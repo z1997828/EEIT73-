@@ -3,11 +3,19 @@ const { ccclass, property } = _decorator;
 
 @ccclass('loginScene')
 export class loginScene extends Component {
+    @property (Node)
+    public 會員註冊 = null;
+
+    onLoad() {
+        this.會員註冊.active = false;
+    }
+
 // -----------登入場景按鈕----------
 
  // 會員註冊按鈕
  public onMemberregist (){
     console.log("確定按鈕被點擊");
+     this.會員註冊.active = !this.會員註冊.active;
 }
 
 // 會員登入按鈕
