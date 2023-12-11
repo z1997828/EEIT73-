@@ -1,10 +1,20 @@
 {
-  "name": "DDZ",
+  "name": "ddz",
   "uuid": "995a703d-41e4-4fc7-b2f3-9db0add55d71",
   "creator": {
     "version": "3.8.1"
   },
   "dependencies": {
-    "@types/firebase": "^3.2.1"
-  }
+    "@types/firebase": "^3.2.1",
+    "firebase-admin": "^12.0.0"
+  },
+  "description": "12345678\r https://www.edrawmind.com/online/map.html?obj=ws302931135_vIY97/Personal/%E5%A4%A7%E5%B0%88.emmx",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
