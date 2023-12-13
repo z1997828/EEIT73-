@@ -3,14 +3,35 @@ const { ccclass, property } = _decorator;
 
 @ccclass('hallScene')
 export class hallScene extends Component {
+    @property(Node) 商城: Node = null;
+    @property(Node) 戰績: Node = null;
+    @property(Node) 反饋: Node = null;
+    @property(Node) 玩法: Node = null;
+    @property(Node) 設置: Node = null;
+    @property(Node) 個人資料: Node = null;
+
+    public 開啟選單 = false;
+
+
     // ----------上方功能列-------------
-    // 商城按鈕
+    // 頭像按鈕
     public onFace() {
-        console.log("確定按鈕被點擊");
+        if(!this.開啟選單)
+        this.個人資料.active = true,
+        this.開啟選單 = true;
+    
     }
+
 
     // 返回按鈕
     public onBack() {
+        this.商城.active = false;
+        this.戰績.active = false;
+        this.反饋.active = false;
+        this.玩法.active = false;
+        this.設置.active = false;
+        this.個人資料.active = false;
+        this.開啟選單 = false;
         console.log("確定按鈕被點擊");
     }
     // ----------中間功能列-------------
@@ -30,7 +51,9 @@ export class hallScene extends Component {
 
     // 商城按鈕
     public onMall() {
-        console.log("確定按鈕被點擊");
+        if(!this.開啟選單)
+        this.商城.active = true,
+        this.開啟選單 = true;
     }
 
     // 商城內儲值金額1按鈕
@@ -68,11 +91,15 @@ export class hallScene extends Component {
 
     // 戰績按鈕
     public onRecord() {
-        console.log("確定按鈕被點擊");
+        if(!this.開啟選單)
+        this.戰績.active = true,
+        this.開啟選單 = true;
     }
     // 反饋按鈕
     public onFeedback() {
-        console.log("確定按鈕被點擊");
+        if(!this.開啟選單)
+        this.反饋.active = true,
+        this.開啟選單 = true;
     }
 
     // 反饋內提交按鈕
@@ -81,7 +108,9 @@ export class hallScene extends Component {
     }
     // 設定按鈕
     public onSetting() {
-        console.log("確定按鈕被點擊");
+        if(!this.開啟選單)
+        this.設置.active = true,
+        this.開啟選單 = true;
     }
 
     // 設定內音樂開關按鈕
@@ -100,7 +129,9 @@ export class hallScene extends Component {
     }
     //// 玩法按鈕
     public onRule() {
-        console.log("確定按鈕被點擊");
+        if(!this.開啟選單)
+        this.玩法.active = true,
+        this.開啟選單 = true;
     }
 }
 

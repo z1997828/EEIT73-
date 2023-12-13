@@ -3,24 +3,29 @@ const { ccclass, property } = _decorator;
 
 @ccclass('loginScene')
 export class loginScene extends Component {
-    @property (Node)
-    public 會員註冊 = null;
+    @property (Node) 會員註冊: Node = null;
+    @property (Node) 會員登入: Node = null;
 
+    public 開啟選單 = false;
     onLoad() {
         this.會員註冊.active = false;
+        this.會員登入.active = false;
     }
 
 // -----------登入場景按鈕----------
 
  // 會員註冊按鈕
  public onMemberregist (){
-    console.log("確定按鈕被點擊");
-     this.會員註冊.active = !this.會員註冊.active;
+    if(!this.開啟選單)
+    this.會員註冊.active = true,
+    this.開啟選單 = true;
 }
 
 // 會員登入按鈕
 public onMemberLogin (){
-    console.log("確定按鈕被點擊");
+    if(!this.開啟選單)
+    this.會員登入.active = true,
+    this.開啟選單 = true;
 }
 
 
@@ -43,7 +48,9 @@ public onMemberLogin (){
 
     // 返回按鈕
     public onBack (){
-        console.log("確定按鈕被點擊");
+        this.會員註冊.active = false;
+        this.會員登入.active = false;
+        this.開啟選單 = false;
     }
 
     // -----------登入頁按鈕------------
@@ -51,13 +58,12 @@ public onMemberLogin (){
     // 確定登入按鈕
     public onConfirmLogin (){
         console.log("確定按鈕被點擊");
+        
     }
-
     // 找回密碼按鈕
     public onFindpw (){
         console.log("確定按鈕被點擊");
     }
-
+    
 }
-
 
