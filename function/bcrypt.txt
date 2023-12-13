@@ -1,0 +1,17 @@
+const bcrypt = require('bcryptjs'); // 如果在Node.js中使用，可以使用require導入模塊
+
+// 要加密的原始密碼
+const password = 'myPassword123';
+
+// 生成鹽（salt）
+const salt = bcrypt.genSaltSync(10);
+
+// 將密碼與鹽結合加密
+const hashedPassword = bcrypt.hashSync(password, salt);
+
+console.log('加密後的密碼：', hashedPassword);
+
+// 驗證密碼
+const isPasswordValid = bcrypt.compareSync(password, hashedPassword);
+
+console.log('密碼驗證結果：', isPasswordValid); // 若為true則表示驗證成功
