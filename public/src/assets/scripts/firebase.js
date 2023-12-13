@@ -42499,7 +42499,7 @@
         throw console.error(t), new Error("Cannot instantiate firebase-database - be sure to load firebase-app.js first.");
       }
     });
-    const firebaseConfig = {
+    const config = {
       apiKey: "AIzaSyCEEb5PlBygA9_pTl38ce19A5vtZsKUqdA",
       authDomain: "gameproject-d9074.firebaseapp.com",
       projectId: "gameproject-d9074",
