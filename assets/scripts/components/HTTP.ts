@@ -1,7 +1,7 @@
 export default class HTTP {
     // 預設 URL，這裡是本地伺服器的地址
-    URL = 'http://127.0.0.1:9000'
-
+    URL = 'http://127.0.0.1:3000'
+    
     // 發送 HTTP 請求的方法
     // 可以傳入路徑（path）、資料（data）、回調函數（handler）、額外的 URL（extraUrl）
     sendRequset(path?, data?, handler?, extraUrl?) {
@@ -10,7 +10,7 @@ export default class HTTP {
             extraUrl = this.URL;
         }
 
-        
+         
         let str = "?";
 
        // 遍歷資料物件，將鍵值轉換為 URL 查詢字串的形式
@@ -22,7 +22,7 @@ export default class HTTP {
     }
 
         // 組合最終的請求 URL
-        let reqUrl = extraUrl + (path ? "/" + path : "") + encodeURI(str);
+        let reqUrl = extraUrl  + path  + encodeURI(str);
 
         // 記錄請求的日誌
         let gameLog ="觸發時間: " + (new Date()).toLocaleTimeString() + " 請求url: " + reqUrl ;
