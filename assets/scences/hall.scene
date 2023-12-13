@@ -4376,7 +4376,7 @@
         "__id__": 144
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 150
@@ -8866,7 +8866,7 @@
         "__id__": 253
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 271
@@ -10190,7 +10190,7 @@
         "__id__": 317
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 325
@@ -12189,7 +12189,7 @@
         "__id__": 345
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 351
@@ -13166,7 +13166,7 @@
         "__id__": 378
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 386
@@ -14522,12 +14522,24 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "商城": null,
-    "戰績": null,
-    "反饋": null,
-    "玩法": null,
-    "設置": null,
-    "個人資料": null,
+    "商城": {
+      "__id__": 152
+    },
+    "戰績": {
+      "__id__": 238
+    },
+    "反饋": {
+      "__id__": 273
+    },
+    "玩法": {
+      "__id__": 327
+    },
+    "設置": {
+      "__id__": 353
+    },
+    "個人資料": {
+      "__id__": 117
+    },
     "_id": "03KNh/oAVBOq31N/Kldh1S"
   },
   {
