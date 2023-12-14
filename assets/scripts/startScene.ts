@@ -50,7 +50,11 @@ export class startScence extends Component {
     }
 
     start() {
+        this.scheduleOnce(()=>{
+            
+            director.loadScene("loading")
 
+        },5)
     }
 
     // update(deltaTime: number) {

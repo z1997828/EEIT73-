@@ -3,35 +3,37 @@ const { ccclass, property } = _decorator;
 
 @ccclass('hallScene')
 export class hallScene extends Component {
-    @property(Node) 商城: Node = null;
-    @property(Node) 戰績: Node = null;
-    @property(Node) 反饋: Node = null;
-    @property(Node) 玩法: Node = null;
-    @property(Node) 設置: Node = null;
-    @property(Node) 個人資料: Node = null;
+    @property(Node) mall: Node = null;
+    @property(Node) record: Node = null;
+    @property(Node) feedback: Node = null;
+    @property(Node) rule: Node = null;
+    @property(Node) setting: Node = null;
+    @property(Node) face: Node = null;
 
-    public 開啟選單 = false;
-
+    public openMenu = false;
+    onLoad() {
+        this.record.active = false;
+    }
 
     // ----------上方功能列-------------
     // 頭像按鈕
     public onFace() {
-        if(!this.開啟選單)
-        this.個人資料.active = true,
-        this.開啟選單 = true;
+        if(!this.openMenu)
+        this.face.active = true,
+        this.openMenu = true;
     
     }
 
 
     // 返回按鈕
     public onBack() {
-        this.商城.active = false;
-        this.戰績.active = false;
-        this.反饋.active = false;
-        this.玩法.active = false;
-        this.設置.active = false;
-        this.個人資料.active = false;
-        this.開啟選單 = false;
+        this.mall.active = false;
+        this.record.active = false;
+        this.feedback.active = false;
+        this.rule.active = false;
+        this.setting.active = false;
+        this.face.active = false;
+        this.openMenu = false;
         console.log("確定按鈕被點擊");
     }
     // ----------中間功能列-------------
@@ -51,9 +53,9 @@ export class hallScene extends Component {
 
     // 商城按鈕
     public onMall() {
-        if(!this.開啟選單)
-        this.商城.active = true,
-        this.開啟選單 = true;
+        if(!this.openMenu)
+        this.mall.active = true,
+        this.openMenu = true;
     }
 
     // 商城內儲值金額1按鈕
@@ -87,19 +89,18 @@ export class hallScene extends Component {
     }
 
 
-
-
     // 戰績按鈕
     public onRecord() {
-        if(!this.開啟選單)
-        this.戰績.active = true,
-        this.開啟選單 = true;
+        if(!this.openMenu)
+        this.record.active = true,
+        this.openMenu = true;
     }
+
     // 反饋按鈕
     public onFeedback() {
-        if(!this.開啟選單)
-        this.反饋.active = true,
-        this.開啟選單 = true;
+        if(!this.openMenu)
+        this.feedback.active = true,
+        this.openMenu = true;
     }
 
     // 反饋內提交按鈕
@@ -108,9 +109,9 @@ export class hallScene extends Component {
     }
     // 設定按鈕
     public onSetting() {
-        if(!this.開啟選單)
-        this.設置.active = true,
-        this.開啟選單 = true;
+        if(!this.openMenu)
+        this.setting.active = true,
+        this.openMenu = true;
     }
 
     // 設定內音樂開關按鈕
@@ -129,9 +130,9 @@ export class hallScene extends Component {
     }
     //// 玩法按鈕
     public onRule() {
-        if(!this.開啟選單)
-        this.玩法.active = true,
-        this.開啟選單 = true;
+        if(!this.openMenu)
+        this.rule.active = true,
+        this.openMenu = true;
     }
 }
 

@@ -185,7 +185,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 431.5657620041754,
+    "_orthoHeight": 413.03780964797915,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -681,7 +681,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "警示",
+    "_name": "alert",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -1262,7 +1262,7 @@
     "_id": "c5V1EV8IpMtrIvY1OE9t2u"
   },
   {
-    "__type__": "ef6a2xWb5FFRppcUPNvDQGV",
+    "__type__": "493919gmxlKQr9ATBOrbJ6q",
     "_name": "",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -1271,7 +1271,10 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "_id": "b7rt0s/JhGxpzya+0w+C37"
+    "alert": {
+      "__id__": 18
+    },
+    "_id": "0c0oxpPvxEvJ6WkL55qcCx"
   },
   {
     "__type__": "cc.SceneGlobals",
