@@ -182,7 +182,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 431.11574556830027,
+    "_orthoHeight": 413.03780964797915,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -3742,7 +3742,7 @@
     },
     "component": "",
     "_componentId": "d7e0cNvQSxNxJUz5zO2Y3Rh",
-    "handler": "onFeedback",
+    "handler": "onRecord",
     "customEventData": ""
   },
   {
@@ -14522,22 +14522,22 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "商城": {
+    "mall": {
       "__id__": 152
     },
-    "戰績": {
+    "record": {
       "__id__": 238
     },
-    "反饋": {
+    "feedback": {
       "__id__": 273
     },
-    "玩法": {
+    "rule": {
       "__id__": 327
     },
-    "設置": {
+    "setting": {
       "__id__": 353
     },
-    "個人資料": {
+    "face": {
       "__id__": 117
     },
     "_id": "03KNh/oAVBOq31N/Kldh1S"
