@@ -8,9 +8,9 @@ require("firebase/firestore");
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "firebase-admin";
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { createContext, useContext, useEffect, useState } from 'react';
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -29,19 +29,17 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const auth = getAuth(app);
+
 
 const signWithEmailAndPassword = (email, password) => {
-
-    firebase.auth()
-        .createUserWithEmailAndPassword(email, password)
+        createUserWithEmailAndPassword(auth ,email, password)
         .then((userCredential) => {
             const user = userCredential.user
             if (user) {
-
                 console.log('user=', user);
 
-                // User is signed in.
+                // 用戶已登錄
                 var displayName = user.displayName;
                 var email = user.email;
                 var emailVerified = user.emailVerified;
@@ -51,7 +49,7 @@ const signWithEmailAndPassword = (email, password) => {
                 var providerData = user.providerData;
                 // ...
             } else {
-                // User is signed out.
+                // 用戶未登錄
                 // ...
             }
         })
@@ -69,32 +67,29 @@ signWithEmailAndPassword(email, password);
 
 ////////////////使用者是否已登入？
 
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './firebase'
-
 const AuthUserContext = createContext({
-authUser:null, //設定初始值
-isLoading:true //要開啟程式時獲取資料所以用true
-});
+        authUser:null, //設定初始值
+        isLoading:true //要開啟程式時獲取資料所以用true
+    });
 //保持追蹤用戶狀態
 export default function useFirebaseAuth(){
 const [authUser,setAuthUser] = useState(null);
 const [isLoading,setIsLoading] = useState(true);
 
 const authStateChanged = async(user) =>{
-setIsLoading(true);
-if(!user){
-setAuthUser(null);
-setIsLoading(false);
-return;
-}
+        setIsLoading(true);
+        if(!user){
+        setAuthUser(null);
+        setIsLoading(false);
+        return;
+    }
 //如果有user資料的話
-setAuthUser({
-uid: user.uid,
-email:user.email
-});
+    setAuthUser({
+    uid: user.uid,
+    email:user.email
+    });
 //上面已完成用戶資料讀取，所以可以不用讀了
-setIsLoading(false);
+    setIsLoading(false);
 }
 
 useEffect(()=>{
