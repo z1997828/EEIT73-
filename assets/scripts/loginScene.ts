@@ -1,31 +1,35 @@
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, director, Node } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('loginScene')
 export class loginScene extends Component {
-    @property (Node) 會員註冊: Node = null;
-    @property (Node) 會員登入: Node = null;
+    @property (Node) singUp: Node = null;
+    @property (Node) singIn: Node = null;
 
-    public 開啟選單 = false;
+    public openMenu = false;
     onLoad() {
-        this.會員註冊.active = false;
-        this.會員登入.active = false;
+        this.singUp.active = false;
+        this.singIn.active = false;
+    }
+
+    public onTest (){
+        director.loadScene("hall")
     }
 
 // -----------登入場景按鈕----------
 
  // 會員註冊按鈕
  public onMemberregist (){
-    if(!this.開啟選單)
-    this.會員註冊.active = true,
-    this.開啟選單 = true;
+    if(!this.openMenu)
+    this.singUp.active = true,
+    this.openMenu = true;
 }
 
 // 會員登入按鈕
 public onMemberLogin (){
-    if(!this.開啟選單)
-    this.會員登入.active = true,
-    this.開啟選單 = true;
+    if(!this.openMenu)
+    this.singIn.active = true,
+    this.openMenu = true;
 }
 
 
@@ -48,9 +52,9 @@ public onMemberLogin (){
 
     // 返回按鈕
     public onBack (){
-        this.會員註冊.active = false;
-        this.會員登入.active = false;
-        this.開啟選單 = false;
+        this.singUp.active = false;
+        this.singIn.active = false;
+        this.openMenu = false;
     }
 
     // -----------登入頁按鈕------------
@@ -64,6 +68,9 @@ public onMemberLogin (){
     public onFindpw (){
         console.log("確定按鈕被點擊");
     }
+
+
+    
     
 }
 
