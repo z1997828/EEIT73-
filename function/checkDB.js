@@ -10,7 +10,7 @@ const FieldValue = admin.firestore.FieldValue;
 
 getData();
 async function getData(){
-    await db.collection('users').get()
+    await db.collection('game_playway').get()
     .then((snapshot)=>{
         snapshot.forEach((doc)=>{
             console.log(doc.id, '=>' , doc.data());
