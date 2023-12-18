@@ -1,7 +1,7 @@
 import { _decorator, Component, Node,AudioSource,Button,SpriteFrame  } from 'cc';
 const { ccclass, property } = _decorator;
 
-@ccclass('hallScene')
+@ccclass('hall')
 export class hallScene extends Component {
     @property(Node) mall: Node = null;
     @property(Node) record: Node = null;

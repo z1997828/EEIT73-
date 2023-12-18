@@ -14,11 +14,11 @@ export default class HTTP {
         let str = "?";
 
        // 遍歷資料物件，將鍵值轉換為 URL 查詢字串的形式
-       for (const i in data) {
+       for (const k in data) {
         if (str != "?") {
             str += "&";
         }
-        str += i + "=" + data[i];
+        str += k + "=" + data[k];
     }
 
         // 組合最終的請求 URL
