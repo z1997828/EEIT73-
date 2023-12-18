@@ -1,4 +1,4 @@
-import { _decorator, Component, director, Node } from 'cc';
+import { _decorator, Component, director, Node ,AudioSource,AudioClip } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('loginScene')
@@ -21,15 +21,17 @@ export class loginScene extends Component {
  // 會員註冊按鈕
  public onMemberregist (){
     if(!this.openMenu)
-    this.singUp.active = true,
-    this.openMenu = true;
+    this.singUp.active = !false,
+    this.openMenu = !false;
+    
+    
 }
 
 // 會員登入按鈕
 public onMemberLogin (){
     if(!this.openMenu)
-    this.singIn.active = true,
-    this.openMenu = true;
+    this.singIn.active = !false,
+    this.openMenu = !false;
 }
 
 
