@@ -15,11 +15,11 @@ const FieldValue = admin.firestore.FieldValue;
 */
 upDate();
 async function upDate(){
-    const userRef = db.collection('users').doc('100001');
+    const userRef = db.collection('users').doc('MXRbxlGYY7sP2LAMQ8FG');
     const res = await userRef.update({
-        age: 33,
+        age: 25,
         upddate: FieldValue.serverTimestamp(),
-        name: "hehe",
-        gender: "male"
+        name: "皮卡皮卡",
+        gender: "gay"
     });
 }

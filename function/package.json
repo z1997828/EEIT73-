@@ -10,8 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "firebase": "^10.7.1",
     "express": "^4.18.2",
     "firebase-admin": "^12.0.0",
     "uuid-v4": "^0.1.0"
