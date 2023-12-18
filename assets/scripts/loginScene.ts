@@ -1,7 +1,7 @@
 import { _decorator, Component, director, Node ,AudioSource,AudioClip } from 'cc';
 const { ccclass, property } = _decorator;
 
-@ccclass('loginScene')
+@ccclass('login')
 export class loginScene extends Component {
     @property (Node) singUp: Node = null;
     @property (Node) singIn: Node = null;

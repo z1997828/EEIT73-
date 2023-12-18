@@ -1,7 +1,7 @@
 import { _decorator, Component, Node,AudioSource,Button,SpriteFrame} from 'cc';
 const { ccclass, property } = _decorator;
 
-@ccclass('gameRoomScene')
+@ccclass('gameroom')
 export class gameRoomScene extends Component {
     @property(Node) setting: Node = null;
     @property(Button)MusicButton: Button = null;

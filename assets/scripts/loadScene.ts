@@ -1,7 +1,7 @@
 import { _decorator, Component, director, Node } from 'cc';
 const { ccclass, property } = _decorator;
 
-@ccclass('loadScene')
+@ccclass('loading')
 export class loadScene extends Component {
     @property(Node) alert: Node = null;
     onLoad() {
@@ -10,11 +10,11 @@ export class loadScene extends Component {
 
 
     start() {
-        this.scheduleOnce(()=>{
+        // this.scheduleOnce(()=>{
             
-            director.loadScene("login")
+        //     director.loadScene("login")
 
-        },3)
+        // },3)
     }
 
     update(deltaTime: number) {

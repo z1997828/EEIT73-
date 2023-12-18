@@ -1,7 +1,7 @@
 // 以 Express 建立 Web 伺服器
-var express = require("express");
-var app = express();
-
+const ws = require('nodejs-websocket')
+const express = require("express");
+const app = express();
 
 
 // 允許跨域使用本服務
@@ -14,6 +14,19 @@ app.use( express.static( "public" ) );
 // 協助 Express 解析表單與JSON資料
 app.use(express.urlencoded({extended: true}));
 app.use(express.json())
+
+let websocket = ws.createServer(function(client){
+    
+    client.on('text',(data)=>{
+        console.log('客戶端傳送資料: ',data);
+    })
+    client.on('close',()=>{
+        console.log('客戶端斷開連接');
+    })
+    client.on('error',()=>{
+        console.log('網路連接出錯');
+    })
+})
 
 app.all('*',(req,res,next)=>{
     res.header('Access-Control-Origin',"*");
@@ -42,7 +55,7 @@ app.use("/use",(req,res) => {
 
 // 一切就緒，開始接受用戶端連線
 // app.listen(process.env.PORT);
-
+websocket.listen(3001);
 app.listen(3000);
 console.log("Web伺服器就緒，開始接受用戶端連線.");
 console.log("鍵盤「Ctrl + C」可結束伺服器程式.");
