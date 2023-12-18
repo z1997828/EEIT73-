@@ -9,59 +9,59 @@ const { ccclass, property } = _decorator;
 export class startScence extends Component {
     @property(Node)
 
-    startBg : Node = null;
+    startBg: Node = null;
     @property(Node)
-    connecting : Node = null;
-    
-    _connecting : Label = null;
+    connecting: Node = null;
+
+    _connecting: Label = null;
     onLoad() {
         this._connecting = this.connecting.getComponent(Label);
         this.connecting.active = false
-        this.scheduleOnce(()=>{
+        this.scheduleOnce(() => {
             this.startBg.active = false;
             this.init()
 
-        },2)
+        }, 2)
 
 
     }
-//  進行初始化
-    init(){
+    //  進行初始化
+    init() {
         gameManager.Instance.http = new HTTP();
-        this.connecting.active=true;
-        this._connecting.string="正在連接伺服器";
+        this.connecting.active = true;
+        this._connecting.string = "正在連接伺服器";
         this.getServerInfo()
     }
 
-//獲取伺服器資料
+    //獲取伺服器資料
 
-    getServerInfo(){
+    getServerInfo() {
         let xhr = null;
-       let complete = false;
-       
-        
-           xhr = gameManager.Instance.http.sendRequset(Api.get_serverinfo,null,(ret)=>{
-                console.log(ret);
-                
-            })
-            
-        
-       
+        let complete = false;
+
+
+        xhr = gameManager.Instance.http.sendRequset(Api.get_serverinfo, null, (ret) => {
+            console.log(ret);
+
+        })
+
+
+
     }
 
     start() {
-        this.scheduleOnce(()=>{
-            
+        this.scheduleOnce(() => {
+
             director.loadScene("loading")
 
-        },5)
+        }, 5)
     }
 
     // update(deltaTime: number) {
-        
+
     // }
 
-// 警示窗按鈕
+    // 警示窗按鈕
     //  public onSure (){
     //     console.log("確定按鈕被點擊");
     // }
