@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>後台管理系統</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        #sidebar {
+            background-color: #333;
+            color: #fff;
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 20px;
+        }
+        #content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            padding: 10px;
+            cursor: pointer;
+        }
+        ul li:hover {
+            background-color: #555;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            text-align: center;
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <ul>
+            <li id="users">玩家資料</li>
+            <li id="game_playway">遊戲資料</li>
+            <li id="money">儲值資料</li>
+        </ul>
+    </div>
+    <div id="content">
+        <h1>歡迎來到後台管理系統</h1>
+        <div id="users-content" style="display: none;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>玩家ID</th>
+                        <th>玩家帳號</th>
+                        <th>玩家名稱</th>
+                        <th>玩家信箱</th>
+                        <th>玩家金錢</th>
+                        <th>創建時間</th>
+                    </tr>
+                </thead>
+                <tbody id="users_table">
+                    
+                </tbody>
+            </table>
+        </div>
+        <div id="game_playway-content" style="display: none;">
+            <table>
+            <thead>
+                <tr>
+                    <th>遊戲ID</th>
+                    <th>地主玩家</th>
+                    <th>地主獲得金額</th>
+                    <th>農民1玩家</th>
+                    <th>農民1獲得金額</th>
+                    <th>農民2玩家</th>
+                    <th>農民2獲得金額</th>
+                    <th>遊戲結束時間</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        </div>
+        <div id="money-content" style="display: none;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>玩家ID</th>
+                        <th>儲值金額</th>
+                        <th>儲值時間</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#users").click(function () {
+                showContent("users-content");
+            });
+            $("#game_playway").click(function () {
+                showContent("game_playway-content");
+            });
+            $("#money").click(function () {
+                showContent("money-content");
+            });
+
+            function showContent(contentId) {
+                $("#content > div").hide();
+                $("#" + contentId).show();
+            }
+            $('#users').click();
+            $.get("/CMS/users", function (e) {
+                $('#users_table').append(e);
+            });
+        });
+    </script>
+</body>
+</html>

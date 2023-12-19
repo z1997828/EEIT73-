@@ -1,7 +1,6 @@
 // 以 Express 建立 Web 伺服器
-const ws = require('nodejs-websocket')
-const express = require("express");
-const app = express();
+var express = require("express");
+var app = express();
 
 
 // 允許跨域使用本服務
@@ -11,52 +10,60 @@ app.use(cors());
 // Web 伺服器的靜態檔案置於 public 資料夾
 app.use( express.static( "public" ) );
 
-// 協助 Express 解析表單與JSON資料
-app.use(express.urlencoded({extended: true}));
-app.use(express.json())
-
-let websocket = ws.createServer(function(client){
-    
-    client.on('text',(data)=>{
-        console.log('客戶端傳送資料: ',data);
-    })
-    client.on('close',()=>{
-        console.log('客戶端斷開連接');
-    })
-    client.on('error',()=>{
-        console.log('網路連接出錯');
-    })
-})
-
-app.all('*',(req,res,next)=>{
-    res.header('Access-Control-Origin',"*");
-    res.header('Access-Control-Allow-Headers',"Content-Type");
-    res.header('Access-Control-Allow-Credentials',true);
-    res.header('Access-Control-Allow-Methods','GET,POST,PUT,OPTIONS,DELETE');
-    if (req.method.toLowerCase() == 'options') {
-        res.send
-    } else{
-        next();
-    }
-})
-
-app.get("/getInfo", (req, res) => {
-	res.send("Info" + req.query.info)
+// 以 body-parser 模組協助 Express 解析表單與JSON資料
+var bodyParser = require('body-parser');
+app.use( express.json() );
+app.use( express.urlencoded({ extended: false }) );
+//資料庫
+var admin = require('firebase-admin');
+//取得Key認證文件
+var serviceAccount = require("./gameproject-d9074-firebase-adminsdk-6rnh9-cff9fb8858.json");
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
 });
-
-app.post("/getPost",(req, res)=>{
-    console.log(req.body)
-});
-
-app.use("/use",(req,res) => {
-    res.send("use")
-});
-
-
+//數據庫對象
+let db = admin.firestore();
+//服務器時間戳
+const FieldValue = admin.firestore.FieldValue;
 // 一切就緒，開始接受用戶端連線
 // app.listen(process.env.PORT);
-websocket.listen(3001);
 app.listen(3000);
 console.log("Web伺服器就緒，開始接受用戶端連線.");
 console.log("鍵盤「Ctrl + C」可結束伺服器程式.");
+
+// ---------------
+
+app.get("", function (req, res) {
+	
+});
+
+app.get("/CMS/users", async function (req,res) {
+    let html = '';
+    await db.collection('users').get()
+    .then((snapshot)=>{
+        snapshot.forEach((doc)=>{
+            // console.log(doc.id, '=>' , doc.data());
+            html += `<tr>
+            <td>${doc.id}</td>
+            <td>${doc.data().account}</td>
+            <td>${doc.data().name}</td>
+            <td>${doc.data().email}</td>
+            <td>${doc.data().money}</td>
+            <td>${doc.data().registertime}</td>
+        </tr>`;
+        });
+    })
+    .catch((err)=>{
+        console.log('Error getting documents',err);
+    });
+    // console.log(html)
+    res.send(html)
+
+
+});
+
+app.post("", function (req, res) {
+	
+});
+
 
