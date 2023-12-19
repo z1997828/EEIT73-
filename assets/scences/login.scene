@@ -20,7 +20,7 @@
         "__id__": 2
       },
       {
-        "__id__": 171
+        "__id__": 170
       }
     ],
     "_active": true,
@@ -105,7 +105,7 @@
         "__id__": 169
       },
       {
-        "__id__": 170
+        "__id__": 187
       }
     ],
     "_prefab": null,
@@ -197,7 +197,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 435.5741127348643,
+    "_orthoHeight": 431.5657620041754,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -6369,37 +6369,17 @@
     "singIn": {
       "__id__": 108
     },
-    "bgMusic": {
+    "loading": {
       "__id__": 170
     },
-    "bgMusicClip": {
-      "__uuid__": "b233f2fb-7e3a-48e8-a062-faf02fb6c85b",
-      "__expectedType__": "cc.AudioClip"
+    "spin": {
+      "__id__": 177
     },
     "_id": "0dT3B33GlBvZ0udPx/VhEz"
   },
   {
-    "__type__": "cc.AudioSource",
-    "_name": "",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "node": {
-      "__id__": 2
-    },
-    "_enabled": true,
-    "__prefab": null,
-    "_clip": {
-      "__uuid__": "b233f2fb-7e3a-48e8-a062-faf02fb6c85b",
-      "__expectedType__": "cc.AudioClip"
-    },
-    "_loop": false,
-    "_playOnAwake": true,
-    "_volume": 1,
-    "_id": "90vl9WHzBEN6nO7vB7T2Ha"
-  },
-  {
     "__type__": "cc.Node",
-    "_name": "讀取中場景",
+    "_name": "waitingConn",
     "_objFlags": 512,
     "__editorExtras__": {},
     "_parent": {
@@ -6407,13 +6387,13 @@
     },
     "_children": [
       {
-        "__id__": 172
+        "__id__": 171
       }
     ],
     "_active": false,
     "_components": [
       {
-        "__id__": 187
+        "__id__": 186
       }
     ],
     "_prefab": null,
@@ -6452,32 +6432,32 @@
     "_objFlags": 512,
     "__editorExtras__": {},
     "_parent": {
-      "__id__": 171
+      "__id__": 170
     },
     "_children": [
       {
-        "__id__": 173
+        "__id__": 172
       },
       {
-        "__id__": 175
+        "__id__": 174
       },
       {
-        "__id__": 178
+        "__id__": 177
       },
       {
-        "__id__": 181
+        "__id__": 180
       }
     ],
     "_active": true,
     "_components": [
       {
+        "__id__": 183
+      },
+      {
         "__id__": 184
       },
       {
         "__id__": 185
-      },
-      {
-        "__id__": 186
       }
     ],
     "_prefab": null,
@@ -6516,13 +6496,13 @@
     "_objFlags": 512,
     "__editorExtras__": {},
     "_parent": {
-      "__id__": 172
+      "__id__": 171
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 174
+        "__id__": 173
       }
     ],
     "_prefab": null,
@@ -6561,7 +6541,7 @@
     "_objFlags": 0,
     "__editorExtras__": {},
     "node": {
-      "__id__": 173
+      "__id__": 172
     },
     "_enabled": true,
     "__prefab": null,
@@ -6607,16 +6587,16 @@
     "_objFlags": 512,
     "__editorExtras__": {},
     "_parent": {
-      "__id__": 172
+      "__id__": 171
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 176
+        "__id__": 175
       },
       {
-        "__id__": 177
+        "__id__": 176
       }
     ],
     "_prefab": null,
@@ -6655,7 +6635,7 @@
     "_objFlags": 0,
     "__editorExtras__": {},
     "node": {
-      "__id__": 175
+      "__id__": 174
     },
     "_enabled": true,
     "__prefab": null,
@@ -6677,7 +6657,7 @@
     "_objFlags": 0,
     "__editorExtras__": {},
     "node": {
-      "__id__": 175
+      "__id__": 174
     },
     "_enabled": true,
     "__prefab": null,
@@ -6712,20 +6692,20 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "1",
+    "_name": "spin",
     "_objFlags": 512,
     "__editorExtras__": {},
     "_parent": {
-      "__id__": 172
+      "__id__": 171
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 179
+        "__id__": 178
       },
       {
-        "__id__": 180
+        "__id__": 179
       }
     ],
     "_prefab": null,
@@ -6764,7 +6744,7 @@
     "_objFlags": 0,
     "__editorExtras__": {},
     "node": {
-      "__id__": 178
+      "__id__": 177
     },
     "_enabled": true,
     "__prefab": null,
@@ -6786,7 +6766,7 @@
     "_objFlags": 0,
     "__editorExtras__": {},
     "node": {
-      "__id__": 178
+      "__id__": 177
     },
     "_enabled": true,
     "__prefab": null,
@@ -6825,16 +6805,16 @@
     "_objFlags": 512,
     "__editorExtras__": {},
     "_parent": {
-      "__id__": 172
+      "__id__": 171
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 182
+        "__id__": 181
       },
       {
-        "__id__": 183
+        "__id__": 182
       }
     ],
     "_prefab": null,
@@ -6873,7 +6853,7 @@
     "_objFlags": 0,
     "__editorExtras__": {},
     "node": {
-      "__id__": 181
+      "__id__": 180
     },
     "_enabled": true,
     "__prefab": null,
@@ -6895,7 +6875,7 @@
     "_objFlags": 0,
     "__editorExtras__": {},
     "node": {
-      "__id__": 181
+      "__id__": 180
     },
     "_enabled": true,
     "__prefab": null,
@@ -6934,7 +6914,7 @@
     "_objFlags": 0,
     "__editorExtras__": {},
     "node": {
-      "__id__": 172
+      "__id__": 171
     },
     "_enabled": true,
     "__prefab": null,
@@ -6956,12 +6936,12 @@
     "_objFlags": 0,
     "__editorExtras__": {},
     "node": {
-      "__id__": 172
+      "__id__": 171
     },
     "_enabled": true,
     "__prefab": null,
     "_cameraComponent": {
-      "__id__": 174
+      "__id__": 173
     },
     "_alignCanvasWithScreen": true,
     "_id": "28Os/voStL8rVINT42oa1a"
@@ -6972,7 +6952,7 @@
     "_objFlags": 0,
     "__editorExtras__": {},
     "node": {
-      "__id__": 172
+      "__id__": 171
     },
     "_enabled": true,
     "__prefab": null,
@@ -7002,7 +6982,7 @@
     "_objFlags": 0,
     "__editorExtras__": {},
     "node": {
-      "__id__": 171
+      "__id__": 170
     },
     "_enabled": true,
     "__prefab": null,
@@ -7017,6 +6997,25 @@
       "y": 0.5
     },
     "_id": "73gP2VQ0pB1bc+V0HTeEoz"
+  },
+  {
+    "__type__": "cc.AudioSource",
+    "_name": "",
+    "_objFlags": 0,
+    "__editorExtras__": {},
+    "node": {
+      "__id__": 2
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_clip": {
+      "__uuid__": "b233f2fb-7e3a-48e8-a062-faf02fb6c85b",
+      "__expectedType__": "cc.AudioClip"
+    },
+    "_loop": false,
+    "_playOnAwake": true,
+    "_volume": 1,
+    "_id": "90vl9WHzBEN6nO7vB7T2Ha"
   },
   {
     "__type__": "cc.SceneGlobals",
