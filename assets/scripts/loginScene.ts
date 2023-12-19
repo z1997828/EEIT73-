@@ -5,13 +5,19 @@ const { ccclass, property } = _decorator;
 export class loginScene extends Component {
     @property (Node) singUp: Node = null;
     @property (Node) singIn: Node = null;
-
+    @property (Node) loading: Node = null;
+    @property (Node) spin: Node = null;
     public openMenu = false;
     onLoad() {
+        this
         this.singUp.active = false;
         this.singIn.active = false;
     }
 
+
+    update() {
+        this
+    }
     public onTest (){
         director.loadScene("hall")
     }

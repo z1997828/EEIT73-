@@ -23,6 +23,7 @@ export class startScence extends Component {
             this.init()
 
         }, 2)
+        
         let ws = new WebSocket("ws://127.0.0.1:3001/msg")
         ws.onopen = (event)=> {
             console.log("與伺服器連接成功");
@@ -47,7 +48,7 @@ export class startScence extends Component {
         this.getServerInfo();
     }
 
-    // 獲取伺服器資料
+    獲取伺服器資料
 
     getServerInfo() {
         let xhr = null;
@@ -63,13 +64,13 @@ export class startScence extends Component {
 
     }
 
-    // start() {
-    //     this.scheduleOnce(() => {
+    start() {
+        this.scheduleOnce(() => {
 
-    //         director.loadScene("loading")
+            director.loadScene("loading")
 
-    //     }, 5)
-    // }
+        }, 5)
+    }
 
     // update(deltaTime: number) {
 
