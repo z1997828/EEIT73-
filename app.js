@@ -36,7 +36,9 @@ console.log("鍵盤「Ctrl + C」可結束伺服器程式.");
 app.get("", function (req, res) {
 	
 });
-
+app.get("/CMS", function (req, res) {
+	res.sendFile('public/CMS_Login.html' , { root : __dirname});
+});
 app.get("/CMS/users", async function (req,res) {
     let html = '';
     await db.collection('users').get()
@@ -49,7 +51,9 @@ app.get("/CMS/users", async function (req,res) {
             <td>${doc.data().name}</td>
             <td>${doc.data().email}</td>
             <td>${doc.data().money}</td>
-            <td>${doc.data().registertime}</td>
+            <td>${Date(doc.data().registertime)}</td>
+            <td><button onclick="Edit_user('${doc.id}')" >修改</button>
+                <button onclick="Del_user('${doc.id}')">刪除</button> </td>
         </tr>`;
         });
     })
