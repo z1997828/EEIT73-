@@ -3,7 +3,6 @@ const ws = require('nodejs-websocket')
 const express = require("express");
 const app = express();
 
-
 // 允許跨域使用本服務
 var cors = require("cors");
 app.use(cors());
@@ -30,15 +29,20 @@ let websocket = ws.createServer(function(client){
 
 app.all('*',(req,res,next)=>{
     res.header('Access-Control-Origin',"*");
-    res.header('Access-Control-Allow-Headers',"Content-Type");
-    res.header('Access-Control-Allow-Credentials',true);
+    res.header('Access-Control-Allow-Headers',"X-Requested-With");
     res.header('Access-Control-Allow-Methods','GET,POST,PUT,OPTIONS,DELETE');
+    res.header("X-Powered-By",'3.2.1');
+    res.header("Content-Type","application/json;charset=utf-8");
     if (req.method.toLowerCase() == 'options') {
         res.send
     } else{
         next();
     }
 })
+
+app.get("/", (req, res) => {
+	res.send("hello!");
+});
 
 app.get("/getInfo", (req, res) => {
 	res.send("Info" + req.query.info)
@@ -55,8 +59,8 @@ app.use("/use",(req,res) => {
 
 // 一切就緒，開始接受用戶端連線
 // app.listen(process.env.PORT);
-websocket.listen(3001);
 app.listen(3000);
+websocket.listen(3001);
 console.log("Web伺服器就緒，開始接受用戶端連線.");
 console.log("鍵盤「Ctrl + C」可結束伺服器程式.");
 

@@ -33,7 +33,7 @@ export default class HTTP {
         // 使用 XMLHttpRequest 物件進行 HTTP 請求
         let xhr = new XMLHttpRequest();
         
-        console.log("ok");
+    
         // 監聽狀態改變事件
         xhr.onreadystatechange = function () {
             // 當請求完成且狀態碼為成功時執行
