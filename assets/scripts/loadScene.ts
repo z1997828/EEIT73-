@@ -18,7 +18,7 @@ export default class loadScene extends Component {
         resources.loadDir("UI",(com,total)=>{
             console.log(com / total)
             this.pb.progress = com / total;
-            this.loadLabel.string = "正在載入資源:" + com / total * 100 + "%";
+            this.loadLabel.string = "正在載入資源:" + Math.floor(this.pb.progress* 100) + "%";
 
             },(err)=>{
                 if(err){
@@ -26,18 +26,14 @@ export default class loadScene extends Component {
                     gameManager.Instance.alert.show("錯誤","資源加載異常...");
                 }else{
                     this.loadLabel.string = "場景跳轉中...";
-                    
+                    director.loadScene("login")
                 }
         })
     }
 
-    // start() {
-    //     this.scheduleOnce(()=>{
-            
-    //         director.loadScene("login")
-
-    //     },5)
-    // }
+    start() {
+  
+    }
 
     update(deltaTime: number) {
         

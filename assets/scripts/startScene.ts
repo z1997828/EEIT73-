@@ -5,29 +5,25 @@ import { Api } from './components/urlAPI';
 import NetUtil from './components/NetUtil';
 
 const { ccclass, property } = _decorator;
-
+const io = (window as any).io || {};
 @ccclass('start')
 export class startScence extends Component {
-    @property(Node)
-
-    startBg: Node = null;
-    @property(Node)
-    connecting: Node = null;
-
+    @property(Node) startBg: Node = null;
+    @property(Node) connecting: Node = null;
     _connecting: Label = null;
+    public static readonly Instance: NetUtil = new NetUtil();
+    sio = null;
     onLoad() {
         this._connecting = this.connecting.getComponent(Label);
         this.connecting.active = false
-        this.scheduleOnce(() => {
-            this.startBg.active = false;
-            this.init()
-
-        }, 2)
         
-        let ws = new WebSocket("ws://127.0.0.1:3001/msg")
+        let ws = new WebSocket("ws://127.0.0.1:3001")
         ws.onopen = (event)=> {
             console.log("與伺服器連接成功");
             ws.send("Hello server!");
+            this.schedule(function() {
+                director.loadScene("loading")
+            }, 2);
         };
 
         ws.onmessage = function (data) {
@@ -40,46 +36,13 @@ export class startScence extends Component {
         };
 
     }
-    //  進行初始化
-    init() {
-        gameManager.Instance.http = new HTTP();
-        this.connecting.active = true;
-        this._connecting.string = "正在連接伺服器...";
-        this.getServerInfo();
-    }
-
-    獲取伺服器資料
-
-    getServerInfo() {
-        let xhr = null;
-        let complete = false;
-
-
-        xhr = gameManager.Instance.http.sendRequset(Api.get_serverinfo, null, (ret) => {
-            console.log(ret);
-
-        })
-
-
-
-    }
+   
 
     start() {
-        this.scheduleOnce(() => {
-
-            director.loadScene("loading")
-
-        }, 5)
+       
     }
 
-    // update(deltaTime: number) {
-
-    // }
-
-    // 警示窗按鈕
-    //  public onSure (){
-    //     console.log("確定按鈕被點擊");
-    // }
+   
 }
 
 

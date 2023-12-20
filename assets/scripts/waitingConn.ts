@@ -1,42 +1,43 @@
-// import { _decorator, Component, find, Node } from 'cc';
-// import gameManager from './components/gameManager';
-// const { ccclass, property } = _decorator;
+import { _decorator, Component, find, Node } from 'cc';
+import gameManager from './components/gameManager';
+const { ccclass, property } = _decorator;
 
-// @ccclass('waittingConn')
-// export class waittingConn extends Component {
-//     @property (Node) loading: Node = null;
-//     @property (Node) spin: Node = null;
-//     isShow = false;
-//     onLoad() {
-//         this.loading = find("Canvas/waitingConn");
-//         this.spin = this.loading.getChildByName("spin")
-//         gameManager.Instance.loading = this;
-//     }
+@ccclass('waittingConn')
+export class waittingConn extends Component {
+    @property (Node) loading: Node = null;
+    @property (Node) spin: Node = null;
     
-//     show(){
-//         this.loading.active = true;
-//         this.isShow = true;
-//     }
+    isShow = false;
+    onLoad() {
+        this.loading = find("Canvas/waitingConn");
+        this.spin = this.loading.getChildByName("spin")
+        gameManager.Instance.loading = this;
+    }
+    
+    show(){
+        this.loading.active = true;
+        this.isShow = true;
+    }
 
-//     hide(){
-//         this.loading.active = false;
-//         this.isShow = false;
-//     }
+    hide(){
+        this.loading.active = false;
+        this.isShow = false;
+    }
    
-//     start() {
+    start() {
 
-//     }
+    }
 
-//     update(dt) {
-//         if (this.isShow) {
-//             this.spin.angle = this.spin.angle - 45 * dt
-//         }
-//     }
+    update(dt) {
+        if (this.isShow) {
+            this.spin.angle = this.spin.angle - 45 * dt
+        }
+    }
     
-//     onDestroy() {
-//         gameManager.Instance.loading = null;
-//     }
+    onDestroy() {
+        gameManager.Instance.loading = null;
+    }
 
-// }
+}
 
 

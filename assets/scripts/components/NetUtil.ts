@@ -11,13 +11,13 @@ export default class NetUtil {
     lastSendTime = null;
     lastReciveTime = null;
     handlers=[];
-    connect(fnConnect, fnError) {
+    init(fnConnect, fnError) {
         let opts = {
             'reconnection': false,
             'force new connection': true,
             'transports': ['websocket', 'polling']
         }
-        this.sio = io.connect(this.ip, opts)
+        this.sio = io.connect("http://127.0.0.1:3000", opts)
         this.sio.on("connect", (data) => {
             console.log("connect")
             this.connected = true;
@@ -90,11 +90,13 @@ export default class NetUtil {
             },3000)
         }  
         this.sio.on("game_pong",()=>{
+            console.log("game_pong")
             this.lastReciveTime = Date.now();
         })
     }
     ping(){
         this.lastSendTime = Date.now();
+        console.log("game_ping");
         this.send("game_ping")
     }
     send(event,data?){
