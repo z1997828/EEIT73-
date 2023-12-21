@@ -49,7 +49,7 @@ app.all('*', (req, res, next) => {
 
     if (req.method.toLowerCase() == 'options') {
         res.send
-    } else if (req.method.toLowerCase() == 'get') {
+    }else if (req.method.toLowerCase() == 'get') {
         switch (req.path) {
             case "/CMS": res.header("Content-Type", "text/html"); res.sendFile('public/CMS_Login.html', { root: __dirname }); break;
             case "/CMS/users":
