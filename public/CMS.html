@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>後台管理系統</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            transition: margin-left 0.5s;
+        }
+
+        #sidebar {
+            background-color: #333;
+            color: #fff;
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            left: -250px;
+            top: 0;
+            padding-top: 20px;
+            transition: left 0.3s ease;
+        }
+
+        #sidebar-toggle {
+            position: fixed;
+            left: 0;
+            top: 20px;
+            padding: 10px;
+            cursor: pointer;
+            color: #fff;
+            background-color: #333;
+            border: none;
+            transition: left 0.3s ease;
+        }
+
+        #content {
+            margin-left: 0;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        ul li:hover {
+            background-color: #555;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            text-align: center;
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="sidebar-toggle">&#9776; 選單</button>
+    <div id="sidebar">
+        <ul>
+            <li id="users">玩家資料</li>
+            <li id="game_playway">遊戲資料</li>
+            <li id="money">儲值資料</li>
+        </ul>
+    </div>
+    <div id="content">
+        <h1>歡迎來到後台管理系統</h1>
+        <div id="users-content" style="display: none;">
+            <button id="add-user">新增</button>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>玩家ID</th>
+                        <th>玩家帳號</th>
+                        <th>玩家名稱</th>
+                        <th>玩家信箱</th>
+                        <th>玩家金錢</th>
+                        <th>創建時間</th>
+                        <th>修改/刪除</th>
+
+                    </tr>
+                </thead>
+                <tbody id="users-tbody">
+                    <tr id="add-user-tr">
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="game_playway-content" style="display: none;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>遊戲ID</th>
+                        <th>地主玩家</th>
+                        <th>地主獲得金額</th>
+                        <th>農民1玩家</th>
+                        <th>農民1獲得金額</th>
+                        <th>農民2玩家</th>
+                        <th>農民2獲得金額</th>
+                        <th>遊戲結束時間</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+        <div id="money-content" style="display: none;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>玩家ID</th>
+                        <th>儲值金額</th>
+                        <th>儲值時間</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#sidebar-toggle").click(function () {
+                $("#sidebar").css("left", function (index, value) {
+                    return value === "0px" ? "-250px" : "0px";
+                });
+                $("#sidebar-toggle").css("left", function (index, value) {
+                    return value === "250px" ? "0px" : "250px";
+                });
+                $("#content").css("margin-left", function (index, value) {
+                    return value === "250px" ? "0px" : "250px";
+                });
+            });
+
+            $("#users").click(function () {
+                showContent("users-content");
+            });
+            $("#game_playway").click(function () {
+                showContent("game_playway-content");
+            });
+            $("#money").click(function () {
+                showContent("money-content");
+            });
+
+            function showContent(contentId) {
+                $("#content > div").hide();
+                $("#" + contentId).show();
+            }
+            $('#users').click();
+            $.get("/CMS/users", function (e) {
+                $('#users-tbody').append(e);
+            });
+            $("#add-user").click(() => {
+                $("#add-user-tr").empty();
+                $("#add-user-tr").append(`<td>玩家ID</td>
+                        <td><input type="text" id="玩家帳號" ></td>
+                        <td><input type="text" id="玩家名稱" ></td>
+                        <td><input type="text" id="玩家信箱" ></td>
+                        <td><input type="text" id="玩家金錢" ></td>
+                        <td>創建時間</td>
+                        <td><button onclick="add_confirm()" >確定</button>
+                        <button  onclick="add_cancel()">取消</button></td>`);
+                        
+                    })
+
+        });
+        function edit_user(user_id) {
+            alert("Edit:" + user_id);
+        }
+        function del_user(user_id) {
+            alert("Del:" + user_id);
+        }
+        function add_confirm() {
+            alert("確定新增");
+        }
+
+        function add_cancel() {
+            $("#add-user-tr").empty();
+        }
+    </script>
+</body>
+
+</html>
