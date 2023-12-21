@@ -88,8 +88,9 @@ app.all('*', (req, res, next) => {
 })
 
 app.get("/", (req, res) => {
-    res.send("hello!");
+	res.send("hello!");
 });
+
 
 app.get("/getInfo", (req, res) => {
     res.send("Info" + req.query.info)
