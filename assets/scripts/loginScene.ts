@@ -1,20 +1,37 @@
-import { _decorator, Component, director, Node ,AudioSource,AudioClip } from 'cc';
+import { _decorator, Component, director, Node ,AudioSource,AudioClip, find, EditBox } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('login')
 export class loginScene extends Component {
     @property (Node) singUp: Node = null;
     @property (Node) singIn: Node = null;
-
+    @property (EditBox)setNameInput: EditBox = null;
+    @property (EditBox)setAccountInput: EditBox = null;
+    @property (EditBox)setPasswdInput: EditBox = null;
+    @property (EditBox)confirmPwInput: EditBox = null;
+    @property (EditBox)accountInput: EditBox = null;
+    @property (EditBox)passwdInput: EditBox = null;
     public openMenu = false;
+    
     onLoad() {
+        
         this.singUp.active = false;
         this.singIn.active = false;
+        let ws = new WebSocket("ws://127.0.0.1:3001")
+        
     }
 
+   
+
+    
     public onTest (){
         director.loadScene("hall")
     }
+
+    
+
+
+
 
 // -----------登入場景按鈕----------
 
@@ -63,8 +80,9 @@ public onMemberLogin (){
 
     // 確定登入按鈕
     public onConfirmLogin (){
-        console.log("確定按鈕被點擊");
-        
+        let account = this.accountInput.string
+        let passwd = this.passwdInput.string
+        console.log("account:" + account + "password" + passwd)
     }
     // 找回密碼按鈕
     public onFindpw (){

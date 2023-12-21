@@ -40,12 +40,14 @@ let websocket = ws.createServer(function (client) {
 })
 
 
+
 app.all('*', (req, res, next) => {
     res.header('Access-Control-Origin', "*");
     res.header('Access-Control-Allow-Headers', "X-Requested-With");
     res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,OPTIONS,DELETE');
     res.header("X-Powered-By", '3.2.1');
     res.header("Content-Type", "application/json;charset=utf-8");
+
 
     if (req.method.toLowerCase() == 'options') {
         res.send
@@ -88,7 +90,9 @@ app.all('*', (req, res, next) => {
 })
 
 app.get("/", (req, res) => {
+
     res.send("hello!");
+
 });
 
 app.get("/getInfo", (req, res) => {
