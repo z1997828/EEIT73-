@@ -104,8 +104,7 @@
                     </tr>
                 </thead>
                 <tbody id="users-tbody">
-                    <tr id="add-user-tr">
-                    </tr>
+
                 </tbody>
             </table>
         </div>
@@ -173,37 +172,113 @@
                 $("#content > div").hide();
                 $("#" + contentId).show();
             }
+
             $('#users').click();
-            $.get("/CMS/users", function (e) {
-                $('#users-tbody').append(e);
-            });
+            refresh_userUI();
+
+
+
             $("#add-user").click(() => {
                 $("#add-user-tr").empty();
                 $("#add-user-tr").append(`<td>玩家ID</td>
-                        <td><input type="text" id="玩家帳號" ></td>
-                        <td><input type="text" id="玩家名稱" ></td>
-                        <td><input type="text" id="玩家信箱" ></td>
-                        <td><input type="text" id="玩家金錢" ></td>
+                        <td><input type="text" id="add-user-account" ></td>
+                        <td><input type="text" id="add-user-name" ></td>
+                        <td><input type="text" id="add-user-email" ></td>
+                        <td><input type="number" id="add-user-money" ></td>
                         <td>創建時間</td>
                         <td><button onclick="add_confirm()" >確定</button>
                         <button  onclick="add_cancel()">取消</button></td>`);
-                        
-                    })
+
+            })
 
         });
-        function edit_user(user_id) {
-            alert("Edit:" + user_id);
+        function refresh_userUI() {
+            $.get("/CMS/users", function (e) {
+                $('#users-tbody').empty();
+                $('#users-tbody').append(`<tr id="add-user-tr">
+                    </tr>`);
+                $('#users-tbody').append(e);
+            });
         }
-        function del_user(user_id) {
-            alert("Del:" + user_id);
-        }
+
         function add_confirm() {
-            alert("確定新增");
+            if ($("#add-user-account").val().trim() != "" && $("#add-user-name").val().trim() != "" &&
+                $("#add-user-email").val().trim() != "" && $("#add-user-money").val().trim() != "") {
+                let users = {
+                    account: $("#add-user-account").val(),
+                    name: $("#add-user-name").val(),
+                    email: $("#add-user-email").val(),
+                    money: $("#add-user-money").val()
+                };
+                $.ajax({
+                    type: "post",
+                    url: "/CMS/users/add",
+                    data: users,
+                    success: function (res) {
+                        refresh_userUI();
+                    }
+                })
+            } else {
+                alert('欄位不可為空值')
+            }
+
         }
 
         function add_cancel() {
             $("#add-user-tr").empty();
         }
+
+        function edit_user(user_id, account, name, email, money, registertime) {
+            $(`#usertr-${user_id}`).empty();
+            $(`#usertr-${user_id}`).append(`<td>${user_id}</td>
+                        <td><input type="text" id="edit-${user_id}-account" value="${account}"></td>
+                        <td><input type="text" id="edit-${user_id}-name" value="${name}"></td>
+                        <td><input type="text" id="edit-${user_id}-email" value="${email}"></td>
+                        <td><input type="number" id="edit-${user_id}-money" value="${money}"></td>
+                        <td>${registertime}</td>
+                        <td><button onclick="edit_confirm('${user_id}')">確定</button>
+                        <button  onclick="edit_cancel('${user_id}','${account}','${name}','${email}','${money}','${registertime}')">取消</button></td>`);
+        }
+        function edit_confirm(user_id) {
+            if ($(`#edit-${user_id}-account`).val().trim() != "" && $(`#edit-${user_id}-name`).val().trim() != "" &&
+                $(`#edit-${user_id}-email`).val().trim() != "" && $(`#edit-${user_id}-money`).val().trim() != "") {
+                let users = {
+                    id:user_id,
+                    account: $(`#edit-${user_id}-account`).val(),
+                    name: $(`#edit-${user_id}-name`).val(),
+                    email: $(`#edit-${user_id}-email`).val(),
+                    money: $(`#edit-${user_id}-money`).val()
+                };
+                $.ajax({
+                    type: "put",
+                    url: "/CMS/users/edit",
+                    data: users,
+                    success: function (res) {
+                        refresh_userUI();
+                    }
+                })
+            } else {
+                alert('欄位不可為空值')
+            }
+            
+        }
+        function edit_cancel(user_id, account, name, email, money, registertime) {
+            $(`#usertr-${user_id}`).empty();
+            $(`#usertr-${user_id}`).append(`<td>${user_id}</td>
+                        <td>${account}</td>
+                        <td>${name}</td>
+                        <td>${email}</td>
+                        <td>${money}</td>
+                        <td>${registertime}</td>
+                        <td><button onclick="edit_user('${user_id}','${account}','${name}','${email}','${money}','${registertime}')" >修改</button>
+                                <button onclick="del_user('${user_id}')">刪除</button> </td>`);
+        }
+
+        function del_user(user_id) {
+            alert("Del:" + user_id);
+        }
+
+
     </script>
 </body>
 

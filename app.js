@@ -49,7 +49,7 @@ app.all('*', (req, res, next) => {
 
     if (req.method.toLowerCase() == 'options') {
         res.send
-    }else if (req.method.toLowerCase() == 'get') {
+    } else if (req.method.toLowerCase() == 'get') {
         switch (req.path) {
             case "/CMS": res.header("Content-Type", "text/html"); res.sendFile('public/CMS_Login.html', { root: __dirname }); break;
             case "/CMS/users":
@@ -60,14 +60,14 @@ app.all('*', (req, res, next) => {
                         .then((snapshot) => {
                             snapshot.forEach((doc) => {
                                 // console.log(doc.id, '=>' , doc.data());
-                                html += `<tr id="${doc.id}">
+                                html += `<tr id="usertr-${doc.id}">
                             <td>${doc.id}</td>
                             <td>${doc.data().account}</td>
                             <td>${doc.data().name}</td>
                             <td>${doc.data().email}</td>
                             <td>${doc.data().money}</td>
                             <td>${Date(doc.data().registertime)}</td>
-                            <td><button onclick="edit_user('${doc.id}')" >修改</button>
+                            <td><button onclick="edit_user('${doc.id}','${doc.data().account}','${doc.data().name}','${doc.data().email}','${doc.data().money}','${Date(doc.data().registertime)}')" >修改</button>
                                 <button onclick="del_user('${doc.id}')">刪除</button> </td>
                              </tr>`;
                             });
@@ -81,6 +81,45 @@ app.all('*', (req, res, next) => {
             default:
                 break;
         }
+    } else if (req.method.toLowerCase() == 'post') {
+        switch (req.path) {
+            case "/CMS/users/add":
+                (async () => {
+                    await db.collection('users').add({
+                        account: req.body.account,
+                        name: req.body.name,
+                        email: req.body.email,
+                        money:req.body.money,
+                        password: '123456',
+                        registertime: FieldValue.serverTimestamp()
+                    });
+                    res.send(true);
+                    
+                })()
+                break;
+        
+            default:
+                break;
+        }
+        
+    }else if (req.method.toLowerCase() == 'put'){
+        switch (req.path) {
+            case "/CMS/users/edit":
+                (async ()=>{
+                    const userRef = db.collection('users').doc(req.body.id);
+                    await userRef.update({
+                        account: req.body.account,
+                        name: req.body.name,
+                        email: req.body.email,
+                        money:req.body.money,
+                    });
+                    res.send(true);
+                })();
+                break;
+            default:
+                break;
+        }
+        
     }
     else {
         next();
@@ -88,7 +127,7 @@ app.all('*', (req, res, next) => {
 })
 
 app.get("/", (req, res) => {
-	res.send("hello!");
+    res.send("hello!");
 });
 
 
