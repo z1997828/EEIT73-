@@ -105,6 +105,8 @@
                 </thead>
                 <tbody id="users-tbody">
 
+                    <tr id="add-user-tr">
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -173,6 +175,7 @@
                 $("#" + contentId).show();
             }
 
+
             $('#users').click();
             refresh_userUI();
 
@@ -222,11 +225,40 @@
                 alert('欄位不可為空值')
             }
 
+
+            $('#users').click();
+            $.get("/CMS/users", function (e) {
+                $('#users-tbody').append(e);
+            });
+            $("#add-user").click(() => {
+                $("#add-user-tr").empty();
+                $("#add-user-tr").append(`<td>玩家ID</td>
+                        <td><input type="text" id="玩家帳號" ></td>
+                        <td><input type="text" id="玩家名稱" ></td>
+                        <td><input type="text" id="玩家信箱" ></td>
+                        <td><input type="text" id="玩家金錢" ></td>
+                        <td>創建時間</td>
+                        <td><button onclick="add_confirm()" >確定</button>
+                        <button  onclick="add_cancel()">取消</button></td>`);
+                        
+                    })
+
+        });
+        function edit_user(user_id) {
+            alert("Edit:" + user_id);
+        }
+        function del_user(user_id) {
+            alert("Del:" + user_id);
+        }
+        function add_confirm() {
+            alert("確定新增");
+
         }
 
         function add_cancel() {
             $("#add-user-tr").empty();
         }
+
 
         function edit_user(user_id, account, name, email, money, registertime) {
             $(`#usertr-${user_id}`).empty();
@@ -277,6 +309,7 @@
         function del_user(user_id) {
             alert("Del:" + user_id);
         }
+
 
 
     </script>

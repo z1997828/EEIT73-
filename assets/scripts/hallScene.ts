@@ -1,4 +1,4 @@
-import { _decorator, Component, Node,AudioSource,Button,SpriteFrame  } from 'cc';
+import { _decorator, Component, Node,AudioSource,Button,SpriteFrame, Label  } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('hall')
@@ -14,6 +14,8 @@ export class hallScene extends Component {
     @property(SpriteFrame)onImage: SpriteFrame = null;
     @property(SpriteFrame)offImage: SpriteFrame = null;
     @property(AudioSource) bgMusic: AudioSource = null;
+    @property(Label) name123: Label = null;
+    
 
     public openMenu = false;
     private MusicIsOn: boolean = !false;
@@ -26,6 +28,7 @@ export class hallScene extends Component {
         this.setting.active = false;
         this.face.active = false;
         this.openMenu = false;
+        this.name123.string = "23456"
     }
 
     // ----------上方功能列-------------
