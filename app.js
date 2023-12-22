@@ -49,7 +49,6 @@ app.all('*', (req, res, next) => {
     res.header("X-Powered-By", '3.2.1');
     res.header("Content-Type", "application/json;charset=utf-8");
 
-
     if (req.method.toLowerCase() == 'options') {
         res.send
     } else if (req.method.toLowerCase() == 'get') {
@@ -63,14 +62,22 @@ app.all('*', (req, res, next) => {
                         .then((snapshot) => {
                             snapshot.forEach((doc) => {
                                 // console.log(doc.id, '=>' , doc.data());
+
+                                html += `<tr id="usertr-${doc.id}">
+
                                 html += `<tr id="${doc.id}">
+
                             <td>${doc.id}</td>
                             <td>${doc.data().account}</td>
                             <td>${doc.data().name}</td>
                             <td>${doc.data().email}</td>
                             <td>${doc.data().money}</td>
                             <td>${Date(doc.data().registertime)}</td>
+
+                            <td><button onclick="edit_user('${doc.id}','${doc.data().account}','${doc.data().name}','${doc.data().email}','${doc.data().money}','${Date(doc.data().registertime)}')" >修改</button>
+
                             <td><button onclick="edit_user('${doc.id}')" >修改</button>
+
                                 <button onclick="del_user('${doc.id}')">刪除</button> </td>
                              </tr>`;
                             });
@@ -84,18 +91,77 @@ app.all('*', (req, res, next) => {
             default:
                 break;
         }
+    } else if (req.method.toLowerCase() == 'post') {
+        switch (req.path) {
+            case "/CMS/users/add":
+                (async () => {
+                    await db.collection('users').add({
+                        account: req.body.account,
+                        name: req.body.name,
+                        email: req.body.email,
+                        money:req.body.money,
+                        password: '123456',
+                        registertime: FieldValue.serverTimestamp()
+                    });
+                    res.send(true);
+                    
+                })()
+                break;
+        
+            default:
+                break;
+        }
+        
+    }else if (req.method.toLowerCase() == 'put'){
+        switch (req.path) {
+            case "/CMS/users/edit":
+                (async ()=>{
+                    const userRef = db.collection('users').doc(req.body.id);
+                    await userRef.update({
+                        account: req.body.account,
+                        name: req.body.name,
+                        email: req.body.email,
+                        money:req.body.money,
+                    });
+                    res.send(true);
+                })();
+                break;
+            default:
+                break;
+        }
+        
+
     }
     else {
         next();
     }
 })
 
+
+app.get("/", (req, res) => {
+    res.send("hello!");
+});
+
+
+app.get("/getInfo", (req, res) => {
+    res.send("Info" + req.query.info)
+});
+
+
+
+app.post("/getPost", (req, res) => {
+    console.log(req.body)
+});
+
+app.use("/use", (req, res) => {
+    res.send("use")
+});
+
 app.get('/', (req, res) => {
 
     console.log("<h1>hello!<h1>");
 
 });
-
 
 
 
