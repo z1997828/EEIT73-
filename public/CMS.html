@@ -275,7 +275,22 @@
         }
 
         function del_user(user_id) {
-            alert("Del:" + user_id);
+            if (confirm('確認刪除：'+user_id)) {
+                let users= {
+                    id:user_id
+                }
+                $.ajax({
+                    type: "delete",
+                    url: "/CMS/users/del",
+                    data: users,
+                    success: function (res) {
+                        refresh_userUI();
+                    }
+                })
+            } else {
+                
+            }
+            
         }
 
 

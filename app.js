@@ -59,7 +59,8 @@ app.all('*', (req, res, next) => {
                     await db.collection('users').get()
                         .then((snapshot) => {
                             snapshot.forEach((doc) => {
-                                // console.log(doc.id, '=>' , doc.data());
+                                let date = new Date(doc.data().registertime);
+                                console.log(doc.id, '=>' , date);
                                 html += `<tr id="usertr-${doc.id}">
                             <td>${doc.id}</td>
                             <td>${doc.data().account}</td>
@@ -120,6 +121,17 @@ app.all('*', (req, res, next) => {
                 break;
         }
         
+    }else if (req.method.toLowerCase() == 'delete'){
+        switch (req.path) {
+            case "/CMS/users/del":
+                (async ()=>{
+                    await db.collection('users').doc(req.body.id).delete();
+                    res.send(true);
+                })();
+                break;
+            default:
+                break;
+        }
     }
     else {
         next();
