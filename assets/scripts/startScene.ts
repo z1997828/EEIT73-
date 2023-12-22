@@ -1,18 +1,11 @@
 import { _decorator, Component, director, Label, Node } from 'cc';
-import gameManager from './components/gameManager';
-import HTTP from './components/HTTP';
-import { Api } from './components/urlAPI';
-import NetUtil from './components/NetUtil';
 
 const { ccclass, property } = _decorator;
-const io = (window as any).io || {};
 @ccclass('start')
 export class startScence extends Component {
     @property(Node) startBg: Node = null;
     @property(Node) connecting: Node = null;
     _connecting: Label = null;
-    public static readonly Instance: NetUtil = new NetUtil();
-    sio = null;
     onLoad() {
         this._connecting = this.connecting.getComponent(Label);
         this.connecting.active = false
@@ -36,7 +29,8 @@ export class startScence extends Component {
         };
 
     }
-   
+    
+
 
     start() {
        

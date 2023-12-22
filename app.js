@@ -1,6 +1,7 @@
 // 以 Express 建立 Web 伺服器
-const ws = require('nodejs-websocket')
 const express = require("express");
+const sio = require('socket.io')
+const ws = require('nodejs-websocket')
 const app = express();
 
 // 允許跨域使用本服務
@@ -89,25 +90,13 @@ app.all('*', (req, res, next) => {
     }
 })
 
-app.get("/", (req, res) => {
+app.get('/', (req, res) => {
 
-    res.send("hello!");
+    console.log("<h1>hello!<h1>");
 
 });
 
-app.get("/getInfo", (req, res) => {
-    res.send("Info" + req.query.info)
-});
 
-
-
-app.post("/getPost", (req, res) => {
-    console.log(req.body)
-});
-
-app.use("/use", (req, res) => {
-    res.send("use")
-});
 
 
 // 一切就緒，開始接受用戶端連線

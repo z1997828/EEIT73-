@@ -64,7 +64,9 @@ public onBack() {
         }
         console.log("確定按鈕被點擊");
     }
-
+    public onReady(){
+        
+    }
 
 
 }
