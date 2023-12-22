@@ -10,8 +10,8 @@ $.get("/CMS/money", function (e) {
 function add_money_confirm() {
 if ($("#add-money-user_id").val().trim() != "" && $("#add-money-money").val().trim() != "") {
     let money = {
-        user_id: $("#add-user-user_id").val(),
-        money: $("#add-user-money").val()
+        user_id: $("#add-money-user_id").val(),
+        money: $("#add-money-money").val()
     };
     $.ajax({
         type: "post",
@@ -34,18 +34,18 @@ $("#add-money-tr").empty();
 function edit_money(money_id, user_id , money , date) {
 $(`#moneytr-${money_id}`).empty();
 $(`#moneytr-${money_id}`).append(`<td>${money_id}</td>
-            <td><input type="text" id="edit-${money_id}-user_id" value="${user_id}"></td>
-            <td><input type="number" id="edit-${money_id}-money" value="${money}"></td>
+            <td><input type="text" id="edit-money-${money_id}-user_id" value="${user_id}"></td>
+            <td><input type="number" id="edit-money-${money_id}-money" value="${money}"></td>
             <td>${date}</td>
             <td><button onclick="edit_money_confirm('${money_id}')">確定</button>
             <button  onclick="edit_money_cancel('${money_id}','${user_id}','${money}','${date}')">取消</button></td>`);
 }
 function edit_money_confirm(money_id) {
-if ($(`#edit-${money_id}-user_id`).val().trim() != "" && $(`#edit-${money_id}-money`).val().trim() != "" ) {
+if ($(`#edit-money-${money_id}-user_id`).val().trim() != "" && $(`#edit-money-${money_id}-money`).val().trim() != "" ) {
     let money = {
         id:money_id,
-        user_id: $(`#edit-${money_id}-account`).val(),
-        money: $(`#edit-${money_id}-money`).val()
+        user_id: $(`#edit-money-${money_id}-user_id`).val(),
+        money: $(`#edit-money-${money_id}-money`).val()
     };
     $.ajax({
         type: "put",
