@@ -4,7 +4,7 @@ export default class HTTP {
     
     // 發送 HTTP 請求的方法
     // 可以傳入路徑（path）、資料（data）、回調函數（handler）、額外的 URL（extraUrl）
-    sendRequset(path?, data?, handler?, extraUrl?) {
+    getRequset(path?, data?, handler?, extraUrl?) {
         // 如果 extraUrl 未提供，則使用預設的 URL
         if (extraUrl == null) {
             extraUrl = this.URL;
