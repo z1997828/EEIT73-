@@ -1,6 +1,7 @@
 // 以 Express 建立 Web 伺服器
-const ws = require('nodejs-websocket')
 const express = require("express");
+const sio = require('socket.io')
+const ws = require('nodejs-websocket')
 const app = express();
 
 // 允許跨域使用本服務
@@ -40,6 +41,7 @@ let websocket = ws.createServer(function (client) {
 })
 
 
+
 app.all('*', (req, res, next) => {
     res.header('Access-Control-Origin', "*");
     res.header('Access-Control-Allow-Headers', "X-Requested-With");
@@ -60,7 +62,11 @@ app.all('*', (req, res, next) => {
                         .then((snapshot) => {
                             snapshot.forEach((doc) => {
                                 // console.log(doc.id, '=>' , doc.data());
+
                                 html += `<tr id="usertr-${doc.id}">
+
+                                html += `<tr id="${doc.id}">
+
                             <td>${doc.id}</td>
                             <td>${doc.data().account}</td>
                             <td>${doc.data().name}</td>
@@ -68,6 +74,11 @@ app.all('*', (req, res, next) => {
                             <td>${doc.data().money}</td>
                             <td>${new Date(doc.data().registertime._seconds * 1000)}</td>
                             <td><button onclick="edit_user('${doc.id}','${doc.data().account}','${doc.data().name}','${doc.data().email}','${doc.data().money}','${new Date(doc.data().registertime._seconds * 1000)}')" >修改</button>
+                            <td>${Date(doc.data().registertime)}</td>
+                            <td><button onclick="edit_user('${doc.id}','${doc.data().account}','${doc.data().name}','${doc.data().email}','${doc.data().money}','${Date(doc.data().registertime)}')" >修改</button>
+                            <td><button onclick="edit_user('${doc.id}')" >修改</button>
+
+
                                 <button onclick="del_user('${doc.id}')">刪除</button> </td>
                              </tr>`;
                             });
@@ -220,6 +231,7 @@ app.all('*', (req, res, next) => {
                 break;
         }
 
+
     } else if (req.method.toLowerCase() == 'delete') {
         switch (req.path) {
             case "/CMS/users/del":
@@ -243,11 +255,13 @@ app.all('*', (req, res, next) => {
             default:
                 break;
         }
+
     }
     else {
         next();
     }
 })
+
 
 app.get("/", (req, res) => {
     res.send("hello!");
@@ -267,6 +281,13 @@ app.post("/getPost", (req, res) => {
 app.use("/use", (req, res) => {
     res.send("use")
 });
+
+app.get('/', (req, res) => {
+
+    console.log("<h1>hello!<h1>");
+
+});
+
 
 
 // 一切就緒，開始接受用戶端連線
