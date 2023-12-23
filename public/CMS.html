@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>後台管理系統</title>
+    <script src="./CMS-js/CMS_users.js"></script>
+    <script src="./CMS-js/CMS_game_playway.js"></script>
+    <script src="./CMS-js/CMS_money.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -85,11 +88,10 @@
             <li id="money">儲值資料</li>
         </ul>
     </div>
-    <div id="content">
-        <h1>歡迎來到後台管理系統</h1>
+    <div id="content" style="margin-top: 20px;">
+        <h1 >歡迎來到後台管理系統</h1>
         <div id="users-content" style="display: none;">
             <button id="add-user">新增</button>
-
             <table>
                 <thead>
                     <tr>
@@ -100,7 +102,6 @@
                         <th>玩家金錢</th>
                         <th>創建時間</th>
                         <th>修改/刪除</th>
-
                     </tr>
                 </thead>
                 <tbody id="users-tbody">
@@ -111,6 +112,7 @@
             </table>
         </div>
         <div id="game_playway-content" style="display: none;">
+            <button id="add-game_playway">新增</button>
             <table>
                 <thead>
                     <tr>
@@ -122,23 +124,27 @@
                         <th>農民2玩家</th>
                         <th>農民2獲得金額</th>
                         <th>遊戲結束時間</th>
+                        <th>修改/刪除</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="game_playway-tbody">
 
                 </tbody>
             </table>
         </div>
         <div id="money-content" style="display: none;">
+            <button id="add-money">新增</button>
             <table>
                 <thead>
                     <tr>
+                        <th>交易編號ID</th>
                         <th>玩家ID</th>
                         <th>儲值金額</th>
                         <th>儲值時間</th>
+                        <th>修改/刪除</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="money-tbody">
 
                 </tbody>
             </table>
@@ -174,57 +180,37 @@
                 $("#content > div").hide();
                 $("#" + contentId).show();
             }
-
-
             $('#users').click();
             refresh_userUI();
-
-
 
             $("#add-user").click(() => {
                 $("#add-user-tr").empty();
                 $("#add-user-tr").append(`<td>玩家ID</td>
-                        <td><input type="text" id="add-user-account" ></td>
-                        <td><input type="text" id="add-user-name" ></td>
-                        <td><input type="text" id="add-user-email" ></td>
-                        <td><input type="number" id="add-user-money" ></td>
-                        <td>創建時間</td>
-                        <td><button onclick="add_confirm()" >確定</button>
-                        <button  onclick="add_cancel()">取消</button></td>`);
+                    <td><input type="text" id="add-user-account" ></td>
+                    <td><input type="text" id="add-user-name" ></td>
+                    <td><input type="text" id="add-user-email" ></td>
+                    <td><input type="number" id="add-user-money" ></td>
+                    <td>創建時間</td>
+                    <td><button onclick="add_user_confirm()" >確定</button>
+                    <button  onclick="add_user_cancel()">取消</button></td>`);
 
             })
 
-        });
-        function refresh_userUI() {
-            $.get("/CMS/users", function (e) {
-                $('#users-tbody').empty();
-                $('#users-tbody').append(`<tr id="add-user-tr">
-                    </tr>`);
-                $('#users-tbody').append(e);
-            });
-        }
+            $("#add-game_playway").click(() => {
+                $("#add-game_playway-tr").empty();
+                $("#add-game_playway-tr").append(`<td>遊戲ID</td>
+                    <td><input type="text" id="add-game_playway-banker-id" ></td>
+                    <td><input type="number" id="add-game_playway-banker-money" ></td>
+                    <td><input type="text" id="add-game_playway-player1-id" ></td>
+                    <td><input type="number" id="add-game_playway-player1-money" ></td>
+                    <td><input type="text" id="add-game_playway-player2-id" ></td>
+                    <td><input type="number" id="add-game_playway-player2-money" ></td>
+                    <td>創建時間</td>
+                    <td><button onclick="add_game_playway_confirm()" >確定</button>
+                    <button  onclick="add_game_playway_cancel()">取消</button></td>`);
 
-        function add_confirm() {
-            if ($("#add-user-account").val().trim() != "" && $("#add-user-name").val().trim() != "" &&
-                $("#add-user-email").val().trim() != "" && $("#add-user-money").val().trim() != "") {
-                let users = {
-                    account: $("#add-user-account").val(),
-                    name: $("#add-user-name").val(),
-                    email: $("#add-user-email").val(),
-                    money: $("#add-user-money").val()
-                };
-                $.ajax({
-                    type: "post",
-                    url: "/CMS/users/add",
-                    data: users,
-                    success: function (res) {
-                        refresh_userUI();
-                    }
-                })
-            } else {
-                alert('欄位不可為空值')
-            }
 
+            })
 
             $('#users').click();
             $.get("/CMS/users", function (e) {
@@ -254,12 +240,17 @@
             alert("確定新增");
 
         }
+            $("#add-money").click(() => {
+                $("#add-money-tr").empty();
+                $("#add-money-tr").append(`<td>交易編號ID</td>
+                    <td><input type="text" id="add-money-user_id" ></td>
+                    <td><input type="number" id="add-money-money" ></td>
+                    <td>儲值時間</td>
+                    <td><button onclick="add_money_confirm()" >確定</button>
+                    <button  onclick="add_money_cancel()">取消</button></td>`);
 
-        function add_cancel() {
-            $("#add-user-tr").empty();
-        }
 
-
+            })
         function edit_user(user_id, account, name, email, money, registertime) {
             $(`#usertr-${user_id}`).empty();
             $(`#usertr-${user_id}`).append(`<td>${user_id}</td>
@@ -293,22 +284,13 @@
                 alert('欄位不可為空值')
             }
             
-        }
-        function edit_cancel(user_id, account, name, email, money, registertime) {
-            $(`#usertr-${user_id}`).empty();
-            $(`#usertr-${user_id}`).append(`<td>${user_id}</td>
-                        <td>${account}</td>
-                        <td>${name}</td>
-                        <td>${email}</td>
-                        <td>${money}</td>
-                        <td>${registertime}</td>
-                        <td><button onclick="edit_user('${user_id}','${account}','${name}','${email}','${money}','${registertime}')" >修改</button>
-                                <button onclick="del_user('${user_id}')">刪除</button> </td>`);
-        }
+            $('#users').click();
+            refresh_userUI();
+            refresh_game_playwayUI();
+            refresh_moneyUI();
+        });
 
-        function del_user(user_id) {
-            alert("Del:" + user_id);
-        }
+
 
 
 

@@ -72,13 +72,66 @@ app.all('*', (req, res, next) => {
                             <td>${doc.data().name}</td>
                             <td>${doc.data().email}</td>
                             <td>${doc.data().money}</td>
+                            <td>${new Date(doc.data().registertime._seconds * 1000)}</td>
+                            <td><button onclick="edit_user('${doc.id}','${doc.data().account}','${doc.data().name}','${doc.data().email}','${doc.data().money}','${new Date(doc.data().registertime._seconds * 1000)}')" >修改</button>
                             <td>${Date(doc.data().registertime)}</td>
-
                             <td><button onclick="edit_user('${doc.id}','${doc.data().account}','${doc.data().name}','${doc.data().email}','${doc.data().money}','${Date(doc.data().registertime)}')" >修改</button>
-
                             <td><button onclick="edit_user('${doc.id}')" >修改</button>
 
+
                                 <button onclick="del_user('${doc.id}')">刪除</button> </td>
+                             </tr>`;
+                            });
+                        })
+                        .catch((err) => {
+                            console.log('Error getting documents', err);
+                        });
+                    res.send(html);
+                })();
+                break;
+            case "/CMS/game_playway":
+                (async () => {
+                    res.header("Content-Type", "text/html");
+                    let html = '';
+                    await db.collection('game_playway').get()
+                        .then((snapshot) => {
+                            snapshot.forEach((doc) => {
+                                // console.log(doc.id, '=>' , doc.data());
+                                html += `<tr id="game_playwaytr-${doc.id}">
+                            <td>${doc.id}</td>
+                            <td>${doc.data().banker_id}</td>
+                            <td>${doc.data().banker_money}</td>
+                            <td>${doc.data().player1_id}</td>
+                            <td>${doc.data().player1_money}</td>
+                            <td>${doc.data().player2_id}</td>
+                            <td>${doc.data().player2_money}</td>
+                            <td>${new Date(doc.data().date._seconds * 1000)}</td>
+                            <td><button onclick="edit_game_playway('${doc.id}','${doc.data().banker_id}','${doc.data().banker_money}','${doc.data().player1_id}','${doc.data().player1_money}','${doc.data().player2_id}','${doc.data().player2_money}','${new Date(doc.data().date._seconds * 1000)}')" >修改</button>
+                                <button onclick="del_game_playway('${doc.id}')">刪除</button> </td>
+                             </tr>`;
+                            });
+                        })
+                        .catch((err) => {
+                            console.log('Error getting documents', err);
+                        });
+                    res.send(html);
+                })();
+                break;
+            case "/CMS/money":
+                (async () => {
+                    res.header("Content-Type", "text/html");
+                    let html = '';
+                    await db.collection('money').get()
+                        .then((snapshot) => {
+                            snapshot.forEach((doc) => {
+                                // console.log(doc.id, '=>' , doc.data());
+                                html += `<tr id="moneytr-${doc.id}">
+                            <td>${doc.id}</td>
+                            <td>${doc.data().user_id}</td>
+                            <td>${doc.data().money}</td>
+                            <td>${new Date(doc.data().date._seconds * 1000)}</td>
+                            <td><button onclick="edit_money('${doc.id}','${doc.data().user_id}','${doc.data().money}','${new Date(doc.data().date._seconds * 1000)}')" >修改</button>
+                                <button onclick="del_money('${doc.id}')">刪除</button> </td>
                              </tr>`;
                             });
                         })
@@ -99,29 +152,77 @@ app.all('*', (req, res, next) => {
                         account: req.body.account,
                         name: req.body.name,
                         email: req.body.email,
-                        money:req.body.money,
+                        money: req.body.money,
                         password: '123456',
                         registertime: FieldValue.serverTimestamp()
                     });
                     res.send(true);
-                    
+
                 })()
                 break;
-        
+            case "/CMS/game_playway/add":
+                (async () => {
+                    await db.collection('game_playway').add({
+                        banker_id: req.body.banker_id,
+                        banker_money: req.body.banker_money,
+                        player1_id: req.body.player1_id,
+                        player1_money: req.body.player1_money,
+                        player2_id: req.body.player2_id,
+                        player2_money: req.body.player2_money,
+                        date: FieldValue.serverTimestamp()
+                    });
+                    res.send(true);
+
+                })()
+                break;
+            case "/CMS/money/add":
+                (async () => {
+                    await db.collection('money').add({
+                        user_id: req.body.user_id,
+                        money: req.body.money,
+                        date: FieldValue.serverTimestamp()
+                    });
+                    res.send(true);
+                })()
+                break;
             default:
                 break;
         }
-        
-    }else if (req.method.toLowerCase() == 'put'){
+
+    } else if (req.method.toLowerCase() == 'put') {
         switch (req.path) {
             case "/CMS/users/edit":
-                (async ()=>{
+                (async () => {
                     const userRef = db.collection('users').doc(req.body.id);
                     await userRef.update({
                         account: req.body.account,
                         name: req.body.name,
                         email: req.body.email,
-                        money:req.body.money,
+                        money: req.body.money,
+                    });
+                    res.send(true);
+                })();
+                break;
+            case "/CMS/game_playway/edit":
+                (async () => {
+                    const userRef = db.collection('game_playway').doc(req.body.id);
+                    await userRef.update({
+                        banker_id: req.body.banker_id,
+                        banker_money: req.body.banker_money,
+                        player1_id: req.body.player1_id,
+                        player1_money: req.body.player1_money,
+                        player2_id: req.body.player2_id,
+                        player2_money: req.body.player2_money
+                    });
+                    res.send(true);
+                })();
+                break;
+            case "/CMS/money/edit":
+                (async () => {
+                    const userRef = db.collection('money').doc(req.body.id);
+                    await userRef.update({
+                        user_id: req.body.user_id,
+                        money: req.body.money
                     });
                     res.send(true);
                 })();
@@ -129,7 +230,31 @@ app.all('*', (req, res, next) => {
             default:
                 break;
         }
-        
+
+
+    } else if (req.method.toLowerCase() == 'delete') {
+        switch (req.path) {
+            case "/CMS/users/del":
+                (async () => {
+                    await db.collection('users').doc(req.body.id).delete();
+                    res.send(true);
+                })();
+                break;
+            case "/CMS/game_playway/del":
+                (async () => {
+                    await db.collection('game_playway').doc(req.body.id).delete();
+                    res.send(true);
+                })();
+                break;
+            case "/CMS/money/del":
+                (async () => {
+                    await db.collection('money').doc(req.body.id).delete();
+                    res.send(true);
+                })();
+                break;
+            default:
+                break;
+        }
 
     }
     else {
