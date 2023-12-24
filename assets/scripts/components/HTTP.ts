@@ -4,7 +4,7 @@ export default class HTTP {
     
     // 發送 HTTP 請求的方法
     // 可以傳入路徑（path）、資料（data）、回調函數（handler）、額外的 URL（extraUrl）
-    getRequset(path?, data?, handler?, extraUrl?) {
+    sendRequset(path?, data?, handeler?, extraUrl?) {
         // 如果 extraUrl 未提供，則使用預設的 URL
         if (extraUrl == null) {
             extraUrl = this.URL;
@@ -44,13 +44,15 @@ export default class HTTP {
                     let ret = JSON.parse(xhr.responseText);
 
                     // 如果提供了回調函數，則執行回調函數
-                    if (handler != null) {
-                        handler(ret);
-                        console.log("觸發時間: " + (new Date()).toLocaleTimeString() + " 請求url: " + reqUrl + " 響應回調函數: " + handler.name);
+                    if (handeler != null) {
+                        handeler(ret);
+                        console.log("觸發時間: " + (new Date()).toLocaleTimeString() + " 請求url: " + reqUrl + " 響應回調函數: " + handeler.name);
                     }
                 } catch (error) {
-                    console.log("出現例外了!");
+                    console.log(error);
                 }
+            } else {
+                console.log(xhr.readyState);
             }
         };
 
