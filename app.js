@@ -65,8 +65,6 @@ app.all('*', (req, res, next) => {
                                 // console.log(doc.id, '=>' , doc.data());
 
                                 html += `<tr id="usertr-${doc.id}">
-
-                    
                             <td>${doc.id}</td>
                             <td>${doc.data().account}</td>
                             <td>${doc.data().name}</td>
