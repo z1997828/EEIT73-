@@ -1,15 +1,15 @@
 import { waittingConn } from "../waitingConn";
 import Alert from "./Alert";
 import HTTP from "./HTTP"
-import NetUtil from "./NetUtil";
+import SocketUtil from "./SocketUtil";
+import NetUtil from "./SocketUtil";
 
 export default class gameManager{
     public static readonly Instance: gameManager = new gameManager()
     
     
-    http: HTTP = null;
-    NetUtil:NetUtil = null;
-    ServerInfo = null;
+    http:HTTP = null;
+    socketUtil:SocketUtil = null;
     loading:waittingConn = null;
     alert:Alert = null;
 }

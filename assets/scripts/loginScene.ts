@@ -1,4 +1,6 @@
 import { _decorator, Component, director, Node ,AudioSource,AudioClip, find, EditBox } from 'cc';
+import gameManager from './components/gameManager';
+import SocketUtil from './components/SocketUtil';
 const { ccclass, property } = _decorator;
 
 @ccclass('login')
@@ -17,7 +19,9 @@ export class loginScene extends Component {
         
         this.singUp.active = false;
         this.singIn.active = false;
-        let ws = new WebSocket("ws://127.0.0.1:3001")
+        gameManager.Instance.socketUtil = new SocketUtil();
+        gameManager.Instance.socketUtil.connect();
+        
         
     }
 
@@ -80,9 +84,15 @@ public onMemberLogin (){
 
     // 確定登入按鈕
     public onConfirmLogin (){
+        
         let account = this.accountInput.string
         let passwd = this.passwdInput.string
-        console.log("account:" + account + "password" + passwd)
+        if(account.length < 1 || passwd.length < 1) {
+            console.log("請輸入帳號以及密碼")
+            return;
+        }
+       
+        console.log("確定按鈕被點擊");
     }
     // 找回密碼按鈕
     public onFindpw (){
