@@ -72,11 +72,6 @@ app.all('*', (req, res, next) => {
                             <td>${doc.data().money}</td>
                             <td>${new Date(doc.data().registertime._seconds * 1000)}</td>
                             <td><button onclick="edit_user('${doc.id}','${doc.data().account}','${doc.data().name}','${doc.data().email}','${doc.data().money}','${new Date(doc.data().registertime._seconds * 1000)}')" >修改</button>
-                            <td>${Date(doc.data().registertime)}</td>
-                            <td><button onclick="edit_user('${doc.id}','${doc.data().account}','${doc.data().name}','${doc.data().email}','${doc.data().money}','${Date(doc.data().registertime)}')" >修改</button>
-                            <td><button onclick="edit_user('${doc.id}')" >修改</button>
-
-
                                 <button onclick="del_user('${doc.id}')">刪除</button> </td>
                              </tr>`;
                             });
