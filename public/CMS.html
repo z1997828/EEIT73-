@@ -5,6 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>後台管理系統</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"
+        integrity="sha512-qzgd5cYSZcosqpzpn7zF2ZId8f/8CHmFKZ8j7mU4OUXTNRd5g+ZHBPsgKEwoqxCtdQvExE5LprwwPAgoicguNg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.default.min.css"
+        integrity="sha512-wghhOJkjQX0Lh3NSWvNKeZ0ZpNn+SPVXX1Qyc9OCaogADktxrBiBdKGDoqVUOyhStvMBmJQ8ZdMHiR3wuEq8+w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="./CMS-js/CMS_users.js"></script>
     <script src="./CMS-js/CMS_game_playway.js"></script>
     <script src="./CMS-js/CMS_money.js"></script>
@@ -65,14 +73,14 @@
             width: 100%;
         }
 
-        th,
+        .tablesorter th,
         td {
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
         }
 
-        th {
+        .tablesorter th {
             text-align: center;
             background-color: #f2f2f2;
         }
@@ -88,11 +96,11 @@
             <li id="money">儲值資料</li>
         </ul>
     </div>
-    <div id="content">
+    <div id="content" style="margin-top: 20px;">
         <h1>歡迎來到後台管理系統</h1>
         <div id="users-content" style="display: none;">
             <button id="add-user">新增</button>
-            <table>
+            <table id="users-table" class="tablesorter">
                 <thead>
                     <tr>
                         <th>玩家ID</th>
@@ -102,7 +110,6 @@
                         <th>玩家金錢</th>
                         <th>創建時間</th>
                         <th>修改/刪除</th>
-
                     </tr>
                 </thead>
                 <tbody id="users-tbody">
@@ -112,7 +119,7 @@
         </div>
         <div id="game_playway-content" style="display: none;">
             <button id="add-game_playway">新增</button>
-            <table>
+            <table id="game_playway-table" class="tablesorter">
                 <thead>
                     <tr>
                         <th>遊戲ID</th>
@@ -133,7 +140,7 @@
         </div>
         <div id="money-content" style="display: none;">
             <button id="add-money">新增</button>
-            <table>
+            <table id="money-table" class="tablesorter">
                 <thead>
                     <tr>
                         <th>交易編號ID</th>
@@ -150,7 +157,7 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     <script>
         $(document).ready(function () {
             $("#sidebar-toggle").click(function () {
@@ -217,7 +224,7 @@
                     <button  onclick="add_money_cancel()">取消</button></td>`);
 
             })
-            
+           
             $('#users').click();
             refresh_userUI();
             refresh_game_playwayUI();

@@ -1,9 +1,13 @@
 function refresh_userUI() {
 $.get("/CMS/users", function (e) {
+    
     $('#users-tbody').empty();
     $('#users-tbody').append(`<tr id="add-user-tr">
         </tr>`);
     $('#users-tbody').append(e);
+    
+    $("#users-table" ).tablesorter (); 
+    $("#users-table" ).trigger('update');
 });
 }
 

@@ -4,6 +4,8 @@ $.get("/CMS/money", function (e) {
     $('#money-tbody').append(`<tr id="add-money-tr">
         </tr>`);
     $('#money-tbody').append(e);
+    $("#money-table" ).tablesorter (); 
+    $("#money-table" ).trigger('update');
 });
 }
 

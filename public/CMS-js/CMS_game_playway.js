@@ -4,6 +4,8 @@ $.get("/CMS/game_playway", function (e) {
     $('#game_playway-tbody').append(`<tr id="add-game_playway-tr">
         </tr>`);
     $('#game_playway-tbody').append(e);
+    $("#game_playway-table" ).tablesorter (); 
+    $("#game_playway-table" ).trigger('update');
 });
 }
 
