@@ -29,7 +29,7 @@ export class loginScene extends Component {
 
     
     public onTest (){
-        director.loadScene("hall")
+        director.loadScene("hall");
     }
 
     

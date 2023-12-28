@@ -19,7 +19,7 @@ export default class SocketUtil {
         this.sio = io.connect("http://127.0.0.1:3000", opts)
         this.sio.on("connect", (data) => {
             console.log(this.ip)
-            console.log("connect")
+            console.log("服務端：connect success!")
             this.connected = true
             this.StartHeartBeat();
         })
