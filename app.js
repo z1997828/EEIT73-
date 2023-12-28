@@ -261,7 +261,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/get_serverinfo", (req, res) => {
-    location.href="/"
+    location.href = "/"
 });
 
 
@@ -274,14 +274,15 @@ app.get("/get_serverinfo", (req, res) => {
 // 一切就緒，開始接受用戶端連線
 // app.listen(process.env.PORT);
 http.listen(3000);
-sio.on('connection',(socket)=>{
-    console.log("socket連接成功")
-    socket.on("game_ping",()=>{
+sio.on('connection', (socket) => {
+    console.log("客戶端:有人連接到Server")
+    socket.on("game_ping", () => {
         socket.emit("game_pong")
     })
-sio.on('disconnection',()=>{
-    console.log("socket取消連接")
-})
+    socket.on("disconnect", () => {
+        console.log("客戶端:有人離開Server")
+    })
+
 
     // socket.on("login",(data)=>{
     //     if(data.name == "sa" && data.pwd == "123"){

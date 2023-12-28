@@ -1,4 +1,6 @@
 import { _decorator, Component, Node,AudioSource,Button,SpriteFrame, Label  } from 'cc';
+import gameManager from './components/gameManager';
+import SocketUtil from './components/SocketUtil';
 const { ccclass, property } = _decorator;
 
 @ccclass('hall')
@@ -28,7 +30,8 @@ export class hallScene extends Component {
         this.setting.active = false;
         this.face.active = false;
         this.openMenu = false;
-        this.name123.string = "23456"
+        gameManager.Instance.socketUtil = new SocketUtil();
+        gameManager.Instance.socketUtil.connect();
     }
 
     // ----------上方功能列-------------
