@@ -1,10 +1,7 @@
 function refresh_game_playwayUI() {
 $.get("/CMS/game_playway", function (e) {
     $('#game_playway-tbody').empty();
-    $('#game_playway-tbody').append(`<tr id="add-game_playway-tr">
-        </tr>`);
     $('#game_playway-tbody').append(e);
-    $("#game_playway-table" ).tablesorter (); 
     $("#game_playway-table" ).trigger('update');
 });
 }
@@ -26,6 +23,7 @@ if ($("#add-game_playway-banker-id").val().trim() != "" && $("#add-game_playway-
         url: "/CMS/game_playway/add",
         data: game_playway,
         success: function (res) {
+            $("#add-game_playway-tr").empty();
             refresh_game_playwayUI();
         }
     })

@@ -9,6 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"
         integrity="sha512-qzgd5cYSZcosqpzpn7zF2ZId8f/8CHmFKZ8j7mU4OUXTNRd5g+ZHBPsgKEwoqxCtdQvExE5LprwwPAgoicguNg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>$.tablesorter.addWidget({id:"staticRow",format:function(a){if(typeof $(a).data("hasSorted")=="undefined"){$(a).data("hasSorted",true);$("tbody .static",a).each(function(){$(this).data("tableindex",$(this).index())})}else{var b=true;while(b){b=false;$("tbody .static",a).each(function(){var c=$(this).data("tableindex");if(c!=$(this).index()){b=true;var d=$(this).detach();var e=$("tbody tr",a).length;if(c>=e){d.appendTo($("tbody",a))}else if(c==0){d.prependTo($("tbody",a))}else{d.insertBefore($("tbody tr:eq("+c+")",a))}}})}}}})</script>
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.default.min.css"
         integrity="sha512-wghhOJkjQX0Lh3NSWvNKeZ0ZpNn+SPVXX1Qyc9OCaogADktxrBiBdKGDoqVUOyhStvMBmJQ8ZdMHiR3wuEq8+w=="
@@ -112,6 +113,8 @@
                         <th>修改/刪除</th>
                     </tr>
                 </thead>
+                <tr id="add-user-tr">
+                </tr>
                 <tbody id="users-tbody">
 
                 </tbody>
@@ -133,6 +136,8 @@
                         <th>修改/刪除</th>
                     </tr>
                 </thead>
+                <tr id="add-game_playway-tr">
+                </tr>
                 <tbody id="game_playway-tbody">
 
                 </tbody>
@@ -150,6 +155,8 @@
                         <th>修改/刪除</th>
                     </tr>
                 </thead>
+                <tr id="add-money-tr">
+                </tr>
                 <tbody id="money-tbody">
 
                 </tbody>
@@ -225,6 +232,9 @@
 
             })
            
+            $("#users-table" ).tablesorter ({ widgets:['staticRow']}); 
+            $("#game_playway-table" ).tablesorter ({ widgets:['staticRow']}); 
+            $("#money-table" ).tablesorter ({ widgets:['staticRow']}); 
             $('#users').click();
             refresh_userUI();
             refresh_game_playwayUI();

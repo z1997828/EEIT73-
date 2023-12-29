@@ -1,12 +1,7 @@
 function refresh_userUI() {
 $.get("/CMS/users", function (e) {
-    
     $('#users-tbody').empty();
-    $('#users-tbody').append(`<tr id="add-user-tr">
-        </tr>`);
     $('#users-tbody').append(e);
-    
-    $("#users-table" ).tablesorter (); 
     $("#users-table" ).trigger('update');
 });
 }
@@ -25,6 +20,7 @@ if ($("#add-user-account").val().trim() != "" && $("#add-user-name").val().trim(
         url: "/CMS/users/add",
         data: users,
         success: function (res) {
+            $("#add-user-tr").empty();
             refresh_userUI();
         }
     })
