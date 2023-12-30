@@ -1,9 +1,8 @@
 function refresh_moneyUI() {
 $.get("/CMS/money", function (e) {
     $('#money-tbody').empty();
-    $('#money-tbody').append(`<tr id="add-money-tr">
-        </tr>`);
     $('#money-tbody').append(e);
+    $("#money-table" ).trigger('update');
 });
 }
 
@@ -18,6 +17,7 @@ if ($("#add-money-user_id").val().trim() != "" && $("#add-money-money").val().tr
         url: "/CMS/money/add",
         data: money,
         success: function (res) {
+            $("#add-money-tr").empty();
             refresh_moneyUI();
         }
     })
