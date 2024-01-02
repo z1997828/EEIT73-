@@ -47,7 +47,9 @@ export default class Alert extends Component {
 
     }
 
-    
+    onDestroy() {
+        gameManager.Instance.alert = null;
+    }
 }
 
 

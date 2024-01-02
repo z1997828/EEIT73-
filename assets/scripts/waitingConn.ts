@@ -1,4 +1,4 @@
-import { _decorator, Component, find, Node } from 'cc';
+import { _decorator, Component, find, Node, tween } from 'cc';
 import gameManager from './components/gameManager';
 const { ccclass, property } = _decorator;
 
@@ -9,9 +9,9 @@ export class waittingConn extends Component {
     
     isShow = false;
     onLoad() {
-        this.loading = find("Canvas/waitingConn");
-        this.spin = this.loading.getChildByName("spin")
+        this.loading.active = false;
         gameManager.Instance.loading = this;
+        
     }
     
     show(){
@@ -25,13 +25,13 @@ export class waittingConn extends Component {
     }
    
     start() {
-
+       
+            
+        
     }
 
     update(dt) {
-        if (this.isShow) {
-            this.spin.angle = this.spin.angle - 45 * dt
-        }
+        this.spin.angle = this.spin.angle - 45 * dt;
     }
     
     onDestroy() {

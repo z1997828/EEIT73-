@@ -16,7 +16,7 @@ export default class loadScene extends Component {
 
     loadRes(){
         resources.loadDir("UI",(com,total)=>{
-            console.log(com / total)
+            // console.log(com / total)
             this.pb.progress = com / total;
             this.loadLabel.string = "正在載入資源:" + Math.floor(this.pb.progress* 100) + "%";
 

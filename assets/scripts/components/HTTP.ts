@@ -4,7 +4,7 @@ export default class HTTP {
     
     // 發送 HTTP 請求的方法
     // 可以傳入路徑（path）、資料（data）、回調函數（handler）、額外的 URL（extraUrl）
-    sendRequset(path?, data?, handeler?, extraUrl?) {
+    getRequset(path?, data?, handeler?, extraUrl?) {
         // 如果 extraUrl 未提供，則使用預設的 URL
         if (extraUrl == null) {
             extraUrl = this.URL;
@@ -22,17 +22,16 @@ export default class HTTP {
     }
 
         // 組合最終的請求 URL
-        let reqUrl = extraUrl  + path  + encodeURI(str);
+        var url = extraUrl  + path  + encodeURI(str);
 
         // 記錄請求的日誌
-        let gameLog ="觸發時間: " + (new Date()).toLocaleTimeString() + " 請求url: " + reqUrl ;
+        let gameLog ="觸發時間: " + (new Date()).toLocaleTimeString() + " 請求url: " + url ;
         console.log(gameLog);
 
-        console.log("reqUrl: ", reqUrl);
+        console.log("reqUrl: ", url);
 
         // 使用 XMLHttpRequest 物件進行 HTTP 請求
         let xhr = new XMLHttpRequest();
-        
     
         // 監聽狀態改變事件
         xhr.onreadystatechange = function () {
@@ -46,21 +45,52 @@ export default class HTTP {
                     // 如果提供了回調函數，則執行回調函數
                     if (handeler != null) {
                         handeler(ret);
-                        console.log("觸發時間: " + (new Date()).toLocaleTimeString() + " 請求url: " + reqUrl + " 響應回調函數: " + handeler.name);
+                        console.log("觸發時間: " + (new Date()).toLocaleTimeString() + " 請求url: " + url + " 響應回調函數: " + handeler.name);
+                        
                     }
                 } catch (error) {
                     console.log(error);
                 }
             } else {
                 console.log(xhr.readyState);
+                console.log(xhr.status);
+                
+                
             }
         };
 
         // 開啟 GET 請求，非同步
-        xhr.open("GET", reqUrl, true);
+        xhr.open("GET", url, true);
         xhr.send();
+
+    
 
         // 返回 XMLHttpRequest 物件，以便後續操作或監聽
         return xhr;
+    }
+    postRequset(path?, data?, handeler?) {
+        // 如果 extraUrl 未提供，則使用預設的 URL
+        if (data == null) {
+           data = {}
+        }
+        // 使用 XMLHttpRequest 物件進行 HTTP 請求
+        let xhr = new XMLHttpRequest();
+
+        // 監聽狀態改變事件
+        xhr.onreadystatechange = function () {
+            // 當請求完成且狀態碼為成功時執行
+            if (xhr.readyState === 4 && (xhr.status >= 200 && xhr.status < 400)) {
+               let ret = xhr.responseText;
+               console.log(ret);
+               handeler(ret);
+            } else {
+                console.log(xhr.readyState);
+                console.log(xhr.status);
+            }
+        };
+
+        // 開啟 GET 請求，非同步
+        xhr.open("POSt", path);
+        xhr.send();
     }
 }
