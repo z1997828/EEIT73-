@@ -49,7 +49,7 @@ export default class SocketUtil {
                 this.sio.emit("game_ping")
                 console.log("game_ping")
             }
-        }, 2000)
+        }, 5000)
 
         setInterval(()=>{
             if(this.sio && this.connected){
