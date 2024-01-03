@@ -10,7 +10,7 @@ let db = admin.firestore();
 const FieldValue = admin.firestore.FieldValue;
 
 
-exports.getAccount = async function getData(accountValue, passwordValue){
+exports.getData = async function getData(accountValue, passwordValue){
     await db.collection('users')
     
     .where("account", "==", accountValue)
