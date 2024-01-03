@@ -65,7 +65,9 @@ app.post('/getPost', (req, res) => {
 
 http.listen(3000);
 sio.on('connection', (socket) => {
-  console.log("客戶端:有人連接到Server")
+  let clientIp = socket.handshake.address;
+	socket.emit('connected', '' + clientIp);
+	console.log('a user connected,ip = ' + clientIp);
   socket.on("game_ping", () => {
     socket.emit("game_pong")
   })
