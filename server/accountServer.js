@@ -36,14 +36,25 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
   let account = req.query.account;
   let password = req.query.password;
-
-  checkDB.getData(account, password,(err,row)=>{
-    
+  
+  
+  checkDB.getData(account, password)
+  .then((data) => {
+      if (data.length === 0) {
+        console.log("用戶不存在");
+        res.send([]);
+      }else{
+        console.log(data);
+        res.send(data);
+      }
+  })
+  .catch((error) => {
+      console.error("發生錯誤:", error);
   });
+
 });
 app.get('/get_serverinfo', (req, res) => {
   const data = { version: '0.0.1' };
-  console.log(data);
   res.send(data);
 });
 

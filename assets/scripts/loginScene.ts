@@ -108,7 +108,14 @@ export class loginScene extends Component {
         gameManager.Instance.http.getRequset(Api.login, data, (ret) => {
             
             console.log(ret)
-            
+            if(ret.length === 0){
+                gameManager.Instance.loading.hide();
+                gameManager.Instance.alert.show("登入失敗", "帳號或密碼錯誤");
+            }else{
+                gameManager.Instance.loading.hide();
+                console.log(JSON.stringify(ret.name) + "登入成功")
+                director.loadScene("hall")
+            }
         })
 
     }
