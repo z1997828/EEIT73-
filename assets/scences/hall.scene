@@ -185,7 +185,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 794.3718592964824,
+    "_orthoHeight": 472.47058823529414,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -4383,7 +4383,7 @@
         "__id__": 144
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 150
@@ -5689,7 +5689,7 @@
         "__id__": 167
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 236
@@ -8873,7 +8873,7 @@
         "__id__": 253
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 271
@@ -10197,7 +10197,7 @@
         "__id__": 317
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 325
@@ -12196,7 +12196,7 @@
         "__id__": 345
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 351
@@ -13173,7 +13173,7 @@
         "__id__": 378
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 386
