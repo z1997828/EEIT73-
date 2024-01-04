@@ -6,6 +6,7 @@ admin.initializeApp({
 
 const { initializeApp } = require('firebase/app');
 const { getAuth, createUserWithEmailAndPassword } = require('firebase/auth');
+const bcrypt = require('bcryptjs')
 
 const firebaseConfig = {
     apiKey: "AIzaSyCEEb5PlBygA9_pTl38ce19A5vtZsKUqdA",
@@ -22,30 +23,39 @@ const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 let db = admin.firestore();
 
-const email = 'happy69@happy.com';
+const email = 'happy68@happy.com';
 const password = '666666';
 const additionalData ={
-    username : 'happy69'
+    username : 'happy68'
 }
 
-createUserWithEmailAndPassword(auth,email, password)
+createUserWithEmailAndPassword(auth, email, password)
   .then((userCredential) => {
-    // 新用戶註冊成功，可以在這裡處理成功的邏輯
     const user = userCredential.user;
-    const username = additionalData.username; //擷取新用戶的名稱
-    //額外將資料寫入db
-    db.collection('users').doc(username).set({
-      email: email,
-      username: username,
-    })
-    .then(() => {
-      console.log('用戶資料寫入成功');
-    })
-    .catch((error) => {
-      console.error('寫入用戶資料失敗', error);
-    });
+    const username = additionalData.username; // 擷取新用戶的名稱
 
-    console.log('註冊成功', user);
+    // 使用bcrypt加密
+    bcrypt.hash(password, 10, (err, hashedPassword) => {
+      if (err) {
+        console.error('密碼加密失敗', err);
+        return;
+      }
+
+      // 額外將資料寫入db - 在此處寫入資料庫
+      db.collection('users').doc(username).set({
+        email: email,
+        username: username,
+        password: hashedPassword, // 存儲加密後的密碼
+      })
+      .then(() => {
+        console.log('用戶資料寫入成功');
+      })
+      .catch((error) => {
+        console.error('寫入用戶資料失敗', error);
+      });
+
+      console.log('註冊成功', user);
+    });
   })
   .catch((error) => {
     // 處理註冊失敗的情況
