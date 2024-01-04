@@ -9,7 +9,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"
         integrity="sha512-qzgd5cYSZcosqpzpn7zF2ZId8f/8CHmFKZ8j7mU4OUXTNRd5g+ZHBPsgKEwoqxCtdQvExE5LprwwPAgoicguNg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>$.tablesorter.addWidget({id:"staticRow",format:function(a){if(typeof $(a).data("hasSorted")=="undefined"){$(a).data("hasSorted",true);$("tbody .static",a).each(function(){$(this).data("tableindex",$(this).index())})}else{var b=true;while(b){b=false;$("tbody .static",a).each(function(){var c=$(this).data("tableindex");if(c!=$(this).index()){b=true;var d=$(this).detach();var e=$("tbody tr",a).length;if(c>=e){d.appendTo($("tbody",a))}else if(c==0){d.prependTo($("tbody",a))}else{d.insertBefore($("tbody tr:eq("+c+")",a))}}})}}}})</script>
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.default.min.css"
         integrity="sha512-wghhOJkjQX0Lh3NSWvNKeZ0ZpNn+SPVXX1Qyc9OCaogADktxrBiBdKGDoqVUOyhStvMBmJQ8ZdMHiR3wuEq8+w=="
@@ -79,6 +78,8 @@
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
+            word-break: break-all;   
+            white-space: pre-wrap; 
         }
 
         .tablesorter th {
@@ -95,6 +96,7 @@
             <li id="users">玩家資料</li>
             <li id="game_playway">遊戲資料</li>
             <li id="money">儲值資料</li>
+            <li id="feedback">意見反饋</li>
         </ul>
     </div>
     <div id="content" style="margin-top: 20px;">
@@ -162,6 +164,39 @@
                 </tbody>
             </table>
         </div>
+        <div id="feedback-content" style="display: none;">
+            <table id="feedback-table" class="tablesorter">
+                <thead>
+                    <tr>
+                        <th>玩家帳號</th>
+                        <th>留言/回應</th>
+                        <th>日期</th>
+                    </tr>
+                </thead>
+                <tbody id="feedback-tbody">
+                    <tr>
+                        <td rowspan="2">useraccount</td>
+                        <td>留言1</td>
+                        <td>留言1時間</td>
+                    </tr>
+
+                    <tr class="tablesorter-childRow">
+                        <td>回應1</td>
+                        <td>回應1時間</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">Andy</td>
+                        <td>留言2</td>
+                        <td>留言2時間</td>
+                    </tr>
+
+                    <tr class="tablesorter-childRow">
+                        <td>回應2</td>
+                        <td>回應2時間</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
 
@@ -187,6 +222,9 @@
             });
             $("#money").click(function () {
                 showContent("money-content");
+            });
+            $("#feedback").click(function () {
+                showContent("feedback-content");
             });
 
             function showContent(contentId) {
@@ -231,14 +269,24 @@
                     <button  onclick="add_money_cancel()">取消</button></td>`);
 
             })
-           
-            $("#users-table" ).tablesorter ({ widgets:['staticRow']}); 
-            $("#game_playway-table" ).tablesorter ({ widgets:['staticRow']}); 
-            $("#money-table" ).tablesorter ({ widgets:['staticRow']}); 
+
+            $("#users-table").tablesorter();
+            $("#game_playway-table").tablesorter();
+            $("#money-table").tablesorter();
+            $("#feedback-table").tablesorter();
             $('#users').click();
             refresh_userUI();
             refresh_game_playwayUI();
             refresh_moneyUI();
+            function refresh_feedbackUI() {
+                $.get("/CMS/feedback", function (e) {
+                    
+                    $('#feedback-tbody').empty();
+                    $('#feedback-tbody').append(e);
+                    $("#feedback-table").trigger('update');
+                });
+            }
+            refresh_feedbackUI();
         });
 
 

@@ -117,6 +117,36 @@ app.all('*', (req, res, next) => {
                     res.send(html);
                 })();
                 break;
+            case "/CMS/feedback":
+                (async () => {
+                    res.header("Content-Type", "text/html");
+                    let html = '';
+                    await db.collection('feedback').get()
+                        .then((snapshot) => {
+                            snapshot.forEach((doc) => {
+                                // console.log(doc.id, '=>' , doc.data());
+                                html += `<tr id="feedbacktr-${doc.id}">
+                                          <td rowspan="${doc.data().message.length*2}">${doc.id}</td>`
+                                doc.data().message.forEach((m)=>{
+                                    html+=`<td>${m.user_message}</td>
+                                            <td>${new Date(m.user_message_date._seconds * 1000)}</td> 
+                                        </tr>
+                                        <tr class="tablesorter-childRow">
+                                            <td>${m.reply_message}</td>
+                                            <td>${new Date(m.reply_message_date._seconds * 1000)}</td>
+                                        </tr>
+                                        <tr class="tablesorter-childRow">`
+                                    // console.log(m.user_message +":"+m.reply_message);
+                                })
+                                html.slice(0,-33)
+                            });
+                        })
+                        .catch((err) => {
+                            console.log('Error getting documents', err);
+                        });
+                    res.send(html);
+                })();
+                break;
             default:
                 break;
         }
@@ -237,6 +267,6 @@ app.all('*', (req, res, next) => {
         next();
     }
 })
-http.listen(3000 ,()=>{
+http.listen(3000, () => {
     console.log("Web伺服器就緒，開始接受用戶端連線.");
 });
