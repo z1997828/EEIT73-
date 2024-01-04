@@ -1,4 +1,4 @@
-import { _decorator, Component, Node,AudioSource,Button,SpriteFrame, Label  } from 'cc';
+import { _decorator, Component, Node,AudioSource,Button,SpriteFrame, Label, director  } from 'cc';
 import gameManager from './components/gameManager';
 import SocketUtil from './components/SocketUtil';
 const { ccclass, property } = _decorator;
@@ -62,12 +62,14 @@ export class hallScene extends Component {
     public onInRookieRoom() {
         
         console.log("確定按鈕被點擊");
+        director.loadScene('gameroom');
     }
 
     // 進入高級場按鈕
 
     public onInMasterRoom() {
         console.log("確定按鈕被點擊");
+        director.loadScene('gameroom');
     }
     // ----------下方功能列-------------
 

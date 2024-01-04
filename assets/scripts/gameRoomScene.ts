@@ -1,4 +1,5 @@
-import { _decorator, Component, Node,AudioSource,Button,SpriteFrame} from 'cc';
+import { _decorator, Component, Node,AudioSource,Button,SpriteFrame, Prefab} from 'cc';
+import GameCtrl from './components/GameCtrl';
 const { ccclass, property } = _decorator;
 
 @ccclass('gameroom')
@@ -9,18 +10,28 @@ export class gameRoomScene extends Component {
     @property(SpriteFrame)onImage: SpriteFrame = null;
     @property(SpriteFrame)offImage: SpriteFrame = null;
     @property(AudioSource) bgMusic: AudioSource = null;
+    @property(Prefab) pokerPrefab:Prefab = null;
+    @property(Node) pokerContainer:Node = null;
 
-
-    
     public openMenu = false;
     private MusicIsOn: boolean = !false;
     private AudioIsOn: boolean = !false;
 
+    private m_GameCtrl:GameCtrl = null;
+
     onLoad() {
         this.openMenu = false;
         this.setting.active = false;
+       
     }
 
+    start() {
+        
+        this.m_GameCtrl = new GameCtrl();
+        // this.m_GameCtrl.init(this.pokerPrefab);
+        this.m_GameCtrl.createCard();
+        this.m_GameCtrl.shuffleCard();
+    }
 // 返回按鈕
 public onBack() {
     this.setting.active = false;
