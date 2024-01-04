@@ -9,8 +9,8 @@ var bucket = admin.storage().bucket();
 /*
     上述為初始化資料庫，及指定資料庫網址
 */
-async function uploadFile(filename){
-    await bucket.upload(filename,{
+async function uploadAvatarToFirestore(filename, username){
+    const uploadedFile = await bucket.upload(filename,{
         gzip:true,
         metadata:{
             metadata:{
@@ -19,6 +19,22 @@ async function uploadFile(filename){
             cacheControl: ' public,max-age=31536000',
         },
     });
-    console.log(`${filename} uploaded.`);
+
+const db = admin.firestore();
+
+
+const file=uploadedFile[0];
+const downloadURL = await file.getSignedUrl({
+    action: 'read',
+    expires: '01-01-2099'
+});
+
+const updateimg={
+    avatar: downloadURL
 }
-uploadFile('C:/Users/vans9/Downloads/train.jpg').catch(console.error);
+
+const userRef = db.collection('users').doc(username);
+await userRef.update(updateimg)
+}
+//此第二個參數為 username 為指定的用戶名稱
+uploadAvatarToFirestore('C:/Users/vans9/Downloads/ttt.jpg', "happy68").catch(console.error);

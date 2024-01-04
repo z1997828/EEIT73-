@@ -23,16 +23,18 @@ const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 let db = admin.firestore();
 
-const email = 'happy68@happy.com';
-const password = '666666';
-const additionalData ={
-    username : 'happy68'
+const username = 'happy68';//獲取使用者輸入的用戶名稱
+const email = 'happy68@happy.com';//獲取使用者輸入的email
+const password = '666666'; //獲取使用者輸入的密碼
+const confirmPassword = '666666' //獲取輸入的確認密碼
+if(password !== confirmPassword){
+  console.error('確認密碼與密碼不相符');
+  return;
 }
 
 createUserWithEmailAndPassword(auth, email, password)
   .then((userCredential) => {
     const user = userCredential.user;
-    const username = additionalData.username; // 擷取新用戶的名稱
 
     // 使用bcrypt加密
     bcrypt.hash(password, 10, (err, hashedPassword) => {
