@@ -36,5 +36,6 @@ const updateimg={
 const userRef = db.collection('users').doc(username);
 await userRef.update(updateimg)
 }
+//第一個path 為用戶端大頭貼上傳位址
 //此第二個參數為 username 為指定的用戶名稱
 uploadAvatarToFirestore('C:/Users/vans9/Downloads/ttt.jpg', "happy68").catch(console.error);
