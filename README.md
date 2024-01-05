@@ -9,7 +9,7 @@ node accountServer.js ，即可在cocos creater上運行遊戲
 如果伺服器沒打開，畫面則會卡在連接伺服器
 
 
-12345
+12345 678
 
 npm init -y
 
