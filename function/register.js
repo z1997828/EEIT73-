@@ -22,11 +22,12 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 let db = admin.firestore();
+const firebaseTimestamp = admin.firestore.FieldValue.serverTimestamp();
 
-const username = 'happy68';//獲取使用者輸入的用戶名稱
-const email = 'happy68@happy.com';//獲取使用者輸入的email
-const password = '666666'; //獲取使用者輸入的密碼
-const confirmPassword = '666666' //獲取輸入的確認密碼
+const username = 'happy33';//獲取使用者輸入的用戶名稱
+const email = 'happy33@happy.com';//獲取使用者輸入的email
+const password = '333333'; //獲取使用者輸入的密碼
+const confirmPassword = '333333' //獲取輸入的確認密碼
 if(password !== confirmPassword){
   console.error('確認密碼與密碼不相符');
   return;
@@ -48,6 +49,8 @@ createUserWithEmailAndPassword(auth, email, password)
         email: email,
         username: username,
         password: hashedPassword, // 存儲加密後的密碼
+        money: 8888,
+        regtime: firebaseTimestamp,
       })
       .then(() => {
         console.log('用戶資料寫入成功');
@@ -65,4 +68,37 @@ createUserWithEmailAndPassword(auth, email, password)
     const errorMessage = error.message;
     console.error('註冊失敗', errorCode, errorMessage);
   });
-
+/*
+//另外呼叫一個時間戳記，提供給html,js使用																									
+async function fetchData() {
+  try {
+    const snapshot = await db.collection('users').doc(username).get();
+    const userData = snapshot.data();
+    
+    if (userData) {
+      const timestampFromFirestore = userData.regtime;
+      const dateFromFirestore = timestampFromFirestore.toDate();
+      const formattedFirestoreDate = dateFromFirestore.toLocaleString();
+      
+      console.log(formattedFirestoreDate);
+      // 在這裡進行後續操作，例如將日期放入 HTML 元素中
+    } else {
+      console.log('找不到使用者資料');
+    }
+  } catch (error) {
+    console.error('讀取資料失敗', error);
+  }
+}
+fetchData();
+//假設html中時間戳的id為 "timestampElement"
+fetch('/getFormattedDate')
+  .then(response => response.json())
+  .then(data => {
+    const formattedDate = data.formattedDate;
+    // 在這裡使用 formattedDate 進行操作，例如將其顯示在網頁上的特定元素中
+    document.getElementById('timestampElement').innerText = formattedDate;
+  })
+  .catch(error => {
+    console.error('讀取資料失敗', error);
+  });
+  */
