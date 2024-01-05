@@ -61,3 +61,46 @@
         .catch((error)=>{
             console.error('取得使用者文件時錯誤',error);
         });
+//透過google登入
+const auth = firebase.auth();
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+function signInWithGoogle(){
+    auth.signInWithPopup(googleProvider)
+    .then((userCredential)=>{
+        const user= userCredential.user;
+    db.collection('users').doc(user.uid).set({
+        displayName: user.displayName,
+        email: user.email,
+        uid: user.uid
+    })
+    .then(()=>{
+        console.log('使用者資料已存入Firestore')
+    })
+    .catch((error)=>{
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error('Google 登入失敗', errorCode, errorMessage); 
+    });
+
+    })
+}
+/*
+const { ccclass, property } = cc._decorator;
+
+@ccclass
+export default class YourScriptName extends cc.Component {
+
+    // 假設這是按鈕的點擊事件處理函式
+    onClickLoginButton() {
+        // 呼叫 Google 登入函式
+        this.signInWithGoogle();
+    }
+
+    // Google 登入函式，這裡放上你的 signInWithGoogle() 函式的內容
+    signInWithGoogle() {
+        // 實作你的 Google 登入邏輯
+        // ...
+    }
+}
+*/
