@@ -1,5 +1,5 @@
 //发牌管理器
-const cardobj = require("./card.js")
+const cardobj = require("./Card.js")
 const cardvalue = {
     "A": 12,
     "2": 13,

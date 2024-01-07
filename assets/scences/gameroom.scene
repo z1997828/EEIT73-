@@ -22,7 +22,9 @@
     ],
     "_active": true,
     "_components": [],
-    "_prefab": null,
+    "_prefab": {
+      "__id__": 255
+    },
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
@@ -52,7 +54,7 @@
     },
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 255
+      "__id__": 256
     },
     "_id": "ca28c55a-943e-473c-a5bc-3c751c4d80f2"
   },
@@ -713,7 +715,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 472.47058823529414,
+    "_orthoHeight": 543.2851511169514,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -767,7 +769,7 @@
         "__id__": 128
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [],
     "_prefab": null,
     "_lpos": {
@@ -9345,6 +9347,17 @@
     "bgMusic": {
       "__id__": 254
     },
+    "pokerPrefab": {
+      "__uuid__": "36ecba63-b06f-437e-a045-2b8a7b752262",
+      "__expectedType__": "cc.Prefab"
+    },
+    "pokerContainer": {
+      "__id__": 20
+    },
+    "cardsSpriteAtlas": {
+      "__uuid__": "0df6f387-8c7f-4e76-82cf-a2e102c57d00",
+      "__expectedType__": "cc.SpriteAtlas"
+    },
     "_id": "81ZV7064VMHoFLMgcGrkmU"
   },
   {
@@ -9367,30 +9380,38 @@
     "_id": "61Wr6+ZqdE6KHByHqydsVG"
   },
   {
+    "__type__": "cc.PrefabInfo",
+    "root": null,
+    "asset": null,
+    "fileId": "ca28c55a-943e-473c-a5bc-3c751c4d80f2",
+    "instance": null,
+    "targetOverrides": null
+  },
+  {
     "__type__": "cc.SceneGlobals",
     "ambient": {
-      "__id__": 256
-    },
-    "shadows": {
       "__id__": 257
     },
-    "_skybox": {
+    "shadows": {
       "__id__": 258
     },
-    "fog": {
+    "_skybox": {
       "__id__": 259
     },
-    "octree": {
+    "fog": {
       "__id__": 260
     },
-    "skin": {
+    "octree": {
       "__id__": 261
     },
-    "lightProbeInfo": {
+    "skin": {
       "__id__": 262
     },
-    "postSettings": {
+    "lightProbeInfo": {
       "__id__": 263
+    },
+    "postSettings": {
+      "__id__": 264
     },
     "bakedWithStationaryMainLight": false,
     "bakedWithHighpLightmap": false
