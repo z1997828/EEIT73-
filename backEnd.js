@@ -38,6 +38,7 @@ app.all('*', (req, res, next) => {
     } else if (req.method.toLowerCase() == 'get') {
         switch (req.path) {
             case "/CMS": res.header("Content-Type", "text/html"); res.sendFile('public/CMS_Login.html', { root: __dirname }); break;
+            
             case "/CMS/users":
                 (async () => {
                     res.header("Content-Type", "text/html");
@@ -46,16 +47,12 @@ app.all('*', (req, res, next) => {
                         .then((snapshot) => {
                             snapshot.forEach((doc) => {
                                 // console.log(doc.id, '=>' , doc.data());
-
                                 html += `<tr id="usertr-${doc.id}">
-                            <td>${doc.id}</td>
-                            <td>${doc.data().account}</td>
-                            <td>${doc.data().name}</td>
+                            <td>${doc.data().username}</td>
                             <td>${doc.data().email}</td>
                             <td>${doc.data().money}</td>
-                            <td>${new Date(doc.data().registertime._seconds * 1000)}</td>
-                            <td><button onclick="edit_user('${doc.id}','${doc.data().account}','${doc.data().name}','${doc.data().email}','${doc.data().money}','${new Date(doc.data().registertime._seconds * 1000)}')" >修改</button>
-                                <button onclick="del_user('${doc.id}')">刪除</button> </td>
+                            <td>${doc.data().regtime.toDate().toLocaleString()}</td>
+                            <td><button onclick="edit_user('${doc.id}','${doc.data().email}','${doc.data().money}','${doc.data().regtime.toDate().toLocaleString()}')" >修改</button><button onclick="del_user('${doc.id}')">刪除</button></td>
                              </tr>`;
                             });
                         })
@@ -81,9 +78,8 @@ app.all('*', (req, res, next) => {
                             <td>${doc.data().player1_money}</td>
                             <td>${doc.data().player2_id}</td>
                             <td>${doc.data().player2_money}</td>
-                            <td>${new Date(doc.data().date._seconds * 1000)}</td>
-                            <td><button onclick="edit_game_playway('${doc.id}','${doc.data().banker_id}','${doc.data().banker_money}','${doc.data().player1_id}','${doc.data().player1_money}','${doc.data().player2_id}','${doc.data().player2_money}','${new Date(doc.data().date._seconds * 1000)}')" >修改</button>
-                                <button onclick="del_game_playway('${doc.id}')">刪除</button> </td>
+                            <td>${doc.data().date.toDate().toLocaleString()}</td>
+                            <td><button onclick="edit_game_playway('${doc.id}','${doc.data().banker_id}','${doc.data().banker_money}','${doc.data().player1_id}','${doc.data().player1_money}','${doc.data().player2_id}','${doc.data().player2_money}','${doc.data().date.toDate().toLocaleString()}')" >修改</button><button onclick="del_game_playway('${doc.id}')">刪除</button></td>
                              </tr>`;
                             });
                         })
@@ -105,9 +101,8 @@ app.all('*', (req, res, next) => {
                             <td>${doc.id}</td>
                             <td>${doc.data().user_id}</td>
                             <td>${doc.data().money}</td>
-                            <td>${new Date(doc.data().date._seconds * 1000)}</td>
-                            <td><button onclick="edit_money('${doc.id}','${doc.data().user_id}','${doc.data().money}','${new Date(doc.data().date._seconds * 1000)}')" >修改</button>
-                                <button onclick="del_money('${doc.id}')">刪除</button> </td>
+                            <td>${doc.data().date.toDate().toLocaleString()}</td>
+                            <td><button onclick="edit_money('${doc.id}','${doc.data().user_id}','${doc.data().money}','${doc.data().date.toDate().toLocaleString()}')" >修改</button><button onclick="del_money('${doc.id}')">刪除</button></td>
                              </tr>`;
                             });
                         })
@@ -119,32 +114,24 @@ app.all('*', (req, res, next) => {
                 break;
             case "/CMS/feedback":
                 (async () => {
-                    res.header("Content-Type", "text/html");
+                    res.header("Content-Type", "application/json;charset=utf-8");
                     let html = '';
                     await db.collection('feedback').get()
                         .then((snapshot) => {
+                            let result = [];
                             snapshot.forEach((doc) => {
-                                // console.log(doc.id, '=>' , doc.data());
-                                html += `<tr id="feedbacktr-${doc.id}">
-                                          <td rowspan="${doc.data().message.length*2}">${doc.id}</td>`
-                                doc.data().message.forEach((m)=>{
-                                    html+=`<td>${m.user_message}</td>
-                                            <td>${new Date(m.user_message_date._seconds * 1000)}</td> 
-                                        </tr>
-                                        <tr class="tablesorter-childRow">
-                                            <td>${m.reply_message}</td>
-                                            <td>${new Date(m.reply_message_date._seconds * 1000)}</td>
-                                        </tr>
-                                        <tr class="tablesorter-childRow">`
-                                    // console.log(m.user_message +":"+m.reply_message);
-                                })
-                                html.slice(0,-33)
+                                let data = {
+                                    id: doc.id,
+                                    data: doc.data()
+                                }
+                                result.push(data);
                             });
+                            res.send(result);
                         })
                         .catch((err) => {
                             console.log('Error getting documents', err);
                         });
-                    res.send(html);
+
                 })();
                 break;
             default:
@@ -154,13 +141,12 @@ app.all('*', (req, res, next) => {
         switch (req.path) {
             case "/CMS/users/add":
                 (async () => {
-                    await db.collection('users').add({
-                        account: req.body.account,
-                        name: req.body.name,
+                    await db.collection('users').doc(req.body.id).set({
+                        username: req.body.id,
                         email: req.body.email,
                         money: req.body.money,
                         password: '123456',
-                        registertime: FieldValue.serverTimestamp()
+                        regtime: FieldValue.serverTimestamp()
                     });
                     res.send(true);
 
@@ -197,12 +183,25 @@ app.all('*', (req, res, next) => {
 
     } else if (req.method.toLowerCase() == 'put') {
         switch (req.path) {
+            case "/CMS_main":
+                res.header("Content-Type", "text/html");
+                db.collection('admin').doc('admin').get()
+                        .then((snapshot) => {
+                            if(snapshot.data().account===req.body.account && snapshot.data().password===req.body.password){
+                                res.send('/CMS.html')
+                            }
+                            else{
+                                console.log('else')
+                            }
+                        })
+                        .catch((error) => {
+                            console.log('Error getting documents: ', error);
+                        });
+                break;
             case "/CMS/users/edit":
                 (async () => {
-                    const userRef = db.collection('users').doc(req.body.id);
-                    await userRef.update({
-                        account: req.body.account,
-                        name: req.body.name,
+                    await db.collection('users').doc(req.body.id).update({
+                        username: req.body.id,
                         email: req.body.email,
                         money: req.body.money,
                     });
@@ -211,8 +210,7 @@ app.all('*', (req, res, next) => {
                 break;
             case "/CMS/game_playway/edit":
                 (async () => {
-                    const userRef = db.collection('game_playway').doc(req.body.id);
-                    await userRef.update({
+                    await db.collection('game_playway').doc(req.body.id).update({
                         banker_id: req.body.banker_id,
                         banker_money: req.body.banker_money,
                         player1_id: req.body.player1_id,
@@ -229,6 +227,18 @@ app.all('*', (req, res, next) => {
                     await userRef.update({
                         user_id: req.body.user_id,
                         money: req.body.money
+                    });
+                    res.send(true);
+                })();
+                break;
+            case "/CMS/feedback/edit":
+                (async () => {
+                    let feedback_edit = (await db.collection('feedback').doc(req.body.id).get()).data().message;
+                    feedback_edit[req.body.index].reply_message = req.body.message;
+                    feedback_edit[req.body.index].reply_message_date = new Date();
+
+                    await db.collection('feedback').doc(req.body.id).set({
+                        message: feedback_edit
                     });
                     res.send(true);
                 })();
