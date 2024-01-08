@@ -16,7 +16,12 @@ export class hallScene extends Component {
     @property(SpriteFrame)onImage: SpriteFrame = null;
     @property(SpriteFrame)offImage: SpriteFrame = null;
     @property(AudioSource) bgMusic: AudioSource = null;
-    @property(Label) name123: Label = null;
+    @property(Node) personalInfo: Node = null;
+
+    @property(Node)lbFace:Node = null;
+    @property(Label)lbname:Label = null;
+    @property(Label)lbMoney:Label = null;
+    @property(Label)lbID:Label = null;
     
 
     public openMenu = false;
@@ -34,6 +39,11 @@ export class hallScene extends Component {
         gameManager.Instance.socketUtil.connect();
     }
 
+    initLabel(){
+        
+        
+
+    }
     // ----------上方功能列-------------
     // 頭像按鈕
     public onFace() {

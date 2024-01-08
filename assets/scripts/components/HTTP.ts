@@ -1,3 +1,5 @@
+import gameManager from "./gameManager";
+
 export default class HTTP {
     // 預設 URL，這裡是本地伺服器的地址
     URL = 'http://127.0.0.1:3000'
@@ -68,29 +70,36 @@ export default class HTTP {
         // 返回 XMLHttpRequest 物件，以便後續操作或監聽
         return xhr;
     }
-    postRequset(path?, data?, handeler?) {
+    postRequest(path?, data?, handler?) {
         // 如果 extraUrl 未提供，則使用預設的 URL
         if (data == null) {
            data = {}
         }
         // 使用 XMLHttpRequest 物件進行 HTTP 請求
         let xhr = new XMLHttpRequest();
+        xhr.open("POST", this.URL + path, true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
-        // 監聽狀態改變事件
         xhr.onreadystatechange = function () {
-            // 當請求完成且狀態碼為成功時執行
-            if (xhr.readyState === 4 && (xhr.status >= 200 && xhr.status < 400)) {
-               let ret = xhr.responseText;
-               console.log(ret);
-               handeler(ret);
-            } else {
-                console.log(xhr.readyState);
-                console.log(xhr.status);
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 400) {
+                    try {
+                        let ret = JSON.parse(xhr.responseText);
+                        console.log(ret);
+                        handler(ret);
+                    } catch (e) {
+                        console.error('JSON 解析錯誤', e);
+                    }
+                } else if (xhr.status === 401){
+                    console.log('登錄失敗', xhr.status, xhr.statusText);
+                    gameManager.Instance.loading.hide();
+                    gameManager.Instance.alert.show("登入失敗", "帳號或密碼輸入錯誤...");
+                }else{
+                    console.error('HTTP 錯誤', xhr.status, xhr.statusText);
+                }
             }
         };
+            xhr.send(JSON.stringify(data));
 
-        // 開啟 GET 請求，非同步
-        xhr.open("POSt", path);
-        xhr.send();
     }
 }
