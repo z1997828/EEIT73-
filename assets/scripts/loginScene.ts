@@ -92,31 +92,30 @@ export class loginScene extends Component {
 
 
 
-        let account = this.accountInput.string
-        let password = this.passwdInput.string
-        if (account.length < 1 || password.length < 1) {
+        let email = this.accountInput.string;
+        let password = this.passwdInput.string;
+        console.log("發送的帳號:", email, "密碼:", password);
+
+        if (email.length < 1 || password.length < 1) {
             gameManager.Instance.alert.show("登入失敗", "帳號與或密碼為空...");
             return;
         }
 
-
-        let data = { "account": account, "password": password }
-
+        let data = { "email": email, "password": password };
 
         gameManager.Instance.loading.show();
 
-        gameManager.Instance.http.getRequset(Api.login, data, (ret) => {
-            
-            console.log(ret)
-            if(ret.length === 0){
+        // 調用 postRequest 方法，並傳入數據
+        gameManager.Instance.http.postRequest(Api.login, data, (ret) => {
+
+            gameManager.Instance.loading.hide();
+            if (ret.message === '登錄成功') {
+                director.loadScene("hall");
+            } else {
                 gameManager.Instance.loading.hide();
-                gameManager.Instance.alert.show("登入失敗", "帳號或密碼錯誤");
-            }else{
-                gameManager.Instance.loading.hide();
-                console.log(JSON.stringify(ret.name) + "登入成功")
-                director.loadScene("hall")
+                gameManager.Instance.alert.show("登入失敗", "帳號或密碼輸入錯誤...");
             }
-        })
+        });
 
     }
     // 找回密碼按鈕

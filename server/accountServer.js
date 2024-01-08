@@ -4,7 +4,8 @@ const app = express();
 const io = require('socket.io-client');
 const http = require('http').Server(app)
 const sio = require('socket.io')(http)
-const checkDB = require('../function/checkDB')
+// const checkDB = require('../function/checkDB')
+const Login = require('../function/login')
 // 允許跨域使用本服務
 var cors = require("cors");
 app.use(cors());
@@ -33,26 +34,39 @@ app.get('/', (req, res) => {
   res.send('Hello');
 });
 
-app.get('/login', (req, res) => {
-  let account = req.query.account;
-  let password = req.query.password;
-  
-  
-  checkDB.getData(account, password)
-  .then((data) => {
-      if (data.length === 0) {
-        console.log("用戶不存在");
-        res.send([]);
-      }else{
-        console.log(data);
-        res.send(data);
-      }
-  })
-  .catch((error) => {
-      console.error("發生錯誤:", error);
-  });
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  // console.log("收到的帳號:", req.body.email, "密碼:", password);
 
+  Login.getUsers(email, password)
+    .then(userDetails => {
+      res.status(200).json({ message: '登錄成功', userDetails });
+    })
+    .catch(error => {
+      res.status(401).json({ message:'登錄失敗', error });
+    });
 });
+
+
+// app.get('/login', (req, res) => {
+// let account = req.query.account;
+// let password = req.query.password;
+
+// checkDB.getData(account, password)
+// .then((data) => {
+//     if (data.length === 0) {
+//       console.log("用戶不存在");
+//       res.send([]);
+//     }else{
+//       console.log(data);
+//       res.send(data);
+//     }
+// })
+// .catch((error) => {
+//     console.error("發生錯誤:", error);
+// });
+
+// });
 app.get('/get_serverinfo', (req, res) => {
   const data = { version: '0.0.1' };
   res.send(data);
@@ -66,8 +80,8 @@ app.post('/getPost', (req, res) => {
 http.listen(3000);
 sio.on('connection', (socket) => {
   let clientIp = socket.handshake.address;
-	socket.emit('connected', '' + clientIp);
-	console.log('a user connected,ip = ' + clientIp);
+  socket.emit('connected', '' + clientIp);
+  console.log('a user connected,ip = ' + clientIp);
   socket.on("game_ping", () => {
     socket.emit("game_pong")
   })
