@@ -53,6 +53,12 @@ createUserWithEmailAndPassword(auth, email, password)
         regtime: firebaseTimestamp,
       })
       .then(() => {
+        user.sendEmailVerification().then(function(){
+          console.log('驗證郵件已發送');
+        }).catch(function(error){
+          console.log('驗證郵件發送失敗',error)
+        });
+
         console.log('用戶資料寫入成功');
       })
       .catch((error) => {
