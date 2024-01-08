@@ -37,8 +37,8 @@ $(`#moneytr-${money_id}`).append(`<td>${money_id}</td>
             <td><input type="text" id="edit-money-${money_id}-user_id" value="${user_id}"></td>
             <td><input type="number" id="edit-money-${money_id}-money" value="${money}"></td>
             <td>${date}</td>
-            <td><button onclick="edit_money_confirm('${money_id}')">確定</button>
-            <button  onclick="edit_money_cancel('${money_id}','${user_id}','${money}','${date}')">取消</button></td>`);
+            <td><button onclick="edit_money_confirm('${money_id}')">確定</button>`+
+            `<button  onclick="edit_money_cancel('${money_id}','${user_id}','${money}','${date}')">取消</button></td>`);
 }
 function edit_money_confirm(money_id) {
 if ($(`#edit-money-${money_id}-user_id`).val().trim() != "" && $(`#edit-money-${money_id}-money`).val().trim() != "" ) {
@@ -66,8 +66,8 @@ $(`#moneytr-${money_id}`).append(`<td>${money_id}</td>
             <td>${user_id}</td>
             <td>${money}</td>
             <td>${date}</td>
-            <td><button onclick="edit_money('${money_id}','${user_id}','${money}','${date}')" >修改</button>
-                    <button onclick="del_money('${money_id}')">刪除</button> </td>`);
+            <td><button onclick="edit_money('${money_id}','${user_id}','${money}','${date}')" >修改</button>`+
+            `<button onclick="del_money('${money_id}')">刪除</button> </td>`);
 }
 
 function del_money(money_id) {

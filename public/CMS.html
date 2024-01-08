@@ -9,7 +9,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"
         integrity="sha512-qzgd5cYSZcosqpzpn7zF2ZId8f/8CHmFKZ8j7mU4OUXTNRd5g+ZHBPsgKEwoqxCtdQvExE5LprwwPAgoicguNg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>$.tablesorter.addWidget({id:"staticRow",format:function(a){if(typeof $(a).data("hasSorted")=="undefined"){$(a).data("hasSorted",true);$("tbody .static",a).each(function(){$(this).data("tableindex",$(this).index())})}else{var b=true;while(b){b=false;$("tbody .static",a).each(function(){var c=$(this).data("tableindex");if(c!=$(this).index()){b=true;var d=$(this).detach();var e=$("tbody tr",a).length;if(c>=e){d.appendTo($("tbody",a))}else if(c==0){d.prependTo($("tbody",a))}else{d.insertBefore($("tbody tr:eq("+c+")",a))}}})}}}})</script>
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.default.min.css"
         integrity="sha512-wghhOJkjQX0Lh3NSWvNKeZ0ZpNn+SPVXX1Qyc9OCaogADktxrBiBdKGDoqVUOyhStvMBmJQ8ZdMHiR3wuEq8+w=="
@@ -17,6 +16,7 @@
     <script src="./CMS-js/CMS_users.js"></script>
     <script src="./CMS-js/CMS_game_playway.js"></script>
     <script src="./CMS-js/CMS_money.js"></script>
+    <script src="./CMS-js/CMS_feedback.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -79,6 +79,8 @@
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
+            word-break: break-all;
+            white-space: pre-wrap;
         }
 
         .tablesorter th {
@@ -95,6 +97,7 @@
             <li id="users">玩家資料</li>
             <li id="game_playway">遊戲資料</li>
             <li id="money">儲值資料</li>
+            <li id="feedback">意見反饋</li>
         </ul>
     </div>
     <div id="content" style="margin-top: 20px;">
@@ -104,8 +107,6 @@
             <table id="users-table" class="tablesorter">
                 <thead>
                     <tr>
-                        <th>玩家ID</th>
-                        <th>玩家帳號</th>
                         <th>玩家名稱</th>
                         <th>玩家信箱</th>
                         <th>玩家金錢</th>
@@ -162,6 +163,41 @@
                 </tbody>
             </table>
         </div>
+        <div id="feedback-content" style="display: none;">
+            <table id="feedback-table" class="tablesorter">
+                <thead>
+                    <tr>
+                        <th width="20%">玩家帳號</th>
+                        <th width="50%">留言/回應</th>
+                        <th width="30%">日期</th>
+                    </tr>
+                </thead>
+                <tbody id="feedback-tbody">
+                    <tr>
+                        <td rowspan="2">useraccount</td>
+                        <td>留言1</td>
+                        <td>留言1時間</td>
+                    </tr>
+
+                    <tr class="tablesorter-childRow">
+                        <td>
+                            <p>回應1</p><br><button onclick="edit_feedback(this)">回覆</button>
+                        </td>
+                        <td>回應1時間</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">Andy</td>
+                        <td>留言2</td>
+                        <td>留言2時間</td>
+                    </tr>
+
+                    <tr class="tablesorter-childRow">
+                        <td>回應2</td>
+                        <td>回應2時間</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
 
@@ -188,6 +224,9 @@
             $("#money").click(function () {
                 showContent("money-content");
             });
+            $("#feedback").click(function () {
+                showContent("feedback-content");
+            });
 
             function showContent(contentId) {
                 $("#content > div").hide();
@@ -195,14 +234,11 @@
             }
             $("#add-user").click(() => {
                 $("#add-user-tr").empty();
-                $("#add-user-tr").append(`<td>玩家ID</td>
-                    <td><input type="text" id="add-user-account" ></td>
-                    <td><input type="text" id="add-user-name" ></td>
+                $("#add-user-tr").append(`<td><input type="text" id="add-user-name" ></td>
                     <td><input type="text" id="add-user-email" ></td>
                     <td><input type="number" id="add-user-money" ></td>
                     <td>創建時間</td>
-                    <td><button onclick="add_user_confirm()" >確定</button>
-                    <button  onclick="add_user_cancel()">取消</button></td>`);
+                    <td><button onclick="add_user_confirm()" >確定</button><button  onclick="add_user_cancel()">取消</button></td>`);
 
             })
 
@@ -216,8 +252,7 @@
                     <td><input type="text" id="add-game_playway-player2-id" ></td>
                     <td><input type="number" id="add-game_playway-player2-money" ></td>
                     <td>創建時間</td>
-                    <td><button onclick="add_game_playway_confirm()" >確定</button>
-                    <button  onclick="add_game_playway_cancel()">取消</button></td>`);
+                    <td><button onclick="add_game_playway_confirm()" >確定</button><button  onclick="add_game_playway_cancel()">取消</button></td>`);
 
             })
 
@@ -227,21 +262,21 @@
                     <td><input type="text" id="add-money-user_id" ></td>
                     <td><input type="number" id="add-money-money" ></td>
                     <td>儲值時間</td>
-                    <td><button onclick="add_money_confirm()" >確定</button>
-                    <button  onclick="add_money_cancel()">取消</button></td>`);
+                    <td><button onclick="add_money_confirm()" >確定</button><button  onclick="add_money_cancel()">取消</button></td>`);
 
             })
-           
-            $("#users-table" ).tablesorter ({ widgets:['staticRow']}); 
-            $("#game_playway-table" ).tablesorter ({ widgets:['staticRow']}); 
-            $("#money-table" ).tablesorter ({ widgets:['staticRow']}); 
+
+            $("#users-table").tablesorter();
+            $("#game_playway-table").tablesorter();
+            $("#money-table").tablesorter();
+            $("#feedback-table").tablesorter();
             $('#users').click();
             refresh_userUI();
             refresh_game_playwayUI();
             refresh_moneyUI();
+            refresh_feedbackUI();
         });
-
-
+        
 
 
     </script>

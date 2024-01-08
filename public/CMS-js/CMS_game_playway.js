@@ -47,8 +47,8 @@ $(`#game_playwaytr-${game_id}`).append(`<td>${game_id}</td>
             <td><input type="text" id="edit-game_playway-${game_id}-player2_id" value="${player2_id}"></td>
             <td><input type="number" id="edit-game_playway-${game_id}-player2_money" value="${player2_money}"></td>
             <td>${date}</td>
-            <td><button onclick="edit_game_playway_confirm('${game_id}')">確定</button>
-            <button  onclick="edit_game_playway_cancel('${game_id}','${banker_id}','${banker_money}','${player1_id}','${player1_money}','${player2_id}','${player2_money}','${date}')">取消</button></td>`);
+            <td><button onclick="edit_game_playway_confirm('${game_id}')">確定</button>`+
+            `<button  onclick="edit_game_playway_cancel('${game_id}','${banker_id}','${banker_money}','${player1_id}','${player1_money}','${player2_id}','${player2_money}','${date}')">取消</button></td>`);
 }
 function edit_game_playway_confirm(game_id) {
 if ($(`#edit-game_playway-${game_id}-banker_id`).val().trim() != "" && $(`#edit-game_playway-${game_id}-banker_money`).val().trim() != "" &&
@@ -88,8 +88,8 @@ $(`#game_playwaytr-${game_id}`).append(`<td>${game_id}</td>
             <td>${player2_id}</td>
             <td>${player2_money}</td>
             <td>${date}</td>
-            <td><button onclick="edit_game_playway('${game_id}','${banker_id}','${banker_money}','${player1_id}','${player1_money}','${player2_id}','${player2_money}','${date}')" >修改</button>
-                    <button onclick="del_game_playway('${game_id}')">刪除</button> </td>`);
+            <td><button onclick="edit_game_playway('${game_id}','${banker_id}','${banker_money}','${player1_id}','${player1_money}','${player2_id}','${player2_money}','${date}')" >修改</button>`+
+            `<button onclick="del_game_playway('${game_id}')">刪除</button> </td>`);
 }
 
 function del_game_playway(game_id) {
