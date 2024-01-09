@@ -1,4 +1,5 @@
 export enum Api{
     get_serverinfo = '/get_serverinfo',
-    login = '/login'
+    login = '/login',
+    register = '/register'
  }
