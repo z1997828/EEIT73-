@@ -4,8 +4,10 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
 
-const { initializeApp } = require('firebase/app');
-const { getAuth, createUserWithEmailAndPassword } = require('firebase/auth');
+const firebase = require('firebase');
+require('firebase/auth');
+require('firebase/database');
+
 const bcrypt = require('bcryptjs')
 
 const firebaseConfig = {
@@ -19,21 +21,17 @@ const firebaseConfig = {
     measurementId: "G-CL35V2SP5F"
   };
 
-const firebaseApp = initializeApp(firebaseConfig);
-const auth = getAuth(firebaseApp);
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+const auth = firebaseApp.auth();
 let db = admin.firestore();
 const firebaseTimestamp = admin.firestore.FieldValue.serverTimestamp();
 
-const username = 'happy33';//獲取使用者輸入的用戶名稱
-const email = 'happy33@happy.com';//獲取使用者輸入的email
-const password = '333333'; //獲取使用者輸入的密碼
-const confirmPassword = '333333' //獲取輸入的確認密碼
-if(password !== confirmPassword){
-  console.error('確認密碼與密碼不相符');
-  return;
-}
+const username = 'happy77';//獲取使用者輸入的用戶名稱
+const email = 'happy77@happy.com';//獲取使用者輸入的email
+const password = '7777777'; //獲取使用者輸入的密碼
 
-createUserWithEmailAndPassword(auth, email, password)
+
+auth.createUserWithEmailAndPassword(email, password)
   .then((userCredential) => {
     const user = userCredential.user;
 
