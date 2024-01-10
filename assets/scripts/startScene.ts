@@ -44,7 +44,7 @@ export class startScence extends Component {
         let complete = false
         let self = this
         let fnRequest = function () {
-            xhr = gameManager.Instance.http.getRequset(Api.get_serverinfo,null,(ret)=>{
+            xhr = gameManager.Instance.http.getRequest(Api.get_serverinfo,null,(ret)=>{
                 console.log(ret);
                 xhr = null;
                 xhr = true;

@@ -2,8 +2,8 @@ const bcrypt = require('bcryptjs')
 const admin = require('firebase-admin');
 const serviceAccount = require("../gameproject-d9074-firebase-adminsdk-6rnh9-cff9fb8858.json");
 const firebase = require('firebase/app');
-require('firebase/auth');
-
+const { getAuth, createUserWithEmailAndPassword } = require('firebase/auth');
+// const getAuth = getAuth(firebaseApp);
 const firebaseConfig = {
     apiKey: "AIzaSyCEEb5PlBygA9_pTl38ce19A5vtZsKUqdA",
     authDomain: "gameproject-d9074.firebaseapp.com",
@@ -14,18 +14,37 @@ const firebaseConfig = {
     appId: "1:521476406324:web:e44521f5a393d56d945e61",
     measurementId: "G-CL35V2SP5F"
   };
-
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
-
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
-
 const db = admin.firestore();
+//查詢資料功能
+const firebaseTimestamp = admin.firestore.FieldValue.serverTimestamp();
 
+exports.getData = function getData(username) {
+    return new Promise((resolve, reject) => {
+        db.collection('users')
+            .where("username", "==", username)
+            .get()
+            .then((querySnapshot) => {
+                let result = [];
+                querySnapshot.forEach((doc) => {
+                    result.push(doc.data());
+                });
+                resolve(result);
+            })
+            .catch((error) => {
+                console.log('Error getting documents: ', error);
+                reject(error);
+            });
+    });
 
+}
+
+// 登入功能
 exports.getUsers = function authenticateUser(email, inputPassword) {
     return new Promise((resolve, reject) => {
         db.collection('users').where("email", "==", email).get()
@@ -43,11 +62,19 @@ exports.getUsers = function authenticateUser(email, inputPassword) {
                         return reject(new Error('密碼比對錯誤'));
                     }
                     if (result) {
+                        
                         // 密碼匹配，使用 Firebase Authentication 登錄
                         firebase.auth().signInWithEmailAndPassword(email, inputPassword)
                             .then((userCredential) => {
+                                const userResponse = {
+                                    avatar:userData.avatar,
+                                    email: userData.email,
+                                    username: userData.username,
+                                    money: userData.money,
+                                    regtime:userData.regtime
+                                };
                                 // 登錄成功
-                                resolve(userCredential.user);
+                                resolve({ user: userCredential.user, userDetails: userResponse });
                             })
                             .catch((error) => {
                                 // Firebase 登錄失敗

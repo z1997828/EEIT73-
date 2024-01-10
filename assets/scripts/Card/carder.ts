@@ -1,4 +1,4 @@
-// Deck.ts
+
 import Card from "./Card2";
 
 const cardValue: { [key: string]: number } = {

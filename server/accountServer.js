@@ -4,7 +4,6 @@ const app = express();
 const io = require('socket.io-client');
 const http = require('http').Server(app)
 const sio = require('socket.io')(http)
-// const checkDB = require('../function/checkDB')
 const Login = require('../function/login')
 // 允許跨域使用本服務
 var cors = require("cors");
@@ -33,40 +32,56 @@ app.all('*', (req, res, next) => {
 app.get('/', (req, res) => {
   res.send('Hello');
 });
-
+//登錄
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
   // console.log("收到的帳號:", req.body.email, "密碼:", password);
 
   Login.getUsers(email, password)
     .then(userDetails => {
+      console.log({userDetails});
       res.status(200).json({ message: '登錄成功', userDetails });
+      
     })
     .catch(error => {
-      res.status(401).json({ message:'登錄失敗', error });
+      res.status(401).json({ message: '登錄失敗', error });
     });
 });
 
+//檢測帳號重複
 
-// app.get('/login', (req, res) => {
-// let account = req.query.account;
-// let password = req.query.password;
+// 註冊
+app.post('/regisger', (req,res)=>{
+  const { username, email, password, confirmPassword } = req.body;
+  console.log("name:",username, "email:",email,"password:",password,"confirmPassword:",confirmPassword);  
+  
+    Login.registerNewUser(username, email, password, confirmPassword)
+    .then(NewUserDetails => {
+      res.status(200).json({ message: '註冊成功', NewUserDetails });
+    })
+    .catch(error => {
+      res.send.json({ message: '註冊失敗', error });
+    });
+});
 
-// checkDB.getData(account, password)
-// .then((data) => {
-//     if (data.length === 0) {
-//       console.log("用戶不存在");
-//       res.send([]);
-//     }else{
-//       console.log(data);
-//       res.send(data);
-//     }
-// })
-// .catch((error) => {
-//     console.error("發生錯誤:", error);
-// });
+app.get('/confirmname', (req, res) => {
+  let username = req.query.username;
 
-// });
+  Login.getData(username)
+    .then(result => {
+      if (result.length > 0) {
+        // 如果獲取到資料，表示用戶名已存在
+        res.status(200).send({ exists: true, message: "用戶名已被占用" });
+      } else {
+        // 如果沒有資料，表示用戶名不存在
+        res.status(200).send({ exists: false, message: "用戶名可用" });
+      }
+    }).catch(error => {
+      // 處理可能出現的錯誤
+      res.status(500).send({ error: error.message });
+    });
+});
+//獲取伺服器信息
 app.get('/get_serverinfo', (req, res) => {
   const data = { version: '0.0.1' };
   res.send(data);
