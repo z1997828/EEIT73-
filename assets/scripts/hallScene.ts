@@ -1,8 +1,8 @@
-import { _decorator, Component, Node,AudioSource,Button,SpriteFrame, Label, director  } from 'cc';
+import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Label, director, game } from 'cc';
 import gameManager from './components/gameManager';
 import SocketUtil from './components/SocketUtil';
+import Util from './components/Util';
 const { ccclass, property } = _decorator;
-
 @ccclass('hall')
 export class hallScene extends Component {
     @property(Node) mall: Node = null;
@@ -11,23 +11,35 @@ export class hallScene extends Component {
     @property(Node) rule: Node = null;
     @property(Node) setting: Node = null;
     @property(Node) face: Node = null;
-    @property(Button)MusicButton: Button = null;
-    @property(Button)AudioButton: Button = null;
-    @property(SpriteFrame)onImage: SpriteFrame = null;
-    @property(SpriteFrame)offImage: SpriteFrame = null;
+    @property(Button) MusicButton: Button = null;
+    @property(Button) AudioButton: Button = null;
+    @property(SpriteFrame) onImage: SpriteFrame = null;
+    @property(SpriteFrame) offImage: SpriteFrame = null;
     @property(AudioSource) bgMusic: AudioSource = null;
     @property(Node) personalInfo: Node = null;
 
-    @property(Node)lbFace:Node = null;
-    @property(Label)lbname:Label = null;
-    @property(Label)lbMoney:Label = null;
-    @property(Label)lbID:Label = null;
-    
-
+    @property(Node) lbFace: Node = null;
+    @property(Node) lbname: Node = null;
+    @property(Node) lbMoney: Node = null;
+    _lbname: Label = null;
+    _lbMoney: Label = null;
+    @property(Node)pIname:Node = null;
+    @property(Node)pIemail:Node = null;
+    @property(Node)pIip:Node = null;
+    _pIname:Label = null;
+    _pIemail:Label = null;
+    _pIip:Label = null;
     public openMenu = false;
     private MusicIsOn: boolean = !false;
     private AudioIsOn: boolean = !false;
+    
     onLoad() {
+
+        this._lbname = this.lbname.getComponent(Label);
+        this._lbMoney = this.lbMoney.getComponent(Label);
+        this._pIname = this.pIname.getComponent(Label);
+        this._pIemail = this.pIemail.getComponent(Label);
+        this._pIip = this.pIip.getComponent(Label);
         this.mall.active = false;
         this.record.active = false;
         this.feedback.active = false;
@@ -37,19 +49,29 @@ export class hallScene extends Component {
         this.openMenu = false;
         gameManager.Instance.socketUtil = new SocketUtil();
         gameManager.Instance.socketUtil.connect();
-    }
-
-    initLabel(){
+        gameManager.Instance.util = new Util();
         
         
-
+        this.init();
     }
+
+    init() {
+        let userDetails = gameManager.Instance.userDetails;
+        if (userDetails && userDetails.userDetails) {
+            // 假设你有获取UI元素的方法，并且已经定义了如何设置它们
+            this._lbname.string = userDetails.userDetails.username;
+            this._lbMoney.string = userDetails.userDetails.money
+            this._pIname.string = userDetails.userDetails.username;
+            this._pIemail.string = userDetails.userDetails.email;
+        }
+    }
+
     // ----------上方功能列-------------
     // 頭像按鈕
     public onFace() {
-        if(!this.openMenu)
-        this.face.active = !false,
-        this.openMenu = !false;
+        if (!this.openMenu)
+            this.face.active = !false,
+                this.openMenu = !false;
         console.log("確定按鈕被點擊");
     }
 
@@ -70,7 +92,7 @@ export class hallScene extends Component {
     // 進入初階場按鈕
 
     public onInRookieRoom() {
-        
+
         console.log("確定按鈕被點擊");
         director.loadScene('gameroom');
     }
@@ -85,9 +107,9 @@ export class hallScene extends Component {
 
     // 商城按鈕
     public onMall() {
-        if(!this.openMenu)
-        this.mall.active = !false,
-        this.openMenu = !false;
+        if (!this.openMenu)
+            this.mall.active = !false,
+                this.openMenu = !false;
     }
 
     // 商城內儲值金額1按鈕
@@ -123,16 +145,16 @@ export class hallScene extends Component {
 
     // 戰績按鈕
     public onRecord() {
-        if(!this.openMenu)
-        this.record.active = !false,
-        this.openMenu = !false;
+        if (!this.openMenu)
+            this.record.active = !false,
+                this.openMenu = !false;
     }
 
     // 反饋按鈕
     public onFeedback() {
-        if(!this.openMenu)
-        this.feedback.active = !false,
-        this.openMenu = !false;
+        if (!this.openMenu)
+            this.feedback.active = !false,
+                this.openMenu = !false;
     }
 
     // 反饋內提交按鈕
@@ -141,9 +163,9 @@ export class hallScene extends Component {
     }
     // 設定按鈕
     public onSetting() {
-        if(!this.openMenu)
-        this.setting.active = !false,
-        this.openMenu = !false;
+        if (!this.openMenu)
+            this.setting.active = !false,
+                this.openMenu = !false;
     }
 
 
@@ -179,15 +201,17 @@ export class hallScene extends Component {
         console.log("確定按鈕被點擊");
     }
 
-     // 設定內登出按鈕
+    // 設定內登出按鈕
     public onLogout() {
-        console.log("確定按鈕被點擊");
+        
+        gameManager.Instance.util.logout();
+        
     }
     //// 玩法按鈕
     public onRule() {
-        if(!this.openMenu)
-        this.rule.active = !false,
-        this.openMenu = !false;
+        if (!this.openMenu)
+            this.rule.active = !false,
+                this.openMenu = !false;
     }
 }
 

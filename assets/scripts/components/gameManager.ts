@@ -1,8 +1,10 @@
+
 import { waittingConn } from "../waitingConn";
 import Alert from "./Alert";
 import HTTP from "./HTTP"
 import SocketUtil from "./SocketUtil";
 import UserMgr from "./UserMgr";
+import Util from "./Util";
 
 
 export default class gameManager{
@@ -16,5 +18,6 @@ export default class gameManager{
     loading:waittingConn = null;
     alert:Alert = null;
     userMgr:UserMgr = null;
-    
+    userDetails = null ; 
+    util:Util = null;
 }
