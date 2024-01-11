@@ -39,7 +39,6 @@ app.post('/login', (req, res) => {
 
   Login.getUsers(email, password)
     .then(userDetails => {
-      console.log({userDetails});
       res.status(200).json({ message: '登錄成功', userDetails });
       
     })
@@ -51,11 +50,11 @@ app.post('/login', (req, res) => {
 //檢測帳號重複
 
 // 註冊
-app.post('/regisger', (req,res)=>{
-  const { username, email, password, confirmPassword } = req.body;
-  console.log("name:",username, "email:",email,"password:",password,"confirmPassword:",confirmPassword);  
+app.post('/register', (req,res)=>{
+  const { username, email, password } = req.body;
+  console.log("name:",username, "email:",email,"password:",password);  
   
-    Login.registerNewUser(username, email, password, confirmPassword)
+    Login.registerNewUser(username, email, password)
     .then(NewUserDetails => {
       res.status(200).json({ message: '註冊成功', NewUserDetails });
     })

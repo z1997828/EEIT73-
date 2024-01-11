@@ -27,16 +27,16 @@ export class loginScene extends Component {
         gameManager.Instance.socketUtil = new SocketUtil();
         gameManager.Instance.socketUtil.connect();
         this._Label = this.Label.getComponent(Label);
-        this.Label.active = false        // 首先檢查兩個密碼輸入框是否都不為空
-         
+        this.Label.active = false
+
     }
 
 
     start() {
 
-       
+
     }
-    
+
 
 
     public onTest() {
@@ -88,13 +88,13 @@ export class loginScene extends Component {
             gameManager.Instance.alert.show("提示", "尚未輸入名稱!");
             return;
         }
-        let data = { "username": checkName}
+        let data = { "username": checkName }
         gameManager.Instance.loading.show();
 
-        
+
         gameManager.Instance.http.getRequest(Api.confirmname, data, (ret) => {
 
-           
+
             if (ret.message === '用戶名已被占用') {
                 gameManager.Instance.loading.hide();
                 gameManager.Instance.alert.show("警告", "這個名稱已經被使用了!");
@@ -113,12 +113,29 @@ export class loginScene extends Component {
         let regname = this.regNameInput.string;;
         let regemail = this.regAccountInput.string;
         let regpassword = this.regPasswdInput.string;
+        let confirmRegPassword = this.confirmregPasswdInput.string;
         console.log("註冊姓名:", regname, "帳號:", regemail, "密碼:", regpassword);
-        
-        let data = { "username": regname,"email": regemail, "password": regpassword };
+
+        if (regname.length < 1 || regemail.length < 1 || regpassword.length < 1) {
+            gameManager.Instance.alert.show("註冊失敗", "輸入內容不能為空");
+            return;
+        }
+
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailRegex.test(regemail)) {
+            gameManager.Instance.alert.show("註冊失敗", "無效的電子郵件格式");
+            return;
+        }
+
+        if (regpassword !== confirmRegPassword) {
+            gameManager.Instance.alert.show("註冊失敗", "輸入的二次密碼有誤!");
+            return;
+        } 
+
+        let data = { "username": regname, "email": regemail, "password": regpassword };
         gameManager.Instance.http.postRequest(Api.register, data, (ret) => {
 
-            
+
             if (ret.message === '註冊成功') {
                 gameManager.Instance.loading.hide();
                 gameManager.Instance.alert.show("註冊成功", "請到信箱收取驗證信!");
@@ -160,10 +177,10 @@ export class loginScene extends Component {
         // 調用 postRequest 方法，並傳入數據
         gameManager.Instance.http.postRequest(Api.login, data, (ret) => {
 
-            
+
             if (ret.message === '登錄成功') {
                 gameManager.Instance.loading.hide();
-                console.log("登入姓名:",JSON.stringify(ret.username),"帳戶金額",JSON.stringify(ret.money));
+                gameManager.Instance.userDetails = ret;
                 director.loadScene("hall");
             } else {
                 gameManager.Instance.loading.hide();
