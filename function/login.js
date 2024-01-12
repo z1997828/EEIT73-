@@ -175,7 +175,21 @@ function signInWithGoogle() {
     });
 }
 exports.signInWithGoogle = signInWithGoogle;
-
+//密碼重設
+function resetPassword(email) {
+    return new Promise((resolve,reject)=>{
+        auth.sendPasswordResetEmail(email)
+        .then(()=>{
+            console.log("重設密碼郵件已發送至"+email)
+            resolve();
+        })
+        .catch((error)=>{
+            console.log('重設密碼郵件發送失敗',error.message);
+            reject(error);
+        })
+    })
+}
+exports.resetPassword = resetPassword;
 
 /*
 const { ccclass, property } = cc._decorator;
