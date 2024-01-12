@@ -21,9 +21,9 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
 const db = admin.firestore();
-//查詢資料功能
-const firebaseTimestamp = admin.firestore.FieldValue.serverTimestamp();
 
+const firebaseTimestamp = admin.firestore.FieldValue.serverTimestamp();
+// 註冊功能
 exports.registerNewUser = function(username, email, password) {
     return new Promise((resolve, reject) => {
 

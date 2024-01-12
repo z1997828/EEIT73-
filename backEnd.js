@@ -277,6 +277,6 @@ app.all('*', (req, res, next) => {
         next();
     }
 })
-http.listen(3000, () => {
+http.listen(3001, () => {
     console.log("Web伺服器就緒，開始接受用戶端連線.");
 });
