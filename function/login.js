@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs')
 const admin = require('firebase-admin');
-const { getAuth, createUserWithEmailAndPassword } = require('firebase/auth');
 
 const serviceAccount = require("../gameproject-d9074-firebase-adminsdk-6rnh9-cff9fb8858.json");
 const firebase = require('firebase/app');
@@ -144,29 +143,54 @@ exports.getUsers = function authenticateUser(email, inputPassword) {
     });
 }
 //透過google登入
-// const auth = firebase.auth();
-// const googleProvider = new firebase.auth.GoogleAuthProvider();
+const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-// function signInWithGoogle() {
-//     auth.signInWithPopup(googleProvider)
-//         .then((userCredential) => {
-//             const user = userCredential.user;
-//             db.collection('users').doc(user.uid).set({
-//                 displayName: user.displayName,
-//                 email: user.email,
-//                 uid: user.uid
-//             })
-//                 .then(() => {
-//                     console.log('使用者資料已存入Firestore')
-//                 })
-//                 .catch((error) => {
-//                     const errorCode = error.code;
-//                     const errorMessage = error.message;
-//                     console.error('Google 登入失敗', errorCode, errorMessage);
-//                 });
+function signInWithGoogle() {
+    return new Promise((resolve,reject)=>{
+    auth.signInWithPopup(googleProvider)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            db.collection('users').doc(user.uid).set({
+                displayName: user.displayName,
+                email: user.email,
+                uid: user.uid
+            })
+                .then(() => {
+                    console.log('使用者資料已存入Firestore');
+                    resolve(user);
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.error('Google 登入失敗', errorCode, errorMessage);
+                    reject(error);
+                });
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.error('Google 登入失敗', errorCode, errorMessage);
+            reject(error);
+        });
+    });
+}
+exports.signInWithGoogle = signInWithGoogle;
+//密碼重設
+function resetPassword(email) {
+    return new Promise((resolve,reject)=>{
+        auth.sendPasswordResetEmail(email)
+        .then(()=>{
+            console.log("重設密碼郵件已發送至"+email)
+            resolve();
+        })
+        .catch((error)=>{
+            console.log('重設密碼郵件發送失敗',error.message);
+            reject(error);
+        })
+    })
+}
+exports.resetPassword = resetPassword;
 
-//         })
-// }
 /*
 const { ccclass, property } = cc._decorator;
 
