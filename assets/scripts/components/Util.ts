@@ -4,7 +4,7 @@ let userDetails = gameManager.Instance.userDetails;
 export default class Util {
     
     logout(){
-        console.log(userDetails);
+        
         userDetails = {};
         console.log(userDetails);
         director.loadScene("login");

@@ -92,8 +92,14 @@ export class hallScene extends Component {
     // 進入初階場按鈕
 
     public onInRookieRoom() {
-
-        console.log("確定按鈕被點擊");
+        let userDetails = gameManager.Instance.userDetails;
+        gameManager.Instance.loading.show();
+        gameManager.Instance.loading.show();
+        let onCreate = (ret)=> {
+            if(userDetails.userDetails.money < 100){
+                gameManager.Instance.alert.show("金額不足","無法參與初級房!")
+            }
+        }
         director.loadScene('gameroom');
     }
 
