@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs')
 const admin = require('firebase-admin');
+const express =require('express')
+const session=require('express-session')
 
 const serviceAccount = require("../gameproject-d9074-firebase-adminsdk-6rnh9-cff9fb8858.json");
 const firebase = require('firebase/app');
@@ -22,6 +24,13 @@ admin.initializeApp({
 const db = admin.firestore();
 
 const firebaseTimestamp = admin.firestore.FieldValue.serverTimestamp();
+//使用express-session中間件
+express().use(session({
+    secret:'0000',
+    resave: false,
+    saveUninitialized: true
+}));
+
 // 註冊功能
 exports.registerNewUser = function(username, email, password) {
     return new Promise((resolve, reject) => {
@@ -97,7 +106,7 @@ exports.getData = function getData(username) {
 }
 
 // 登入功能
-exports.getUsers = function authenticateUser(email, inputPassword) {
+exports.getUsers = function authenticateUser(req,email, inputPassword) {
     return new Promise((resolve, reject) => {
         db.collection('users').where("email", "==", email).get()
             .then((querySnapshot) => {
@@ -125,8 +134,11 @@ exports.getUsers = function authenticateUser(email, inputPassword) {
                                     money: userData.money,
                                     regtime: userData.regtime
                                 };
+                                //將當前用戶資料保存在session中
+                                req.session.currentUsername=userData.username;
                                 // 登錄成功
                                 resolve(userDetails);
+
                             })
                             .catch((error) => {
                                 // Firebase 登錄失敗
@@ -190,23 +202,3 @@ function resetPassword(email) {
     })
 }
 exports.resetPassword = resetPassword;
-
-/*
-const { ccclass, property } = cc._decorator;
-
-@ccclass
-export default class YourScriptName extends cc.Component {
-
-// 假設這是按鈕的點擊事件處理函式
-onClickLoginButton() {
-    // 呼叫 Google 登入函式
-    this.signInWithGoogle();
-}
-
-// Google 登入函式，這裡放上你的 signInWithGoogle() 函式的內容
-signInWithGoogle() {
-    // 實作你的 Google 登入邏輯
-    // ...
-}
-}
-*/
