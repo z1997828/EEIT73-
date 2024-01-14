@@ -107,3 +107,11 @@ sio.on('connection', (socket) => {
 console.log("Web伺服器就緒，開始接受用戶端連線.");
 console.log("鍵盤「Ctrl + C」可結束伺服器程式.");
 
+//聊天室
+const chat = require('../function/chat');
+chat(io);
+const PORT = process.env.PORT || 3000;
+
+server.listen(PORT,()=>{
+    console.log('Server is running on port ${PORT}');
+})
