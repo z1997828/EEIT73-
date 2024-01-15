@@ -43,7 +43,6 @@ app.post('/login', (req, res) => {
   Login.getUsers(email, password)
     .then(userDetails => {
       res.status(200).json({ message: '登錄成功', userDetails });
-      
     })
     .catch(error => {
       res.status(401).json({ message: '登錄失敗', error });

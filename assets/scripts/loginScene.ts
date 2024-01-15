@@ -28,7 +28,7 @@ export class loginScene extends Component {
         gameManager.Instance.socketUtil.connect();
         this._Label = this.Label.getComponent(Label);
         this.Label.active = false
-
+        
     }
 
 

@@ -2,7 +2,9 @@ import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Label, d
 import gameManager from './components/gameManager';
 import SocketUtil from './components/SocketUtil';
 import Util from './components/Util';
+
 const { ccclass, property } = _decorator;
+
 @ccclass('hall')
 export class hallScene extends Component {
     @property(Node) mall: Node = null;
@@ -33,7 +35,7 @@ export class hallScene extends Component {
     private MusicIsOn: boolean = !false;
     private AudioIsOn: boolean = !false;
 
-
+    
     onLoad() {
 
         this._lbname = this.lbname.getComponent(Label);
@@ -51,9 +53,11 @@ export class hallScene extends Component {
         gameManager.Instance.socketUtil = new SocketUtil();
         gameManager.Instance.util = new Util();
         
-    
+
         this.init();
     }
+
+   
 
     init() {
         let userDetails = gameManager.Instance.userDetails;

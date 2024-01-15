@@ -63,6 +63,16 @@ export default class SocketUtil {
         })
 
     }
+
+    send(event, data?) {
+        if (this.connected) {
+            if (data != null && (typeof (data) == "object")) {
+                data = JSON.stringify(data);
+            }
+            this.sio.emit(event, data);
+        }
+        console.log("觸發時間: " + (new Date()).toLocaleTimeString + "request :" + event)
+    }
     private _request(cmdType: string, req: any, callback) {
         if (this.sio && this.connected) {
             const callIndex = ++this.callIndex;
@@ -71,8 +81,8 @@ export default class SocketUtil {
         }
     }
 
-    requestLogin(req: any, callback) {
-        this._request("login", req, callback);
+    requestLogin(callback) {
+        this.event.on("login_success", callback);
     }
 
     requestCreateRoom(req: any, callback) {
@@ -222,15 +232,7 @@ export default class SocketUtil {
         console.log("game_ping");
         this.send("game_ping")
     }
-    send(event, data?) {
-        if (this.connected) {
-            if (data != null && (typeof (data) == "object")) {
-                data = JSON.stringify(data);
-            }
-            this.sio.emit(event.data);
-        }
-        console.log("觸發時間: " + (new Date()).toLocaleTimeString + "request :" + event)
-    }
+    
 
     close() {
         if (this.sio && this.connected) {

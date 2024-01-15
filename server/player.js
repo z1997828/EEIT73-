@@ -1,9 +1,9 @@
 module.exports = function(userDetails,socket,callindex,gamectr){
    //console.log("playerinfo:"+ JSON.stringify(info))
    var that = {}
-   that._userName = userDetails.userDetails.userName;    //用户昵称
-   that._avatarUrl = userDetails.userDetails.avatar;  //头像
-   that._money = userDetails.userDetails._money;       //当前金币
+   that._userName = userDetails.userName;    //用户昵称
+   that._avatarUrl = userDetails.avatar;  //头像
+   that._money = userDetails.money;       //当前金币
    that._socket = socket
    that._gamesctr = gamectr
    that._room = undefined //所在房间的引用
