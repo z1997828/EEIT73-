@@ -1,10 +1,9 @@
-module.exports = function(info,socket,callindex,gamectr){
+module.exports = function(userDetails,socket,callindex,gamectr){
    //console.log("playerinfo:"+ JSON.stringify(info))
    var that = {}
-   that._nickName = info.nick_name;    //用户昵称
-   that._accountID = info.account_id;  //用户账号
-   that._avatarUrl = info.avatar_url;  //头像
-   that._gold = info.gold_count;       //当前金币
+   that._userName = userDetails.userDetails.userName;    //用户昵称
+   that._avatarUrl = userDetails.userDetails.avatar;  //头像
+   that._money = userDetails.userDetails._money;       //当前金币
    that._socket = socket
    that._gamesctr = gamectr
    that._room = undefined //所在房间的引用
@@ -24,7 +23,7 @@ module.exports = function(info,socket,callindex,gamectr){
    
 
    //通知客户端登录成功，返回数据
-   _notify("login_resp",0,{goldcount:that._gold},callindex)
+   _notify("login_resp",0,{moneycount:that._money},callindex)
 
    that._socket.on("disconnect",function(){
         console.log("player disconnect")
@@ -132,12 +131,12 @@ module.exports = function(info,socket,callindex,gamectr){
                             that._room.playerRobmaster(that,data)
                            }
                            break 
-                       case "chu_bu_card_req":   //客户端发送出牌消息
+                       case "no_play_card_req":   //客户端发送出牌消息
                             if(that._room){
                                 that._room.playerBuChuCard(that,data)
                             }
                            break   
-                       case "chu_card_req":
+                       case "play_card_req":
                             if(that._room){
                                
                                 console.log("that._room")
@@ -204,7 +203,7 @@ module.exports = function(info,socket,callindex,gamectr){
     }
 
     that.SendChuCard = function(data){
-        _notify("can_chu_card_notify",0,data,0)
+        _notify("can_play_card_notify",0,data,0)
     }
 
     that.sendRoomState = function(data){

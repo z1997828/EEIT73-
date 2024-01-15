@@ -23,16 +23,17 @@ export class hallScene extends Component {
     @property(Node) lbMoney: Node = null;
     _lbname: Label = null;
     _lbMoney: Label = null;
-    @property(Node)pIname:Node = null;
-    @property(Node)pIemail:Node = null;
-    @property(Node)pIip:Node = null;
-    _pIname:Label = null;
-    _pIemail:Label = null;
-    _pIip:Label = null;
+    @property(Node) pIname: Node = null;
+    @property(Node) pIemail: Node = null;
+    @property(Node) pIip: Node = null;
+    _pIname: Label = null;
+    _pIemail: Label = null;
+    _pIip: Label = null;
     public openMenu = false;
     private MusicIsOn: boolean = !false;
     private AudioIsOn: boolean = !false;
-    
+
+
     onLoad() {
 
         this._lbname = this.lbname.getComponent(Label);
@@ -48,24 +49,23 @@ export class hallScene extends Component {
         this.face.active = false;
         this.openMenu = false;
         gameManager.Instance.socketUtil = new SocketUtil();
-        gameManager.Instance.socketUtil.connect();
         gameManager.Instance.util = new Util();
         
-        
+    
         this.init();
     }
 
     init() {
         let userDetails = gameManager.Instance.userDetails;
-        if (userDetails && userDetails.userDetails) {
-            // 假设你有获取UI元素的方法，并且已经定义了如何设置它们
-            this._lbname.string = userDetails.userDetails.username;
-            this._lbMoney.string = userDetails.userDetails.money
-            this._pIname.string = userDetails.userDetails.username;
-            this._pIemail.string = userDetails.userDetails.email;
+        if (userDetails) {
+            this._lbname.string = userDetails.username;
+            this._lbMoney.string = userDetails.money
+            this._pIname.string = userDetails.username;
+            this._pIemail.string = userDetails.email;
         }
     }
 
+    
     // ----------上方功能列-------------
     // 頭像按鈕
     public onFace() {
@@ -92,14 +92,7 @@ export class hallScene extends Component {
     // 進入初階場按鈕
 
     public onInRookieRoom() {
-        let userDetails = gameManager.Instance.userDetails;
-        gameManager.Instance.loading.show();
-        gameManager.Instance.loading.show();
-        let onCreate = (ret)=> {
-            if(userDetails.userDetails.money < 100){
-                gameManager.Instance.alert.show("金額不足","無法參與初級房!")
-            }
-        }
+
         director.loadScene('gameroom');
     }
 
@@ -209,9 +202,9 @@ export class hallScene extends Component {
 
     // 設定內登出按鈕
     public onLogout() {
-        
+
         gameManager.Instance.util.logout();
-        
+
     }
     //// 玩法按鈕
     public onRule() {

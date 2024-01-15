@@ -5,6 +5,9 @@ import HTTP from "./HTTP"
 import SocketUtil from "./SocketUtil";
 import UserMgr from "./UserMgr";
 import Util from "./Util";
+import eventListener from "./eventListener";
+
+
 
 
 export default class gameManager{
@@ -18,6 +21,7 @@ export default class gameManager{
     loading:waittingConn = null;
     alert:Alert = null;
     userMgr:UserMgr = null;
-    userDetails = null ; 
     util:Util = null;
+    eventlistener:eventListener = null;
+    userDetails = null;
 }
