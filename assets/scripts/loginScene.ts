@@ -130,7 +130,7 @@ export class loginScene extends Component {
         if (regpassword !== confirmRegPassword) {
             gameManager.Instance.alert.show("註冊失敗", "輸入的二次密碼有誤!");
             return;
-        } 
+        }
 
         let data = { "username": regname, "email": regemail, "password": regpassword };
         gameManager.Instance.http.postRequest(Api.register, data, (ret) => {
@@ -180,7 +180,7 @@ export class loginScene extends Component {
 
             if (ret.message === '登錄成功') {
                 gameManager.Instance.loading.hide();
-                gameManager.Instance.userDetails = ret;
+                gameManager.Instance.userDetails = ret.userDetails;
                 director.loadScene("hall");
             } else {
                 gameManager.Instance.loading.hide();

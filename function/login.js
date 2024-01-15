@@ -1,11 +1,11 @@
 const bcrypt = require('bcryptjs')
 const admin = require('firebase-admin');
-const express =require('express')
-const session=require('express-session')
+const express = require('express')
+const session = require('express-session')
 
 const serviceAccount = require("../gameproject-d9074-firebase-adminsdk-6rnh9-cff9fb8858.json");
 const firebase = require('firebase/app');
-// const getAuth = getAuth(firebaseApp);
+require('firebase/auth');
 const firebaseConfig = {
     apiKey: "AIzaSyCEEb5PlBygA9_pTl38ce19A5vtZsKUqdA",
     authDomain: "gameproject-d9074.firebaseapp.com",
@@ -17,10 +17,11 @@ const firebaseConfig = {
     measurementId: "G-CL35V2SP5F"
 };
 const firebaseApp = firebase.initializeApp(firebaseConfig);
-const auth = firebaseApp.auth();
+
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
+const auth = firebaseApp.auth();
 const db = admin.firestore();
 
 const firebaseTimestamp = admin.firestore.FieldValue.serverTimestamp();
@@ -106,7 +107,7 @@ exports.getData = function getData(username) {
 }
 
 // 登入功能
-exports.getUsers = function authenticateUser(req,email, inputPassword) {
+exports.getUsers = function authenticateUser(email, inputPassword) {
     return new Promise((resolve, reject) => {
         db.collection('users').where("email", "==", email).get()
             .then((querySnapshot) => {
@@ -135,7 +136,7 @@ exports.getUsers = function authenticateUser(req,email, inputPassword) {
                                     regtime: userData.regtime
                                 };
                                 //將當前用戶資料保存在session中
-                                req.session.currentUsername=userData.username;
+                                // req.session.currentUsername=userDetails.username;
                                 // 登錄成功
                                 resolve(userDetails);
 

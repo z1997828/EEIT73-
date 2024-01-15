@@ -5,6 +5,8 @@ const io = require('socket.io-client');
 const http = require('http').Server(app)
 const sio = require('socket.io')(http)
 const Login = require('../function/login')
+const gamectr = require('./game_ctr')
+
 // 允許跨域使用本服務
 var cors = require("cors");
 app.use(cors());
@@ -35,7 +37,8 @@ app.get('/', (req, res) => {
 //登錄
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
-  // console.log("收到的帳號:", req.body.email, "密碼:", password);
+  
+  // console.log(req,"收到的帳號:", req.body.email, "密碼:", password);
 
   Login.getUsers(email, password)
     .then(userDetails => {
@@ -96,6 +99,8 @@ sio.on('connection', (socket) => {
   let clientIp = socket.handshake.address;
   socket.emit('connected', '' + clientIp);
   console.log('a user connected,ip = ' + clientIp);
+  
+  
   socket.on("game_ping", () => {
     socket.emit("game_pong")
   })
@@ -108,10 +113,10 @@ console.log("Web伺服器就緒，開始接受用戶端連線.");
 console.log("鍵盤「Ctrl + C」可結束伺服器程式.");
 
 //聊天室
-const chat = require('../function/chat');
-chat(io);
-const PORT = process.env.PORT || 3000;
+// const chat = require('../function/chat');
+// chat(io);
+// const PORT = process.env.PORT || 3000;
 
-server.listen(PORT,()=>{
-    console.log('Server is running on port ${PORT}');
-})
+// server.listen(PORT,()=>{
+//     console.log('Server is running on port ${PORT}');
+// })
