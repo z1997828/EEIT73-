@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Label, director, game } from 'cc';
+import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Label, director, game, Prefab, instantiate } from 'cc';
 import gameManager from './components/gameManager';
 import SocketUtil from './components/SocketUtil';
 import Util from './components/Util';
@@ -19,7 +19,10 @@ export class hallScene extends Component {
     @property(SpriteFrame) offImage: SpriteFrame = null;
     @property(AudioSource) bgMusic: AudioSource = null;
     @property(Node) personalInfo: Node = null;
-
+    //sammykym:
+    @property(Node) recordFrame: Node = null;  
+    @property(Prefab) recordText:Prefab=null;
+    //-----------
     @property(Node) lbFace: Node = null;
     @property(Node) lbname: Node = null;
     @property(Node) lbMoney: Node = null;
@@ -66,6 +69,17 @@ export class hallScene extends Component {
             this._lbMoney.string = userDetails.money
             this._pIname.string = userDetails.username;
             this._pIemail.string = userDetails.email;
+
+            //sammykym:
+            userDetails.user_playway.forEach(record => {
+                let record_text = instantiate(this.recordText);
+                record.money>0?record_text.getComponentsInChildren(Label)[0].string='勝':record_text.getComponentsInChildren(Label)[0].string='負';
+                record_text.getComponentsInChildren(Label)[1].string=record.date;
+                record.identity=='banker'?record_text.getComponentsInChildren(Label)[2].string='地主':record_text.getComponentsInChildren(Label)[2].string='農民';
+                record_text.getComponentsInChildren(Label)[3].string=record.money;
+                this.recordFrame.addChild(record_text);
+            });
+            //-----------
         }
     }
 

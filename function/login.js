@@ -27,29 +27,29 @@ const db = admin.firestore();
 const firebaseTimestamp = admin.firestore.FieldValue.serverTimestamp();
 //使用express-session中間件
 express().use(session({
-    secret:'0000',
+    secret: '0000',
     resave: false,
     saveUninitialized: true
 }));
 
 // 註冊功能
-exports.registerNewUser = function(username, email, password) {
+exports.registerNewUser = function (username, email, password) {
     return new Promise((resolve, reject) => {
 
         auth.createUserWithEmailAndPassword(email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-        
+
                 // 使用bcrypt加密
                 bcrypt.hash(password, 10, (err, hashedPassword) => {
                     if (err) {
                         console.error('密碼加密失敗', err);
                         return reject(err);
                     }
-        
+
                     // 額外將資料寫入db - 在此處寫入資料庫
                     db.collection('users').doc(username).set({
-                        avatar:"",
+                        avatar: "",
                         email: email,
                         username: username,
                         password: hashedPassword, // 存儲加密後的密碼
@@ -62,7 +62,7 @@ exports.registerNewUser = function(username, email, password) {
                             }).catch(function (error) {
                                 console.log('驗證郵件發送失敗', error)
                             });
-        
+
                             console.log('用戶資料寫入成功');
                             resolve(user);
                         })
@@ -70,7 +70,7 @@ exports.registerNewUser = function(username, email, password) {
                             console.error('寫入用戶資料失敗', error);
                             reject(error);
                         });
-        
+
                     console.log('註冊成功', user);
                 });
             })
@@ -124,7 +124,45 @@ exports.getUsers = function authenticateUser(email, inputPassword) {
                         return reject(new Error('密碼比對錯誤'));
                     }
                     if (result) {
-
+                        let feedback = [];
+                        db.collection('feedback').doc(userData.username).get()
+                            .then((snapshot) => {
+                                feedback = snapshot.data().message;
+                            }).catch((err) => {
+                                feedback = '';
+                            })
+                        let user_playway = [];
+                        db.collection('game_playway')
+                            .get()
+                            .then((snapshot) => {
+                                snapshot.forEach((doc) => {
+                                    switch (userData.username) {
+                                        case doc.data().banker_id:
+                                            user_playway.push({
+                                                identity: 'banker',
+                                                money: doc.data().banker_money,
+                                                date: doc.data().date.toDate().toLocaleString()
+                                            })
+                                            break;
+                                        case doc.data().player1_id:
+                                            user_playway.push({
+                                                identity: 'player1',
+                                                money: doc.data().player1_money,
+                                                date: doc.data().date.toDate().toLocaleString()
+                                            })
+                                            break;
+                                        case doc.data().player2_id:
+                                            user_playway.push({
+                                                identity: 'player2',
+                                                money: doc.data().player2_money,
+                                                date: doc.data().date.toDate().toLocaleString()
+                                            })
+                                            break;
+                                    }
+                                });
+                            }).catch((err) => {
+                                console.log(err);
+                            })
                         // 密碼匹配，使用 Firebase Authentication 登錄
                         firebase.auth().signInWithEmailAndPassword(email, inputPassword)
                             .then((userCredential) => {
@@ -133,7 +171,9 @@ exports.getUsers = function authenticateUser(email, inputPassword) {
                                     email: userData.email,
                                     username: userData.username,
                                     money: userData.money,
-                                    regtime: userData.regtime
+                                    regtime: userData.regtime,
+                                    feedback: feedback,
+                                    user_playway:user_playway
                                 };
                                 //將當前用戶資料保存在session中
                                 // req.session.currentUsername=userDetails.username;
@@ -159,47 +199,47 @@ exports.getUsers = function authenticateUser(email, inputPassword) {
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
 function signInWithGoogle() {
-    return new Promise((resolve,reject)=>{
-    auth.signInWithPopup(googleProvider)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            db.collection('users').doc(user.uid).set({
-                displayName: user.displayName,
-                email: user.email,
-                uid: user.uid
-            })
-                .then(() => {
-                    console.log('使用者資料已存入Firestore');
-                    resolve(user);
+    return new Promise((resolve, reject) => {
+        auth.signInWithPopup(googleProvider)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                db.collection('users').doc(user.uid).set({
+                    displayName: user.displayName,
+                    email: user.email,
+                    uid: user.uid
                 })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.error('Google 登入失敗', errorCode, errorMessage);
-                    reject(error);
-                });
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.error('Google 登入失敗', errorCode, errorMessage);
-            reject(error);
-        });
+                    .then(() => {
+                        console.log('使用者資料已存入Firestore');
+                        resolve(user);
+                    })
+                    .catch((error) => {
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        console.error('Google 登入失敗', errorCode, errorMessage);
+                        reject(error);
+                    });
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.error('Google 登入失敗', errorCode, errorMessage);
+                reject(error);
+            });
     });
 }
 exports.signInWithGoogle = signInWithGoogle;
 //密碼重設
 function resetPassword(email) {
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve, reject) => {
         auth.sendPasswordResetEmail(email)
-        .then(()=>{
-            console.log("重設密碼郵件已發送至"+email)
-            resolve();
-        })
-        .catch((error)=>{
-            console.log('重設密碼郵件發送失敗',error.message);
-            reject(error);
-        })
+            .then(() => {
+                console.log("重設密碼郵件已發送至" + email)
+                resolve();
+            })
+            .catch((error) => {
+                console.log('重設密碼郵件發送失敗', error.message);
+                reject(error);
+            })
     })
 }
 exports.resetPassword = resetPassword;
