@@ -111,7 +111,7 @@ export class hallScene extends Component {
     // 進入初階場按鈕
 
     public onInRookieRoom() {
-
+        
         director.loadScene('gameroom');
     }
 
