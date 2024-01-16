@@ -28,10 +28,6 @@ app.all('*', (req, res, next) => {
   next();
 })
 
-
-
-const connectedUsers = {};
-
 app.get('/', (req, res) => {
   res.send('Hello');
 });
@@ -43,7 +39,7 @@ app.post('/login', (req, res) => {
 
   Login.getUsers(email, password)
     .then(userDetails => {
-      connectedUsers[userDetails.username] = userDetails;
+      
       res.status(200).json({ message: '登錄成功', userDetails });
     })
     .catch(error => {
@@ -104,23 +100,26 @@ sio.on('connection', (socket) => {
   socket.on("game_ping", () => {
     socket.emit("game_pong")
   })
-  socket.on('login', (userDetails) => {
-    if (userDetails) {
-      // 使用 userDetails 創建 Player 對象或進行其他處理
-      const player = new Player(userDetails, socket);
-      console.log('連接的用戶資料:', userDetails);
-      // 其他與 Player 相關的邏輯處理...
+  socket.on('notify', (data) => {
+    const cmdType = data.cmd;
+    const req = data.data;
+    const callIndex = data.callindex;
 
-      // 斷開連接時的處理
-      socket.on("disconnect", () => {
-        console.log('斷開的用戶資料:', userDetails);
-        // 這裡可以處理用戶斷開連接後的相關邏輯
-      });
-    } else {
-      console.log("未提供有效的用戶名");
-    }
-  })
+    console.log(`收到通知: 命令類型 - ${cmdType}, 數據 - ${JSON.stringify(req)}`);
+    switch (cmdType) {
+      case 'login':
+          // 處理登入邏輯
+          // 假設驗證成功
+          const response = { success: true, message: '登入成功' };
+          socket.emit('notify', { cmd: 'login_response', data: response, callindex: callIndex });
+          break;
+      
+      // 其他命令的處理...
 
+      default:
+          console.log(`未知的命令類型: ${cmdType}`);
+  }
+});
   socket.on("disconnect", () => {
     console.log("客戶端:有人離開Server")
   })

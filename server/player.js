@@ -1,5 +1,5 @@
 module.exports = function(userDetails,socket,callindex,gamectr){
-   //console.log("playerinfo:"+ JSON.stringify(info))
+   console.log("playerinfo:"+ JSON.stringify(userDetails))
    var that = {}
    that._userName = userDetails.userName;    //用户昵称
    that._avatarUrl = userDetails.avatar;  //头像

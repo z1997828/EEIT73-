@@ -13,11 +13,10 @@ export default class SocketUtil {
     isPing = false;
     lastSendTime = null;
     lastReciveTime = null;
-    handlers = [];
     private responseMap: { [key: number]: Function } = {};
     private callIndex = 0;
     private event = gameManager.Instance.eventlistener;
-    public userDetails: any = null;
+
 
     connect() {
         let opts = {
@@ -63,23 +62,29 @@ export default class SocketUtil {
         })
 
     }
-
     send(event, data?) {
         if (this.connected) {
             this.sio.emit(event, data);
         }
         console.log("觸發時間: " + (new Date()).toLocaleTimeString() + "，請求事件：" + event);
     }
-    private _request(cmdType: string, req: any, callback) {
-        if (this.sio && this.connected) {
-            const callIndex = ++this.callIndex;
-            this.responseMap[callIndex] = callback;
-            this.sio.emit("notify", { cmd: cmdType, data: req, callIndex: callIndex });
-        }
+
+
+    private _sendmsg(cmdtype, req, callindex) {
+        this.sio.emit("notify", { cmd: cmdtype, data: req, callindex: callindex });
     }
 
-    requestLogin(callback) {
-        this.event.on("login_success", callback);
+    private _request(cmdType, req, callback) {
+        console.log(`Send cmd: ${cmdType} ${JSON.stringify(req)}`);
+
+        this.callIndex++;
+        this.responseMap[this.callIndex] = callback;
+        this._sendmsg(cmdType, req, this.callIndex);
+
+    }
+
+    requestLogin = function (req, callback) {
+        this._request("login", req, callback)
     }
 
     requestCreateRoom(req: any, callback) {
@@ -89,6 +94,7 @@ export default class SocketUtil {
     requestJoin(req: any, callback) {
         this._request("joinroom_req", req, callback);
     }
+
 
     requestEnterRoom(req: any, callback) {
         this._request("enterroom_req", req, callback);
@@ -229,7 +235,7 @@ export default class SocketUtil {
         console.log("game_ping");
         this.send("game_ping")
     }
-    
+
 
     close() {
         if (this.sio && this.connected) {
