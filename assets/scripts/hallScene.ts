@@ -71,6 +71,7 @@ export class hallScene extends Component {
             this._pIemail.string = userDetails.email;
 
             //sammykym:
+            this.recordFrame.removeAllChildren();
             userDetails.user_playway.forEach(record => {
                 let record_text = instantiate(this.recordText);
                 record.money>0?record_text.getComponentsInChildren(Label)[0].string='勝':record_text.getComponentsInChildren(Label)[0].string='負';
