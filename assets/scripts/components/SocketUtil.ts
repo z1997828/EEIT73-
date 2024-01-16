@@ -66,12 +66,9 @@ export default class SocketUtil {
 
     send(event, data?) {
         if (this.connected) {
-            if (data != null && (typeof (data) == "object")) {
-                data = JSON.stringify(data);
-            }
             this.sio.emit(event, data);
         }
-        console.log("觸發時間: " + (new Date()).toLocaleTimeString + "request :" + event)
+        console.log("觸發時間: " + (new Date()).toLocaleTimeString() + "，請求事件：" + event);
     }
     private _request(cmdType: string, req: any, callback) {
         if (this.sio && this.connected) {
@@ -213,15 +210,15 @@ export default class SocketUtil {
             }
         }, 5000)
 
-        setInterval(() => {
-            if (this.sio && this.connected) {
-                if (Date.now() - this.lastReciveTime > 10000) {
-                    this.connected = false;
-                    this.sio.disconnect();
-                    this.sio = null;
-                }
-            }
-        }, 500)
+        // setInterval(() => {
+        //     if (this.sio && this.connected) {
+        //         if (Date.now() - this.lastReciveTime > 10000) {
+        //             this.connected = false;
+        //             this.sio.disconnect();
+        //             this.sio = null;
+        //         }
+        //     }
+        // }, 500)
     }
 
 

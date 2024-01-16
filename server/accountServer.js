@@ -5,7 +5,8 @@ const io = require('socket.io-client');
 const http = require('http').Server(app)
 const sio = require('socket.io')(http)
 const Login = require('../function/login')
-const gamectr = require('./game_ctr')
+const Gamectr = require('./game_ctr')
+const Player = require('./player');
 
 // 允許跨域使用本服務
 var cors = require("cors");
@@ -29,7 +30,7 @@ app.all('*', (req, res, next) => {
 
 
 
-
+const connectedUsers = {};
 
 app.get('/', (req, res) => {
   res.send('Hello');
@@ -37,11 +38,12 @@ app.get('/', (req, res) => {
 //登錄
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
-  
+
   // console.log(req,"收到的帳號:", req.body.email, "密碼:", password);
 
   Login.getUsers(email, password)
     .then(userDetails => {
+      connectedUsers[userDetails.username] = userDetails;
       res.status(200).json({ message: '登錄成功', userDetails });
     })
     .catch(error => {
@@ -52,13 +54,14 @@ app.post('/login', (req, res) => {
 //檢測帳號重複
 
 // 註冊
-app.post('/register', (req,res)=>{
+app.post('/register', (req, res) => {
   const { username, email, password } = req.body;
-  console.log("name:",username, "email:",email,"password:",password);  
-  
-    Login.registerNewUser(username, email, password)
+  console.log("name:", username, "email:", email, "password:", password);
+
+  Login.registerNewUser(username, email, password)
     .then(NewUserDetails => {
       res.status(200).json({ message: '註冊成功', NewUserDetails });
+
     })
     .catch(error => {
       res.send.json({ message: '註冊失敗', error });
@@ -98,11 +101,26 @@ sio.on('connection', (socket) => {
   let clientIp = socket.handshake.address;
   socket.emit('connected', '' + clientIp);
   console.log('a user connected,ip = ' + clientIp);
-  
-  
   socket.on("game_ping", () => {
     socket.emit("game_pong")
   })
+  socket.on('login', (userDetails) => {
+    if (userDetails) {
+      // 使用 userDetails 創建 Player 對象或進行其他處理
+      const player = new Player(userDetails, socket);
+      console.log('連接的用戶資料:', userDetails);
+      // 其他與 Player 相關的邏輯處理...
+
+      // 斷開連接時的處理
+      socket.on("disconnect", () => {
+        console.log('斷開的用戶資料:', userDetails);
+        // 這裡可以處理用戶斷開連接後的相關邏輯
+      });
+    } else {
+      console.log("未提供有效的用戶名");
+    }
+  })
+
   socket.on("disconnect", () => {
     console.log("客戶端:有人離開Server")
   })

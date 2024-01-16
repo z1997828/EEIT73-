@@ -25,7 +25,7 @@ export class loginScene extends Component {
         this.singIn.active = false;
         gameManager.Instance.http = new HTTP();
         gameManager.Instance.socketUtil = new SocketUtil();
-        gameManager.Instance.socketUtil.connect();
+       
         this._Label = this.Label.getComponent(Label);
         this.Label.active = false
         
@@ -181,6 +181,8 @@ export class loginScene extends Component {
             if (ret.message === '登錄成功') {
                 gameManager.Instance.loading.hide();
                 gameManager.Instance.userDetails = ret.userDetails;
+                gameManager.Instance.socketUtil.connect();
+                gameManager.Instance.socketUtil.send("login", ret.userDetails);
                 director.loadScene("hall");
             } else {
                 gameManager.Instance.loading.hide();
