@@ -22,6 +22,10 @@ app.use((socket,next)=>{
                 return next(new Error('認證錯誤'));
             }
         //將用戶名添加
+        /*使用...用於創建session的淺拷貝，創建一個新對象，包含原始對象的所有屬性
+        並添加一個新屬性currentUsername,不會直接修改原始的session而是創建新對象,
+        以確保不會對其他代碼或中間件產生不良影響
+        */
             socket.handshake.session={
                 ...socket.handshake.session,
                 currentUsername: decode.username,
@@ -33,8 +37,6 @@ app.use((socket,next)=>{
     }
 });
 
-=
-
 async function handleConnection(socket){
     const currentUsername = socket.handshake.session.currentUsername;// 從登入邏輯中獲取當前用戶名
     socket.join(currentUsername);
@@ -42,11 +44,9 @@ async function handleConnection(socket){
 
     //監聽客戶端發送的消息
     socket.on('chat message',(msg)=>{
-
         console.log('message'+ msg);
         //廣播消息給特定房間的所有客戶端
         io.to(currentUsername).emit('chat message', msg);
-
     });
     
     //監聽客戶端斷開連接
