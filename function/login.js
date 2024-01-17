@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs')
 const admin = require('firebase-admin');
 const express = require('express')
-const session = require('express-session')
+
 
 const serviceAccount = require("../gameproject-d9074-firebase-adminsdk-6rnh9-cff9fb8858.json");
 const firebase = require('firebase/app');
@@ -24,13 +24,12 @@ admin.initializeApp({
 const auth = firebaseApp.auth();
 const db = admin.firestore();
 
+const jwt = require('jsonwebtoken');
 const firebaseTimestamp = admin.firestore.FieldValue.serverTimestamp();
-//使用express-session中間件
-express().use(session({
-    secret: '0000',
-    resave: false,
-    saveUninitialized: true
-}));
+const crypto=require('crypto')
+const secretKey = crypto.randomBytes(32).toString('base64');
+const firebaseTimestamp = admin.firestore.FieldValue.serverTimestamp();
+
 
 // 註冊功能
 exports.registerNewUser = function (username, email, password) {
@@ -175,8 +174,10 @@ exports.getUsers = function authenticateUser(email, inputPassword) {
                                     feedback: feedback,
                                     user_playway:user_playway
                                 };
-                                //將當前用戶資料保存在session中
-                                // req.session.currentUsername=userDetails.username;
+                                    // 生成 JWT
+                                    const token = jwt.sign({ username: userDetails.username }, secretKey, { expiresIn: '72h' });
+                                    // 将 JWT 添加到用户详情中
+                                    userDetails.token = token;
                                 // 登錄成功
                                 resolve(userDetails);
 
