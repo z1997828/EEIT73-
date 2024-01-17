@@ -25,7 +25,7 @@ export class loginScene extends Component {
         this.singIn.active = false;
         gameManager.Instance.http = new HTTP();
         gameManager.Instance.socketUtil = new SocketUtil();
-        gameManager.Instance.socketUtil.connect();
+
         this._Label = this.Label.getComponent(Label);
         this.Label.active = false
 
@@ -130,7 +130,7 @@ export class loginScene extends Component {
         if (regpassword !== confirmRegPassword) {
             gameManager.Instance.alert.show("註冊失敗", "輸入的二次密碼有誤!");
             return;
-        } 
+        }
 
         let data = { "username": regname, "email": regemail, "password": regpassword };
         gameManager.Instance.http.postRequest(Api.register, data, (ret) => {
@@ -159,8 +159,6 @@ export class loginScene extends Component {
     // 確定登入按鈕
     public onConfirmLogin() {
 
-
-
         let email = this.accountInput.string;
         let password = this.passwdInput.string;
         // console.log("發送的帳號:", email, "密碼:", password);
@@ -177,10 +175,20 @@ export class loginScene extends Component {
         // 調用 postRequest 方法，並傳入數據
         gameManager.Instance.http.postRequest(Api.login, data, (ret) => {
 
-
             if (ret.message === '登錄成功') {
                 gameManager.Instance.loading.hide();
-                gameManager.Instance.userDetails = ret;
+                gameManager.Instance.userDetails = ret.userDetails;
+                gameManager.Instance.socketUtil.connect();
+                gameManager.Instance.socketUtil.requestLogin(ret.userDetails, (err, result) => {
+                    if (err) {
+                        // 處理錯誤
+                        console.error("Socket 登入失敗", err);
+                    } else {
+                        // 處理登入成功的邏輯
+                        console.log("Socket 登入成功", result);
+                    }
+                });
+
                 director.loadScene("hall");
             } else {
                 gameManager.Instance.loading.hide();

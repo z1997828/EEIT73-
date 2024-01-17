@@ -1,8 +1,10 @@
-import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Label, director, game } from 'cc';
+import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Label, director, game, Prefab, instantiate } from 'cc';
 import gameManager from './components/gameManager';
 import SocketUtil from './components/SocketUtil';
 import Util from './components/Util';
+
 const { ccclass, property } = _decorator;
+
 @ccclass('hall')
 export class hallScene extends Component {
     @property(Node) mall: Node = null;
@@ -17,21 +19,25 @@ export class hallScene extends Component {
     @property(SpriteFrame) offImage: SpriteFrame = null;
     @property(AudioSource) bgMusic: AudioSource = null;
     @property(Node) personalInfo: Node = null;
-
+    //sammykym:
+    @property(Node) recordFrame: Node = null;  
+    @property(Prefab) recordText:Prefab=null;
+    //-----------
     @property(Node) lbFace: Node = null;
     @property(Node) lbname: Node = null;
     @property(Node) lbMoney: Node = null;
     _lbname: Label = null;
     _lbMoney: Label = null;
-    @property(Node)pIname:Node = null;
-    @property(Node)pIemail:Node = null;
-    @property(Node)pIip:Node = null;
-    _pIname:Label = null;
-    _pIemail:Label = null;
-    _pIip:Label = null;
+    @property(Node) pIname: Node = null;
+    @property(Node) pIemail: Node = null;
+    @property(Node) pIip: Node = null;
+    _pIname: Label = null;
+    _pIemail: Label = null;
+    _pIip: Label = null;
     public openMenu = false;
     private MusicIsOn: boolean = !false;
     private AudioIsOn: boolean = !false;
+
     
     onLoad() {
 
@@ -48,24 +54,37 @@ export class hallScene extends Component {
         this.face.active = false;
         this.openMenu = false;
         gameManager.Instance.socketUtil = new SocketUtil();
-        gameManager.Instance.socketUtil.connect();
         gameManager.Instance.util = new Util();
         
-        
+
         this.init();
     }
 
+   
+
     init() {
         let userDetails = gameManager.Instance.userDetails;
-        if (userDetails && userDetails.userDetails) {
-            // 假设你有获取UI元素的方法，并且已经定义了如何设置它们
-            this._lbname.string = userDetails.userDetails.username;
-            this._lbMoney.string = userDetails.userDetails.money
-            this._pIname.string = userDetails.userDetails.username;
-            this._pIemail.string = userDetails.userDetails.email;
+        if (userDetails) {
+            this._lbname.string = userDetails.username;
+            this._lbMoney.string = userDetails.money
+            this._pIname.string = userDetails.username;
+            this._pIemail.string = userDetails.email;
+
+            //sammykym:
+            this.recordFrame.removeAllChildren();
+            userDetails.user_playway.forEach(record => {
+                let record_text = instantiate(this.recordText);
+                record.money>0?record_text.getComponentsInChildren(Label)[0].string='勝':record_text.getComponentsInChildren(Label)[0].string='負';
+                record_text.getComponentsInChildren(Label)[1].string=record.date;
+                record.identity=='banker'?record_text.getComponentsInChildren(Label)[2].string='地主':record_text.getComponentsInChildren(Label)[2].string='農民';
+                record_text.getComponentsInChildren(Label)[3].string=record.money;
+                this.recordFrame.addChild(record_text);
+            });
+            //-----------
         }
     }
 
+    
     // ----------上方功能列-------------
     // 頭像按鈕
     public onFace() {
@@ -92,8 +111,7 @@ export class hallScene extends Component {
     // 進入初階場按鈕
 
     public onInRookieRoom() {
-
-        console.log("確定按鈕被點擊");
+        
         director.loadScene('gameroom');
     }
 
@@ -203,9 +221,9 @@ export class hallScene extends Component {
 
     // 設定內登出按鈕
     public onLogout() {
-        
+
         gameManager.Instance.util.logout();
-        
+
     }
     //// 玩法按鈕
     public onRule() {

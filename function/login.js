@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs')
 const admin = require('firebase-admin');
 const express = require('express')
 
+
 const serviceAccount = require("../gameproject-d9074-firebase-adminsdk-6rnh9-cff9fb8858.json");
 const firebase = require('firebase/app');
 require('firebase/auth');
@@ -22,10 +23,12 @@ admin.initializeApp({
 });
 const auth = firebaseApp.auth();
 const db = admin.firestore();
+
 const jwt = require('jsonwebtoken');
 const firebaseTimestamp = admin.firestore.FieldValue.serverTimestamp();
 const crypto=require('crypto')
 const secretKey = crypto.randomBytes(32).toString('base64');
+const firebaseTimestamp = admin.firestore.FieldValue.serverTimestamp();
 
 
 // 註冊功能
@@ -175,7 +178,6 @@ exports.getUsers = function authenticateUser(email, inputPassword) {
                                     const token = jwt.sign({ username: userDetails.username }, secretKey, { expiresIn: '72h' });
                                     // 将 JWT 添加到用户详情中
                                     userDetails.token = token;
-
                                 // 登錄成功
                                 resolve(userDetails);
 

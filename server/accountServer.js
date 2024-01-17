@@ -5,6 +5,9 @@ const io = require('socket.io-client');
 const http = require('http').Server(app)
 const sio = require('socket.io')(http)
 const Login = require('../function/login')
+const Gamectr = require('./game_ctr')
+const Player = require('./player');
+
 // 允許跨域使用本服務
 var cors = require("cors");
 app.use(cors());
@@ -25,22 +28,19 @@ app.all('*', (req, res, next) => {
   next();
 })
 
-
-
-
-
 app.get('/', (req, res) => {
   res.send('Hello');
 });
 //登錄
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
-  // console.log("收到的帳號:", req.body.email, "密碼:", password);
+
+  // console.log(req,"收到的帳號:", req.body.email, "密碼:", password);
 
   Login.getUsers(email, password)
     .then(userDetails => {
-      res.status(200).json({ message: '登錄成功', userDetails });
       
+      res.status(200).json({ message: '登錄成功', userDetails });
     })
     .catch(error => {
       res.status(401).json({ message: '登錄失敗', error });
@@ -50,13 +50,14 @@ app.post('/login', (req, res) => {
 //檢測帳號重複
 
 // 註冊
-app.post('/register', (req,res)=>{
+app.post('/register', (req, res) => {
   const { username, email, password } = req.body;
-  console.log("name:",username, "email:",email,"password:",password);  
-  
-    Login.registerNewUser(username, email, password)
+  console.log("name:", username, "email:", email, "password:", password);
+
+  Login.registerNewUser(username, email, password)
     .then(NewUserDetails => {
       res.status(200).json({ message: '註冊成功', NewUserDetails });
+
     })
     .catch(error => {
       res.send.json({ message: '註冊失敗', error });
@@ -99,6 +100,26 @@ sio.on('connection', (socket) => {
   socket.on("game_ping", () => {
     socket.emit("game_pong")
   })
+  socket.on('notify', (data) => {
+    const cmdType = data.cmd;
+    const req = data.data;
+    const callIndex = data.callindex;
+
+    console.log(`收到通知: 命令類型 - ${cmdType}, 數據 - ${JSON.stringify(req)}`);
+    switch (cmdType) {
+      case 'login':
+          // 處理登入邏輯
+          // 假設驗證成功
+          const response = { success: true, message: '登入成功' };
+          socket.emit('notify', { cmd: 'login_response', data: response, callindex: callIndex });
+          break;
+      
+      // 其他命令的處理...
+
+      default:
+          console.log(`未知的命令類型: ${cmdType}`);
+  }
+});
   socket.on("disconnect", () => {
     console.log("客戶端:有人離開Server")
   })
@@ -107,3 +128,11 @@ sio.on('connection', (socket) => {
 console.log("Web伺服器就緒，開始接受用戶端連線.");
 console.log("鍵盤「Ctrl + C」可結束伺服器程式.");
 
+//聊天室
+// const chat = require('../function/chat');
+// chat(io);
+// const PORT = process.env.PORT || 3000;
+
+// server.listen(PORT,()=>{
+//     console.log('Server is running on port ${PORT}');
+// })

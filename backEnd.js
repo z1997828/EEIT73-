@@ -11,6 +11,7 @@ app.use(cors());
 var admin = require('firebase-admin');
 //取得Key認證文件
 var serviceAccount = require("./gameproject-d9074-firebase-adminsdk-6rnh9-cff9fb8858.json");
+const { timeStamp } = require("console");
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
@@ -154,7 +155,8 @@ app.all('*', (req, res, next) => {
                 break;
             case "/CMS/game_playway/add":
                 (async () => {
-                    await db.collection('game_playway').add({
+                   
+                    await db.collection('game_playway').doc(new Date().getTime().toString()).create({
                         banker_id: req.body.banker_id,
                         banker_money: req.body.banker_money,
                         player1_id: req.body.player1_id,
@@ -277,6 +279,6 @@ app.all('*', (req, res, next) => {
         next();
     }
 })
-http.listen(3000, () => {
+http.listen(3001, () => {
     console.log("Web伺服器就緒，開始接受用戶端連線.");
 });
