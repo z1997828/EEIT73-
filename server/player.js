@@ -1,9 +1,11 @@
-module.exports = function(userDetails,socket,callindex,gamectr){
-   console.log("playerinfo:"+ JSON.stringify(userDetails))
+module.exports = function(info,socket,callindex,gamectr){
+//    console.log("playerinfo:"+ JSON.stringify(userDetails))
+  
    var that = {}
-   that._userName = userDetails.userName;    //用户昵称
-   that._avatarUrl = userDetails.avatar;  //头像
-   that._money = userDetails.money;       //当前金币
+   that._username = info.username;    //用户昵称
+   that._email = info.email;  //用户账号
+   that._avatar = info.avatar;  //头像
+   that._money = info.money;       //当前金币
    that._socket = socket
    that._gamesctr = gamectr
    that._room = undefined //所在房间的引用
@@ -24,6 +26,7 @@ module.exports = function(userDetails,socket,callindex,gamectr){
 
    //通知客户端登录成功，返回数据
    _notify("login_resp",0,{moneycount:that._money},callindex)
+//    console.log(that);
 
    that._socket.on("disconnect",function(){
         console.log("player disconnect")
@@ -55,11 +58,11 @@ module.exports = function(userDetails,socket,callindex,gamectr){
 
    //data分3个部分 cmd,{data},callindex
    that._socket.on("notify",function(req){
-        var cmd = req.cmd
+        var cmdType = req.cmd
         var data = req.data
         var callindex = req.callindex
         console.log("_notify" + JSON.stringify(req))
-        switch(cmd){
+        switch(cmdType){
             case "createroom_req":
                 that._gamesctr.create_room(data,that,function(err,result){
                     if(err!=0){
