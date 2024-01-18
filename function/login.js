@@ -28,7 +28,6 @@ const jwt = require('jsonwebtoken');
 const firebaseTimestamp = admin.firestore.FieldValue.serverTimestamp();
 const crypto=require('crypto')
 const secretKey = crypto.randomBytes(32).toString('base64');
-const firebaseTimestamp = admin.firestore.FieldValue.serverTimestamp();
 
 
 // 註冊功能
