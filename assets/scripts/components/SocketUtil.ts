@@ -26,13 +26,13 @@ export default class SocketUtil {
         }
         this.sio = io.connect("http://127.0.0.1:3000", opts)
         this.sio.on("connect", (data) => {
-            console.log(this.ip)
             console.log("服務端：connect success!")
             this.connected = true
             this.StartHeartBeat();
         })
 
-        this.sio.on("notify", (res: any) => {
+        this.sio.on("notify", (res) => {
+            console.log("收到來自伺服器的通知:", res);
             // 檢查回應對象中是否有名為 callBackIndex 的屬性，
             // 如果有，則這表明這個通知是之前某個請求的回應。
             if (this.responseMap.hasOwnProperty(res.callBackIndex)) {
@@ -70,8 +70,8 @@ export default class SocketUtil {
     }
 
 
-    private _sendmsg(cmdtype, req, callindex) {
-        this.sio.emit("notify", { cmd: cmdtype, data: req, callindex: callindex });
+    private _sendmsg(cmdtype, req, callIndex) {
+        this.sio.emit("notify", { cmd: cmdtype, data: req, callIndex: callIndex });
     }
 
     private _request(cmdType, req, callback) {
@@ -87,24 +87,24 @@ export default class SocketUtil {
         this._request("login", req, callback)
     }
 
-    requestCreateRoom(req: any, callback) {
+    requestCreateRoom(req, callback) {
         this._request("createroom_req", req, callback);
     }
 
-    requestJoin(req: any, callback) {
+    requestJoin(req, callback) {
         this._request("joinroom_req", req, callback);
     }
 
 
-    requestEnterRoom(req: any, callback) {
+    requestEnterRoom(req, callback) {
         this._request("enterroom_req", req, callback);
     }
 
-    requestNoplayCard(req: any, callback) {
+    requestNoplayCard(req, callback) {
         this._request("no_play_card_req", req, callback);
     }
 
-    requestPlayCard(req: any, callback) {
+    requestPlayCard(req, callback) {
         this._request("play_card_req", req, callback);
     }
 
@@ -142,7 +142,7 @@ export default class SocketUtil {
     }
 
     // 發送搶地主的消息
-    requestRobState(state: any) {
+    requestRobState(state) {
         this._request("player_rob_notify", state, null);
     }
 

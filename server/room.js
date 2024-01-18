@@ -120,10 +120,10 @@ module.exports = function(roominfo,player){
         if(player){
             player.seatindex = getSeatIndex(that._player_list) 
             playerInfo={
-                accountid:player._accountID,
-                nick_name:player._nickName,
-                avatarUrl:player._avatarUrl,
-                goldcount:player._gold,
+                username:player._username,
+                email:player._email,
+                avatar:player._avatar,
+                money:player._money,
                 seatindex:player.seatindex,
             }
             //把用户信息广播个给房间其他用户
@@ -142,10 +142,10 @@ module.exports = function(roominfo,player){
         console.log("enter_room _player_list.length:"+that._player_list.length)
         for(var i=0;i<that._player_list.length;i++){
             var data = {
-                accountid:that._player_list[i]._accountID,
-                nick_name:that._player_list[i]._nickName,
-                avatarUrl:that._player_list[i]._avatarUrl,
-                goldcount:that._player_list[i]._gold,
+                username:that._player_list[i]._username,
+                email:that._player_list[i]._email,
+                avatar:that._player_list[i]._avatar,
+                money:that._player_list[i]._money,
                 seatindex:that._player_list[i].seatindex,
                 isready:that._player_list[i]._isready,
             }
@@ -160,7 +160,7 @@ module.exports = function(roominfo,player){
                 seatindex: player.seatindex, //自己在房间内的位置
                 roomid:that.room_id,      //房间roomid
                 playerdata: player_data,  //房间内玩家用户列表
-                housemanageid:that.house_manage._accountID, 
+                housemanageid:that.house_manage._username, 
             }
             callback(0,enterroom_para)
             //https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1564763901986&di=82c257959de2c29ea027a4c2a00952e0&imgtype=0&src=http%3A%2F%2Fimages.liqucn.com%2Fimg%2Fh1%2Fh988%2Fimg201711250941030_info400X400.jpg
@@ -172,7 +172,7 @@ module.exports = function(roominfo,player){
             that.house_manage = player
             //这里需要加上，掉线用户accountid过去
             for(var i=0;i<that._player_list.length;i++){
-                that._player_list[i].sendPlayerChangeManage(that.house_manage._accountID)
+                that._player_list[i].sendPlayerChangeManage(that.house_manage.username)
             }
         }
     }
@@ -180,10 +180,10 @@ module.exports = function(roominfo,player){
     that.playerOffLine = function(player){
         //通知房间内那个用户掉线,并且用用户列表删除
         for(var i=0;i<that._player_list.length;i++){
-            if(that._player_list[i]._accountID === player._accountID){
+            if(that._player_list[i].username === player.username){
                 that._player_list.splice(i,1)
                 //判断是否为房主掉线
-                if(that.house_manage._accountID == player._accountID){
+                if(that.house_manage.username == player.username){
                     if(that._player_list.length>=1){
                         changeHouseManage(that._player_list[0])
                     }
@@ -196,7 +196,7 @@ module.exports = function(roominfo,player){
     that.playerReady = function(player){
         //告诉房间里所有用户，有玩家ready
         for(var i=0;i<that._player_list.length;i++){
-            that._player_list[i].sendplayerReady(player._accountID)
+            that._player_list[i].sendplayerReady(player.username)
         }
     }
 
@@ -213,7 +213,7 @@ module.exports = function(roominfo,player){
         if(that.robplayer.length==0){
             //都抢过了，需要确定最终地主人选,直接退出
             console.log("rob player end")
-            changeMaster(that.room_master._accountID)
+            changeMaster(that.room_master.username)
             //改变房间状态，显示底牌
             changeState(RoomState.ROOM_SHOWBOTTOMCARD)
             return
@@ -229,14 +229,14 @@ module.exports = function(roominfo,player){
        
         for(var i=0;i<that._player_list.length;i++){
             //通知下一个可以抢地主的玩家
-            that._player_list[i].SendCanRob(can_player._accountID)
+            that._player_list[i].SendCanRob(can_player.username)
         }
     }
 
     //客户端到服务器: 发送地主改变的消息
     const changeMaster = function(){
         for(var i=0;i<that._player_list.length;i++){
-            that._player_list[i].SendChangeMaster(that.room_master._accountID)
+            that._player_list[i].SendChangeMaster(that.room_master.username)
         }
 
         //显示底牌
@@ -257,7 +257,7 @@ module.exports = function(roominfo,player){
 
         //判断是有都准备成功
         for(var i=0;i<that._player_list.length;i++){
-            if(that._player_list[0]._accountID!=that.house_manage._accountID){
+            if(that._player_list[0].username!=that.house_manage.username){
                 if(that._player_list[0]._isready==false){
                     cb(-3,null)
                     return 
@@ -279,7 +279,7 @@ module.exports = function(roominfo,player){
     const resetChuCardPlayer = function(){
         var master_index = 0 //地主在列表中的位置 
         for(var i=that._player_list.length-1;i>=0;i--){
-           if(that._player_list[i]._accountID==that.room_master._accountID){
+           if(that._player_list[i].username==that.room_master.username){
                master_index = i
            }
         }
@@ -294,7 +294,7 @@ module.exports = function(roominfo,player){
 
         //如果上一个出牌的人是自己，在一轮完毕后要从新设置为空
         //如果上一个出牌的人不是自己，就不用处理
-        var next_push_player_account = that.playing_cards[that.playing_cards.length-1]._accountID
+        var next_push_player_account = that.playing_cards[that.playing_cards.length-1].username
         if(that.last_push_card_accountid == next_push_player_account){
            that.last_push_card_list = []
            that.last_push_card_accountid = 0
@@ -308,7 +308,7 @@ module.exports = function(roominfo,player){
         var cur_chu_card_player = that.playing_cards.pop()
         for(var i=0;i<that._player_list.length;i++){
               //通知下一个出牌的玩家
-              that._player_list[i].SendChuCard(cur_chu_card_player._accountID)
+              that._player_list[i].SendChuCard(cur_chu_card_player.username)
         }
       }
 
@@ -335,7 +335,7 @@ module.exports = function(roominfo,player){
                 continue
             }
             data = {
-                accountid:player._accountID,
+                accountid:player.username,
                 cards:cards,
             }
             that._player_list[i].SendOtherChuCard(data)
@@ -351,7 +351,7 @@ module.exports = function(roominfo,player){
          if(data==0){
             resp = {
                 data:{
-                      account:player._accountID,
+                      account:player.username,
                       msg:"choose card sucess",
                     }
             }
@@ -366,7 +366,7 @@ module.exports = function(roominfo,player){
         if(cardvalue==undefined){
             resp = {
                 data:{
-                      account:player._accountID,
+                      account:player.username,
                       msg:"不可用牌型",
                     }
             }
@@ -378,10 +378,10 @@ module.exports = function(roominfo,player){
             if(that.last_push_card_list.length==0){
                 //出牌成功
                 that.last_push_card_list = data
-                that.last_push_card_accountid = player._accountID
+                that.last_push_card_accountid = player.username
                 resp = {
                     data:{
-                          account:player._accountID,
+                          account:player.username,
                           msg:"sucess",
                           cardvalue:cardvalue,
                         }
@@ -398,7 +398,7 @@ module.exports = function(roominfo,player){
             if(false==that.carder.compareWithCard(that.last_push_card_list,data)){
                 resp = {
                     data:{
-                          account:player._accountID,
+                          account:player.username,
                           msg:"当前牌太小",
                           cardvalue:cardvalue,
                         }
@@ -407,10 +407,10 @@ module.exports = function(roominfo,player){
             }else{
                 //出牌成功
                 that.last_push_card_list = data
-                that.last_push_card_accountid = player._accountID
+                that.last_push_card_accountid = player.username
                 resp = {
                     data:{
-                          account:player._accountID,
+                          account:player.username,
                           msg:"choose card sucess",
                           cardvalue:cardvalue,
                         }
@@ -445,7 +445,7 @@ module.exports = function(roominfo,player){
         var value = data
         for(var i=0;i<that._player_list.length;i++){
             data={
-                accountid:player._accountID,
+                accountid:player.username,
                 state:value,
             }
             that._player_list[i].sendRobState(data)

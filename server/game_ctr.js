@@ -5,8 +5,8 @@ const config = require("../defines.js")
 var _player_list = []
 var _room_info = []
 
-exports.create_player = function(playInfo,socket,callindex){
-    var player = Player(playInfo,socket,callindex,this)
+exports.create_player = function(info,socket,callindex){
+    var player = Player(info,socket,callindex,this)
     _player_list.push(player)
 }
 
@@ -18,7 +18,7 @@ exports.create_room = function(roomInfo,own_player,callback){
     var needglobal = config.createRoomConfig[roomInfo.rate].needCostGold
     console.log("create room needglobal:"+needglobal)
     
-    if(own_player._gold < needglobal){
+    if(own_player._money < needglobal){
         callback(-1,{}) 
         return 
     }
