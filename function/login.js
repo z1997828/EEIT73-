@@ -2,7 +2,6 @@ const bcrypt = require('bcryptjs')
 const admin = require('firebase-admin');
 const express = require('express')
 
-
 const serviceAccount = require("../gameproject-d9074-firebase-adminsdk-6rnh9-cff9fb8858.json");
 const firebase = require('firebase/app');
 require('firebase/auth');
@@ -23,7 +22,6 @@ admin.initializeApp({
 });
 const auth = firebaseApp.auth();
 const db = admin.firestore();
-
 const jwt = require('jsonwebtoken');
 const firebaseTimestamp = admin.firestore.FieldValue.serverTimestamp();
 const crypto=require('crypto')
@@ -33,18 +31,15 @@ const secretKey = crypto.randomBytes(32).toString('base64');
 // 註冊功能
 exports.registerNewUser = function (username, email, password) {
     return new Promise((resolve, reject) => {
-
         auth.createUserWithEmailAndPassword(email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-
-                // 使用bcrypt加密
+                  // 使用bcrypt加密
                 bcrypt.hash(password, 10, (err, hashedPassword) => {
                     if (err) {
                         console.error('密碼加密失敗', err);
                         return reject(err);
                     }
-
                     // 額外將資料寫入db - 在此處寫入資料庫
                     db.collection('users').doc(username).set({
                         avatar: "",
@@ -60,7 +55,6 @@ exports.registerNewUser = function (username, email, password) {
                             }).catch(function (error) {
                                 console.log('驗證郵件發送失敗', error)
                             });
-
                             console.log('用戶資料寫入成功');
                             resolve(user);
                         })
@@ -80,9 +74,7 @@ exports.registerNewUser = function (username, email, password) {
                 reject(error);
             });
     });
-
 }
-
 
 exports.getData = function getData(username) {
     return new Promise((resolve, reject) => {
@@ -198,7 +190,7 @@ exports.getUsers = function authenticateUser(email, inputPassword) {
 //透過google登入
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-function signInWithGoogle() {
+exports.signInWithGoogle = function signInWithGoogle() {
     return new Promise((resolve, reject) => {
         auth.signInWithPopup(googleProvider)
             .then((userCredential) => {
@@ -227,9 +219,9 @@ function signInWithGoogle() {
             });
     });
 }
-exports.signInWithGoogle = signInWithGoogle;
+
 //密碼重設
-function resetPassword(email) {
+exports.resetPassword =function resetPassword(email) {
     return new Promise((resolve, reject) => {
         auth.sendPasswordResetEmail(email)
             .then(() => {
@@ -241,5 +233,7 @@ function resetPassword(email) {
                 reject(error);
             })
     })
+
 }
 exports.resetPassword = resetPassword;
+
