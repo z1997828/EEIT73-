@@ -109,10 +109,19 @@ export class hallScene extends Component {
     // ----------中間功能列-------------
 
     // 進入初階場按鈕
-
+    
     public onInRookieRoom() {
-        
-        director.loadScene('gameroom');
+        gameManager.Instance.socketUtil.connect();
+        gameManager.Instance.socketUtil.requestCreateRoom(gameManager.Instance.userDetails,(err,result)=>{
+            if (err) {
+                // 處理錯誤
+                console.error("requestCreateRoom失敗", err);
+            } else {
+                // 處理登入成功的邏輯
+                console.log("requestCreateRoom成功", result);
+            }
+        })
+        // director.loadScene('gameroom');
     }
 
     // 進入高級場按鈕

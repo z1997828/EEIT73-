@@ -27,6 +27,7 @@ const firebaseTimestamp = admin.firestore.FieldValue.serverTimestamp();
 const crypto=require('crypto')
 const secretKey = crypto.randomBytes(32).toString('base64');
 
+
 // 註冊功能
 exports.registerNewUser = function (username, email, password) {
     return new Promise((resolve, reject) => {
@@ -232,4 +233,7 @@ exports.resetPassword =function resetPassword(email) {
                 reject(error);
             })
     })
+
 }
+exports.resetPassword = resetPassword;
+

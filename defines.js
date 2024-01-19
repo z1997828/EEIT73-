@@ -1,4 +1,5 @@
-
+exports.defaultGoldCount = 100;
+exports.roomFullPlayerCount = 3;
 
 exports.createRoomConfig = {
     '1': {
