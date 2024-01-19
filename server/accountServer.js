@@ -109,7 +109,14 @@ sio.on('connection', (socket) => {
       case 'login':
         gamectr.create_player(info, socket, callIndex)
         break;
+      case "createroom_req":
+        // 假设 gameCtr 有一个 createRoom 方法
+        gamectr.create_room(data, {
+          _socket: socket
+        }, function (err, result) {
 
+        });
+        break;
       default:
         console.log(`未知的命令類型: ${cmdType}`);
     }

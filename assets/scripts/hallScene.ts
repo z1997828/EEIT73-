@@ -1,4 +1,5 @@
 import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Label, director, game, Prefab, instantiate } from 'cc';
+import { createRoomConfig } from "./components/define"
 import gameManager from './components/gameManager';
 import SocketUtil from './components/SocketUtil';
 import Util from './components/Util';
@@ -109,26 +110,34 @@ export class hallScene extends Component {
     // ----------中間功能列-------------
 
     // 進入初階場按鈕
-    
+    public onEnterRoom(rateKey: string) {
+        // 獲取房間配置
+        const config = createRoomConfig[rateKey];
+        if (config) {
+            // 創建房間請求
+            gameManager.Instance.socketUtil.connect();
+            gameManager.Instance.socketUtil.requestCreateRoom(config, (err, result) => {
+                if (err) {
+                    console.error("創建房間失敗", err);
+                } else {
+                    console.log("創建房間成功", result);
+                    // 在這裡處理房間創建成功後的邏輯，例如跳轉到房間場景
+                }
+            });
+        } else {
+            console.error("無效的房間等級");
+        }
+    }
+
+
     public onInRookieRoom() {
-        gameManager.Instance.socketUtil.connect();
-        gameManager.Instance.socketUtil.requestCreateRoom(gameManager.Instance.userDetails,(err,result)=>{
-            if (err) {
-                // 處理錯誤
-                console.error("requestCreateRoom失敗", err);
-            } else {
-                // 處理登入成功的邏輯
-                console.log("requestCreateRoom成功", result);
-            }
-        })
-        // director.loadScene('gameroom');
+        director.loadScene('gameroom')
     }
 
     // 進入高級場按鈕
 
     public onInMasterRoom() {
-        console.log("確定按鈕被點擊");
-        director.loadScene('gameroom');
+        this.onEnterRoom('rate_2');
     }
     // ----------下方功能列-------------
 
