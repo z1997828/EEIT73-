@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Prefab, instantiate, SpriteAtlas } from 'cc';
+import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Prefab, instantiate, SpriteAtlas,director } from 'cc';
 import Deck from './Card/carder';
 import Card2 from './Card/Card2';
 import Card from './Card/Card';
@@ -76,7 +76,10 @@ export class gameRoomScene extends Component {
             this.setting.active = !false,
                 this.openMenu = !false;
     }
-
+    //返回大廳按鈕
+    public onleaveRoom() {
+        director.loadScene('hall')
+    }
     // 設定內音樂開關按鈕
     public onMusic() {
         this.MusicIsOn = !this.MusicIsOn;

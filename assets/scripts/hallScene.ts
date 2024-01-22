@@ -14,6 +14,7 @@ export class hallScene extends Component {
     @property(Node) rule: Node = null;
     @property(Node) setting: Node = null;
     @property(Node) face: Node = null;
+    @property(Node) mail: Node = null;
     @property(Button) MusicButton: Button = null;
     @property(Button) AudioButton: Button = null;
     @property(SpriteFrame) onImage: SpriteFrame = null;
@@ -53,6 +54,7 @@ export class hallScene extends Component {
         this.rule.active = false;
         this.setting.active = false;
         this.face.active = false;
+        this.mail.active = false;
         this.openMenu = false;
         gameManager.Instance.socketUtil = new SocketUtil();
         gameManager.Instance.util = new Util();
@@ -94,11 +96,18 @@ export class hallScene extends Component {
                 this.openMenu = !false;
         console.log("確定按鈕被點擊");
     }
+    // 郵件按鈕
+    public onMail() {
+        if (!this.openMenu)
+            this.mail.active = !false,
+                this.openMenu = !false;
+    }
 
 
     // 返回按鈕
     public onBack() {
         this.mall.active = false;
+        this.mail.active = false;
         this.record.active = false;
         this.feedback.active = false;
         this.rule.active = false;
@@ -131,13 +140,17 @@ export class hallScene extends Component {
 
 
     public onInRookieRoom() {
+        if (!this.openMenu)
         director.loadScene('gameroom')
+            this.openMenu = !false;
     }
 
     // 進入高級場按鈕
 
     public onInMasterRoom() {
+        if (!this.openMenu)
         this.onEnterRoom('rate_2');
+        this.openMenu = !false;
     }
     // ----------下方功能列-------------
 
