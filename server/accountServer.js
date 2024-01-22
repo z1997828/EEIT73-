@@ -107,17 +107,6 @@ sio.on('connection', (socket) => {
     const info = req.data;
     const callIndex = req.callindex;
 
-    var that = {}
-    that._username = info.username;    //用户昵称
-    that._email = info.email;  //用户账号
-    that._avatar = info.avatar;  //头像
-    that._money = info.money;       //当前金币
-    that._socket = socket
-    that._gamesctr = gamectr
-    that._room = undefined //所在房间的引用
-    that._seatindex = 0   //在房间的位置
-    that._isready = false //当前在房间的状态 是否点击了准备按钮
-    that._cards = []      //当前手上的牌
     
     // console.log(`收到通知: 命令類型 - ${cmdType}, 數據 - ${JSON.stringify(info.username)},callIndex - ${callIndex}`);
     switch (cmdType) {
