@@ -10,6 +10,7 @@ import eventListener from "./eventListener";
 
 
 
+
 export default class gameManager{
     public static readonly Instance: gameManager = new gameManager()
     
@@ -24,4 +25,5 @@ export default class gameManager{
     util:Util = null;
     eventlistener:eventListener = null;
     userDetails = null;
+    
 }

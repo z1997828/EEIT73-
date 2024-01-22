@@ -119,7 +119,7 @@ export class hallScene extends Component {
     // ----------中間功能列-------------
 
     // 進入初階場按鈕
-    public onEnterRoom(rateKey: string) {
+    onEnterRoom(rateKey) {
         // 獲取房間配置
         const config = createRoomConfig[rateKey];
         if (config) {
@@ -130,6 +130,7 @@ export class hallScene extends Component {
                     console.error("創建房間失敗", err);
                 } else {
                     console.log("創建房間成功", result);
+                    director.loadScene('gameroom')
                     // 在這裡處理房間創建成功後的邏輯，例如跳轉到房間場景
                 }
             });
@@ -138,23 +139,14 @@ export class hallScene extends Component {
         }
     }
 
-
     public onInRookieRoom() {
-<<<<<<< HEAD
-        this.onEnterRoom('rate_1')
-=======
-        if (!this.openMenu)
->>>>>>> 1b120ab0989d5be832d59f35d05635eb122f8344
-        director.loadScene('gameroom')
-            this.openMenu = !false;
+        this.onEnterRoom('1')
     }
 
     // 進入高級場按鈕
 
     public onInMasterRoom() {
-        if (!this.openMenu)
-        this.onEnterRoom('rate_2');
-        this.openMenu = !false;
+       
     }
     // ----------下方功能列-------------
 

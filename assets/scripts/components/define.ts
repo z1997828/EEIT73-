@@ -20,14 +20,14 @@ export const RoomState = {
 };
 
 export const createRoomConfig = {
-    'rate_1': {
+    '1': {
         needCostGold: 100,
-        bottom: 10,
+        bottom: 100,
         rate: 1
     },
-    'rate_2': {
+    '2': {
         needCostGold: 1000,
-        bottom: 100,
+        bottom: 1000,
         rate: 2
     }
 };
