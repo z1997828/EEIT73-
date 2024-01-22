@@ -27,7 +27,7 @@ export const createRoomConfig = {
     },
     '2': {
         needCostGold: 1000,
-        bottom: 1000,
+        bottom: 500,
         rate: 2
     }
 };

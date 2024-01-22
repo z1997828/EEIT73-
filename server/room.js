@@ -41,8 +41,8 @@ module.exports = function(roominfo,player){
     console.log("creat room id:"+that.room_id)
 
     console.log("roominfo.rate:"+roominfo.rate)
-    var tconfig = config.createRoomConfig[roominfo]
-    console.log("config"+JSON.stringify(tconfig))
+    var tconfig = config.createRoomConfig[roominfo.rate]
+    console.log("config :"+JSON.stringify(tconfig))
 
     that.own_player = player              //创建房间的玩家
     that.bottom = tconfig.bottom

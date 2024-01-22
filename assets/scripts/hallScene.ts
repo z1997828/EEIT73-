@@ -119,9 +119,9 @@ export class hallScene extends Component {
     // ----------中間功能列-------------
 
     // 進入初階場按鈕
-    onEnterRoom(rateKey) {
+    onEnterRoom(roominfo) {
         // 獲取房間配置
-        const config = createRoomConfig[rateKey];
+        const config = createRoomConfig[roominfo];
         if (config) {
             // 創建房間請求
             gameManager.Instance.socketUtil.connect();
@@ -130,6 +130,8 @@ export class hallScene extends Component {
                     console.error("創建房間失敗", err);
                 } else {
                     console.log("創建房間成功", result);
+                    gameManager.Instance.userDetails.bottom = result.bottom
+                    gameManager.Instance.userDetails.rate = result.rate
                     director.loadScene('gameroom')
                     // 在這裡處理房間創建成功後的邏輯，例如跳轉到房間場景
                 }
