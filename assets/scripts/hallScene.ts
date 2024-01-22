@@ -131,6 +131,7 @@ export class hallScene extends Component {
 
 
     public onInRookieRoom() {
+        this.onEnterRoom('rate_1')
         director.loadScene('gameroom')
     }
 
