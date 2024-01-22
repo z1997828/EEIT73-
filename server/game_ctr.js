@@ -15,7 +15,7 @@ exports.create_room = function(roomInfo,own_player,callback){
     _room_info.push(room)
     //检测用户是否能创建房间
     //检查金币数量是否足够
-    var needglobal = config.createRoomConfig[roomInfo.rate].needCostGold
+    var needglobal = config.createRoomConfig[roomInfo].needCostGold
     console.log("create room needglobal:"+needglobal)
     
     if(own_player._money < needglobal){
