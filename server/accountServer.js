@@ -100,10 +100,25 @@ sio.on('connection', (socket) => {
   socket.on("game_ping", () => {
     socket.emit("game_pong")
   })
-  socket.on('notify', (data) => {
-    const cmdType = data.cmd;
-    const info = data.data;
-    const callIndex = data.callindex;
+  socket.on('notify', (req) => {
+    
+    
+    const cmdType = req.cmd;
+    const info = req.data;
+    const callIndex = req.callindex;
+
+    var that = {}
+    that._username = info.username;    //用户昵称
+    that._email = info.email;  //用户账号
+    that._avatar = info.avatar;  //头像
+    that._money = info.money;       //当前金币
+    that._socket = socket
+    that._gamesctr = gamectr
+    that._room = undefined //所在房间的引用
+    that._seatindex = 0   //在房间的位置
+    that._isready = false //当前在房间的状态 是否点击了准备按钮
+    that._cards = []      //当前手上的牌
+    
     // console.log(`收到通知: 命令類型 - ${cmdType}, 數據 - ${JSON.stringify(info.username)},callIndex - ${callIndex}`);
     switch (cmdType) {
       case 'login':
@@ -111,12 +126,20 @@ sio.on('connection', (socket) => {
         break;
       case "createroom_req":
         // 假设 gameCtr 有一个 createRoom 方法
-        gamectr.create_room(data, {
-          _socket: socket
-        }, function (err, result) {
-
-        });
+        gamectr.create_room(info,that,function(err,result){
+          if(err!=0){
+              console.log("create_room err:"+ err)
+          }else{
+              that._room = result.room
+              console.log("create_room:"+ result)
+          }
+         
+          _notify("createroom_resp",err,result.data,callindex)
+      })
         break;
+
+
+
       default:
         console.log(`未知的命令類型: ${cmdType}`);
     }
