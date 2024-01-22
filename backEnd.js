@@ -101,9 +101,9 @@ app.all('*', (req, res, next) => {
                                 html += `<tr id="moneytr-${doc.id}">
                             <td>${doc.id}</td>
                             <td>${doc.data().user_id}</td>
-                            <td>${doc.data().money}</td>
+                            <td>${doc.data().cash}</td>
                             <td>${doc.data().date.toDate().toLocaleString()}</td>
-                            <td><button onclick="edit_money('${doc.id}','${doc.data().user_id}','${doc.data().money}','${doc.data().date.toDate().toLocaleString()}')" >修改</button><button onclick="del_money('${doc.id}')">刪除</button></td>
+                            <td><button onclick="edit_money('${doc.id}','${doc.data().user_id}','${doc.data().cash}','${doc.data().date.toDate().toLocaleString()}')" >修改</button><button onclick="del_money('${doc.id}')">刪除</button></td>
                              </tr>`;
                             });
                         })
@@ -173,7 +173,7 @@ app.all('*', (req, res, next) => {
                 (async () => {
                     await db.collection('money').add({
                         user_id: req.body.user_id,
-                        money: req.body.money,
+                        cash: req.body.money,
                         date: FieldValue.serverTimestamp()
                     });
                     res.send(true);
@@ -228,7 +228,7 @@ app.all('*', (req, res, next) => {
                     const userRef = db.collection('money').doc(req.body.id);
                     await userRef.update({
                         user_id: req.body.user_id,
-                        money: req.body.money
+                        cash: req.body.money
                     });
                     res.send(true);
                 })();
