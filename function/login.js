@@ -235,5 +235,5 @@ exports.resetPassword =function resetPassword(email) {
     })
 
 }
-exports.resetPassword = resetPassword;
+
 
