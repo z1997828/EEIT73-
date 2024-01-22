@@ -107,14 +107,14 @@ sio.on('connection', (socket) => {
     const info = req.data;
     const callIndex = req.callindex;
 
-    
+    const that = info
     // console.log(`收到通知: 命令類型 - ${cmdType}, 數據 - ${JSON.stringify(info.username)},callIndex - ${callIndex}`);
     switch (cmdType) {
       case 'login':
         gamectr.create_player(info, socket, callIndex)
         break;
       case "createroom_req":
-        // 假设 gameCtr 有一个 createRoom 方法
+        
         gamectr.create_room(info,that,function(err,result){
           if(err!=0){
               console.log("create_room err:"+ err)
@@ -123,7 +123,6 @@ sio.on('connection', (socket) => {
               console.log("create_room:"+ result)
           }
          
-          _notify("createroom_resp",err,result.data,callindex)
       })
         break;
 

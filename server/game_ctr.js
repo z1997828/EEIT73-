@@ -8,14 +8,17 @@ var _room_info = []
 exports.create_player = function(info,socket,callindex){
     var player = Player(info,socket,callindex,this)
     _player_list.push(player)
+    // console.log(player)
 }
 
-exports.create_room = function(roomInfo,own_player,callback){
-    var room = Room(roomInfo,own_player)
+exports.create_room = function(roominfo,own_player,callback){
+    var room = Room(roominfo,own_player)
     _room_info.push(room)
+    console.log(room)
     //检测用户是否能创建房间
     //检查金币数量是否足够
-    var needglobal = config.createRoomConfig[roomInfo].needCostGold
+
+    var needglobal = config.createRoomConfig[roominfo.rate].needCostGold
     console.log("create room needglobal:"+needglobal)
     
     if(own_player._money < needglobal){
@@ -29,7 +32,7 @@ exports.create_room = function(roomInfo,own_player,callback){
                     data:{
                            roomid:room.room_id,
                            bottom:room.bottom,
-                           rate:roomInfo.rate
+                           rate:roominfo.rate
                          }
                    })
         }

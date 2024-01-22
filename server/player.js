@@ -23,6 +23,8 @@ module.exports = function(info,socket,callindex,gamectr){
     });
 };
    
+    
+
 
    //通知客户端登录成功，返回数据
    _notify("login_resp",0,{moneycount:that._money},callindex)
@@ -69,6 +71,7 @@ module.exports = function(info,socket,callindex,gamectr){
                         console.log("create_room err:"+ err)
                     }else{
                         that._room = result.room
+                       
                         console.log("create_room:"+ result)
                     }
                    
