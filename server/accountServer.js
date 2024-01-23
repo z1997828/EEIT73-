@@ -6,6 +6,7 @@ const http = require('http').Server(app)
 const sio = require('socket.io')(http)
 const Login = require('../function/login')
 const gamectr = require('./game_ctr')
+const player = require('./player')
 
 // 允許跨域使用本服務
 var cors = require("cors");
@@ -101,31 +102,25 @@ sio.on('connection', (socket) => {
     socket.emit("game_pong")
   })
   socket.on('notify', (req) => {
-    
-    
+
+
     const cmdType = req.cmd;
     const info = req.data;
     const callIndex = req.callindex;
+    
 
-    const that = info
+
     // console.log(`收到通知: 命令類型 - ${cmdType}, 數據 - ${JSON.stringify(info.username)},callIndex - ${callIndex}`);
     switch (cmdType) {
       case 'login':
         gamectr.create_player(info, socket, callIndex)
-        break;
-      case "createroom_req":
-        
-        gamectr.create_room(info,that,function(err,result){
-          if(err!=0){
-              console.log("create_room err:"+ err)
-          }else{
-              that._room = result.room
-              console.log("create_room:"+ result)
-          }
-         
-      })
-        break;
 
+        break;
+      case 'createroom_req':
+        // 假設gamectr有一個處理創建房間的函數
+        gamectr.create_room(info, info, callIndex )
+       
+        break;
 
 
       default:
