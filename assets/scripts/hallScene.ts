@@ -22,8 +22,8 @@ export class hallScene extends Component {
     @property(AudioSource) bgMusic: AudioSource = null;
     @property(Node) personalInfo: Node = null;
     //sammykym:
-    @property(Node) recordFrame: Node = null;  
-    @property(Prefab) recordText:Prefab=null;
+    @property(Node) recordFrame: Node = null;
+    @property(Prefab) recordText: Prefab = null;
     //-----------
     @property(Node) lbFace: Node = null;
     @property(Node) lbname: Node = null;
@@ -40,7 +40,7 @@ export class hallScene extends Component {
     private MusicIsOn: boolean = !false;
     private AudioIsOn: boolean = !false;
 
-    
+
     onLoad() {
 
         this._lbname = this.lbname.getComponent(Label);
@@ -58,12 +58,12 @@ export class hallScene extends Component {
         this.openMenu = false;
         gameManager.Instance.socketUtil = new SocketUtil();
         gameManager.Instance.util = new Util();
-        
+
 
         this.init();
     }
 
-   
+
 
     init() {
         let userDetails = gameManager.Instance.userDetails;
@@ -77,17 +77,17 @@ export class hallScene extends Component {
             this.recordFrame.removeAllChildren();
             userDetails.user_playway.forEach(record => {
                 let record_text = instantiate(this.recordText);
-                record.money>0?record_text.getComponentsInChildren(Label)[0].string='勝':record_text.getComponentsInChildren(Label)[0].string='負';
-                record_text.getComponentsInChildren(Label)[1].string=record.date;
-                record.identity=='banker'?record_text.getComponentsInChildren(Label)[2].string='地主':record_text.getComponentsInChildren(Label)[2].string='農民';
-                record_text.getComponentsInChildren(Label)[3].string=record.money;
+                record.money > 0 ? record_text.getComponentsInChildren(Label)[0].string = '勝' : record_text.getComponentsInChildren(Label)[0].string = '負';
+                record_text.getComponentsInChildren(Label)[1].string = record.date;
+                record.identity == 'banker' ? record_text.getComponentsInChildren(Label)[2].string = '地主' : record_text.getComponentsInChildren(Label)[2].string = '農民';
+                record_text.getComponentsInChildren(Label)[3].string = record.money;
                 this.recordFrame.addChild(record_text);
             });
             //-----------
         }
     }
 
-    
+
     // ----------上方功能列-------------
     // 頭像按鈕
     public onFace() {
@@ -120,6 +120,25 @@ export class hallScene extends Component {
 
     // 進入初階場按鈕
     onEnterRoom(roominfo) {
+        // 首先檢查是否已存在可加入的房間
+        this.checkForExistingRoom((err, roomExists, existingRoomInfo) => {
+            if (err) {
+                console.error("檢查現有房間時出錯:", err);
+                return;
+            }
+
+            if (roomExists) {
+                // 如果存在房間，則嘗試加入該房間
+                this.joinExistingRoom(existingRoomInfo);
+            } else {
+                // 如果不存在房間，則執行創建房間的流程
+                this.createRoom(roominfo);
+            }
+        });
+    }
+
+
+    createRoom(roominfo) {
         // 獲取房間配置
         const config = createRoomConfig[roominfo];
         if (config) {
@@ -127,28 +146,45 @@ export class hallScene extends Component {
             gameManager.Instance.socketUtil.connect();
             gameManager.Instance.socketUtil.requestCreateRoom(config, (err, result) => {
                 if (err) {
-                    console.error("創建房間失敗", err);
+                    // 處理錯誤
+                    console.error("Socket 失敗", err);
                 } else {
-                    console.log("創建房間成功", result);
-                    gameManager.Instance.userDetails.bottom = result.bottom
-                    gameManager.Instance.userDetails.rate = result.rate
-                    director.loadScene('gameroom')
-                    // 在這裡處理房間創建成功後的邏輯，例如跳轉到房間場景
+                    // 處理登入成功的邏輯
+                    console.log("Socket 成功", result);
                 }
             });
+
+            gameManager.Instance.userDetails.bottom = config.bottom
+            gameManager.Instance.userDetails.rate = config.rate
+            // console.log(gameManager.Instance.userDetails)
+            director.loadScene('gameroom')
         } else {
             console.error("無效的房間等級");
         }
     }
 
+    joinExistingRoom(roomInfo) {
+        // 實現加入已存在房間的邏輯
+        // 例如：發送加入房間的請求，更新用戶界面等
+        // ...
+    }
+
+    checkForExistingRoom(callback) {
+        // 實現檢查已存在房間的邏輯
+        // 通常是向伺服器發送請求，並在回調函數中處理結果
+        // callback(err, roomExists, roomInfo)
+        // ...
+    }
+
     public onInRookieRoom() {
         this.onEnterRoom('1')
+
     }
 
     // 進入高級場按鈕
 
     public onInMasterRoom() {
-       
+
     }
     // ----------下方功能列-------------
 

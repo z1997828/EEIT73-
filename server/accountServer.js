@@ -152,16 +152,16 @@ sio.on('connection', (socket) => {
         })
 
         break;
-      case "joinroom_req":
+      case "checkroom_req":
 
         that._gamesctr.jion_room(req.info, that, function (err, result) {
           if (err) {
-            console.log("joinroom_req err" + err)
-            _notify("joinroom_resp", err, null, callindex)
+            console.log("checkroom_req err" + err)
+            _notify("checkroom_req_resp", err, null, callindex)
           } else {
             //加入房间成功
             that._room = result.room
-            _notify("joinroom_resp", err, result.info, callindex)
+            _notify("checkroom_req_resp", err, result.info, callindex)
           }
 
         })
