@@ -4,6 +4,7 @@ import gameManager from './components/gameManager';
 import SocketUtil from './components/SocketUtil';
 import Util from './components/Util';
 
+
 const { ccclass, property } = _decorator;
 
 @ccclass('hall')
@@ -41,10 +42,12 @@ export class hallScene extends Component {
     private AudioIsOn: boolean = !false;
     @property(Node) recordMail: Node = null;  
     @property(Prefab) mailText:Prefab=null;
+    @property(Node) userMessage: Node = null;  
+    @property(Node) replyMessage: Node = null;  
 
     
     onLoad() {
-
+        
         this._lbname = this.lbname.getComponent(Label);
         this._lbMoney = this.lbMoney.getComponent(Label);
         this._pIname = this.pIname.getComponent(Label);
@@ -61,21 +64,21 @@ export class hallScene extends Component {
         gameManager.Instance.socketUtil = new SocketUtil();
         gameManager.Instance.util = new Util();
         
-
+        
         this.init();
     }
-
-   
-
+    
+    
+    
     init() {
         let userDetails = gameManager.Instance.userDetails;
-
+        
         if (userDetails) {
             this._lbname.string = userDetails.username;
             this._lbMoney.string = userDetails.money
             this._pIname.string = userDetails.username;
             this._pIemail.string = userDetails.email;
-
+            
             //sammykym:
             this.recordFrame.removeAllChildren();
             userDetails.user_playway.forEach(record => {
@@ -85,21 +88,33 @@ export class hallScene extends Component {
                 record.identity=='banker'?record_text.getComponentsInChildren(Label)[2].string='地主':record_text.getComponentsInChildren(Label)[2].string='農民';
                 record_text.getComponentsInChildren(Label)[3].string=record.money;
                 this.recordFrame.addChild(record_text);
+                
             });
             //-----------
-
+            
             //郵箱:
+            
+            
             this.recordMail.removeAllChildren();
             userDetails.feedback.forEach(record => {
                 let text = instantiate(this.mailText);
                 let labels = text.getComponentsInChildren(Label);
                 labels[0].string=new Date(record.user_message_date._seconds * 1000).toLocaleString();
                 // labels[1].string=record.user_message;
-                this.recordMail.addChild(text);                
+                this.recordMail.addChild(text);
+                text.on('click', () => this.onTextClicked(record), this);
             });
+            
         }
     }
-
+    onTextClicked(record) {
+        let userMessage = this.userMessage.getComponent(Label);
+        let replyMessage = this.replyMessage.getComponent(Label);
+        userMessage.string = record.user_message
+        replyMessage.string = record.reply_message
+        
+        
+    }
     
     // ----------上方功能列-------------
     // 頭像按鈕
