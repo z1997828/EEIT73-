@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Label, director, game, Prefab, instantiate } from 'cc';
+import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Label, director, game, Prefab, instantiate, labelAssembler } from 'cc';
 import { createRoomConfig } from "./components/define"
 import gameManager from './components/gameManager';
 import SocketUtil from './components/SocketUtil';
@@ -39,6 +39,8 @@ export class hallScene extends Component {
     public openMenu = false;
     private MusicIsOn: boolean = !false;
     private AudioIsOn: boolean = !false;
+    @property(Node) recordMail: Node = null;  
+    @property(Prefab) mailText:Prefab=null;
 
     
     onLoad() {
@@ -67,6 +69,7 @@ export class hallScene extends Component {
 
     init() {
         let userDetails = gameManager.Instance.userDetails;
+
         if (userDetails) {
             this._lbname.string = userDetails.username;
             this._lbMoney.string = userDetails.money
@@ -84,6 +87,16 @@ export class hallScene extends Component {
                 this.recordFrame.addChild(record_text);
             });
             //-----------
+
+            //郵箱:
+            this.recordMail.removeAllChildren();
+            userDetails.feedback.forEach(record => {
+                let text = instantiate(this.mailText);
+                let labels = text.getComponentsInChildren(Label);
+                labels[0].string=new Date(record.user_message_date._seconds * 1000).toLocaleString();
+                // labels[1].string=record.user_message;
+                this.recordMail.addChild(text);                
+            });
         }
     }
 
