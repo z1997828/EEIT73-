@@ -6,11 +6,12 @@ const http = require('http').Server(app)
 const sio = require('socket.io')(http)
 const Login = require('../function/login')
 const gamectr = require('./game_ctr')
-const player = require('./player')
+
 
 // 允許跨域使用本服務
 var cors = require("cors");
 const { userInfo } = require("os");
+const player = require("./player");
 app.use(cors());
 
 // 協助 Express 解析表單與JSON資料
@@ -94,6 +95,7 @@ app.post('/getPost', (req, res) => {
 // 一切就緒，開始接受用戶端連線
 
 http.listen(3000);
+
 sio.on('connection', (socket) => {
   let clientIp = socket.handshake.address;
   socket.emit('connected', '' + clientIp);
@@ -106,26 +108,133 @@ sio.on('connection', (socket) => {
 
     const cmdType = req.cmd;
     const info = req.data;
-    const callIndex = req.callindex;
-    
+    const callindex = req.callindex;
 
+    var that = {}
+    that._username = info.username;    //用户昵称
+    that._email = info.email;  //用户账号
+    that._avatar = info.avatar;  //头像
+    that._money = info.money;       //当前金币
+    that._socket = socket
+    that._gamesctr = gamectr
+    that._room = undefined //所在房间的引用
+    that._seatindex = 0   //在房间的位置
+    that._isready = false //当前在房间的状态 是否点击了准备按钮
+    that._cards = []      //当前手上的牌
+    //内部使用的发送数据函数
+    const _notify = function (type, result, info, callBackIndex) {
+        console.log('notify =' + JSON.stringify(info));
+        that._socket.emit('notify', {
+            type: type,
+            result: result,
+            info: info,
+            callBackIndex: callBackIndex
+        });
 
-    // console.log(`收到通知: 命令類型 - ${cmdType}, 數據 - ${JSON.stringify(info.username)},callIndex - ${callIndex}`);
+    };
+    console.log(`收到通知: 命令類型 - ${cmdType}, 數據 - ${JSON.stringify(info.username)},callindex - ${callindex}`);
     switch (cmdType) {
       case 'login':
-        gamectr.create_player(info, socket, callIndex)
+        gamectr.create_player(info, socket, callindex)
 
         break;
-      case 'createroom_req':
-        // 假設gamectr有一個處理創建房間的函數
-        gamectr.create_room(info, info, callIndex )
-       
-        break;
+      case "createroom_req":
+        that._gamesctr.create_room(info, that, function (err, result) {
+          if (err != 0) {
+            console.log("create_room err:" + err)
+          } else {
+            that._room = result.room
 
+            console.log("create_room:" + result)
+          }
+
+          _notify("createroom_resp", err, result.info, callindex)
+        })
+
+        break;
+      case "joinroom_req":
+
+        that._gamesctr.jion_room(req.info, that, function (err, result) {
+          if (err) {
+            console.log("joinroom_req err" + err)
+            _notify("joinroom_resp", err, null, callindex)
+          } else {
+            //加入房间成功
+            that._room = result.room
+            _notify("joinroom_resp", err, result.info, callindex)
+          }
+
+        })
+        break
+      case "enterroom_req":
+        if (that._room) {
+          that._room.enter_room(that, function (err, result) {
+            if (err != 0) {
+              _notify("enter_room_resp", err, {}, callindex)
+            } else {
+              //enterroom成功
+              that._seatindex = result.seatindex
+              _notify("enter_room_resp", err, result, callindex)
+            }
+
+          })
+
+        } else {
+          console.log("that._room is null")
+        }
+
+        break
+      case "player_ready_notify":   //玩家准备消息通知
+        if (that._room) {
+          that._isready = true
+          that._room.playerReady(that)
+        }
+        break
+      case "player_start_notify": //客户端:房主发送开始游戏消息
+        if (that._room) {
+          that._room.playerStart(that, function (err, result) {
+            if (err) {
+              console.log("player_start_notify err" + err)
+              _notify("player_start_notify", err, null, callindex)
+            } else {
+              //加入房间成功
+
+              _notify("player_start_notify", err, result.info, callindex)
+            }
+
+          })
+        }
+        break
+      case "player_rob_notify":  //客户端发送抢地主消息
+        if (that._room) {
+          that._room.playerRobmaster(that, info)
+        }
+        break
+      case "no_play_card_req":   //客户端发送出牌消息
+        if (that._room) {
+          that._room.playerBuChuCard(that, info)
+        }
+        break
+      case "play_card_req":
+        if (that._room) {
+
+          console.log("that._room")
+          that._room.playerChuCard(that, info, function (err, result) {
+            if (err) {
+              console.log("playerChuCard cb err:" + err + " " + result)
+              _notify("chu_card_res", err, result.info, callindex)
+
+            }
+            _notify("chu_card_res", err, result.info, callindex)
+          })
+        }
+        break
 
       default:
         console.log(`未知的命令類型: ${cmdType}`);
     }
+
+
   });
   socket.on("disconnect", () => {
     console.log("客戶端:有人離開Server")
