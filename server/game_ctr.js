@@ -9,9 +9,12 @@ exports.create_player = function(info,socket,callindex){
     var player = Player(info,socket,callindex,this)
     _player_list.push(player)
     // console.log(player)
+    return player
 }
 
 exports.create_room = function(roominfo,own_player,callback){
+    
+    
     var room = Room(roominfo,own_player)
     _room_info.push(room)
     console.log(room)

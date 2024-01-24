@@ -1,3 +1,5 @@
+
+
 module.exports = function(info,socket,callindex,gamectr){
 //    console.log("playerinfo:"+ JSON.stringify(userDetails))
   
