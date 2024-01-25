@@ -109,7 +109,7 @@ sio.on('connection', (socket) => {
     const cmdType = req.cmd;
     const info = req.data;
     const callindex = req.callindex;
-
+    
     var that = {}
     that._username = info.username;    //用户昵称
     that._email = info.email;  //用户账号
@@ -123,13 +123,13 @@ sio.on('connection', (socket) => {
     that._cards = []      //当前手上的牌
     //内部使用的发送数据函数
     const _notify = function (type, result, info, callBackIndex) {
-        console.log('notify =' + JSON.stringify(info));
-        that._socket.emit('notify', {
-            type: type,
-            result: result,
-            info: info,
-            callBackIndex: callBackIndex
-        });
+      console.log('notify =' + JSON.stringify(info));
+      that._socket.emit('notify', {
+        type: type,
+        result: result,
+        info: info,
+        callBackIndex: callBackIndex
+      });
 
     };
     console.log(`收到通知: 命令類型 - ${cmdType}, 數據 - ${JSON.stringify(info.username)},callindex - ${callindex}`);
@@ -152,20 +152,7 @@ sio.on('connection', (socket) => {
         })
 
         break;
-      case "checkroom_req":
-
-        that._gamesctr.jion_room(req.info, that, function (err, result) {
-          if (err) {
-            console.log("checkroom_req err" + err)
-            _notify("checkroom_req_resp", err, null, callindex)
-          } else {
-            //加入房间成功
-            that._room = result.room
-            _notify("checkroom_req_resp", err, result.info, callindex)
-          }
-
-        })
-        break
+      
       case "enterroom_req":
         if (that._room) {
           that._room.enter_room(that, function (err, result) {

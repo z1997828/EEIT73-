@@ -94,8 +94,28 @@ export class hallScene extends Component {
                 
             });
             //-----------
+             //郵箱:
+            
+            
+             this.recordMail.removeAllChildren();
+             userDetails.feedback.forEach(record => {
+                 let text = instantiate(this.mailText);
+                 let labels = text.getComponentsInChildren(Label);
+                 labels[0].string=new Date(record.user_message_date._seconds * 1000).toLocaleString();
+                 // labels[1].string=record.user_message;
+                 this.recordMail.addChild(text);
+                 text.on('click', () => this.onTextClicked(record), this);
+             });
+             
+         }
+     }
+    onTextClicked(record) {
+         let userMessage = this.userMessage.getComponent(Label);
+         let replyMessage = this.replyMessage.getComponent(Label);
+         userMessage.string = record.user_message
+         replyMessage.string = record.reply_message
         }
-    }
+    
 
     
     // ----------上方功能列-------------
