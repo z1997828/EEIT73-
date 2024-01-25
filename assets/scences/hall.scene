@@ -187,7 +187,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 444.9861495844875,
+    "_orthoHeight": 429.98444790046653,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -10564,7 +10564,7 @@
         "__id__": 337
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 345
@@ -11237,7 +11237,7 @@
         "__id__": 312
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 322
@@ -11732,7 +11732,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": -199.588,
-      "y": 55.80500000000001,
+      "y": 143.169,
       "z": 0
     },
     "_lrot": {
@@ -11790,7 +11790,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 208.327,
-      "y": -109,
+      "y": -157.536,
       "z": 0
     },
     "_lrot": {
@@ -11838,7 +11838,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": -248,
-      "y": 100,
+      "y": 150,
       "z": 0
     },
     "_lrot": {
@@ -11877,7 +11877,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 498,
-      "height": 200
+      "height": 300
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -11947,7 +11947,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": -248,
-      "y": 100,
+      "y": 150,
       "z": 0
     },
     "_lrot": {
@@ -11986,7 +11986,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 498,
-      "height": 200
+      "height": 300
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -12021,7 +12021,7 @@
     "_actualFontSize": 20,
     "_fontSize": 20,
     "_fontFamily": "Arial",
-    "_lineHeight": 200,
+    "_lineHeight": 300,
     "_overflow": 1,
     "_enableWrapText": false,
     "_font": null,
@@ -12047,7 +12047,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 500,
-      "height": 200
+      "height": 300
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -14848,7 +14848,7 @@
         "__id__": 464
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 470
