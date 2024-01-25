@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Label, director, game, Prefab, instantiate, labelAssembler } from 'cc';
+import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Label, director, game, Prefab, instantiate, labelAssembler, EditBox } from 'cc';
 import { createRoomConfig } from "./components/define"
 import gameManager from './components/gameManager';
 import SocketUtil from './components/SocketUtil';
@@ -44,6 +44,8 @@ export class hallScene extends Component {
     @property(Prefab) mailText:Prefab=null;
     @property(Node) userMessage: Node = null;  
     @property(Node) replyMessage: Node = null;  
+    @property(Node)EnterWindow:Node = null;
+    @property(EditBox)roomId:EditBox=null;
 
 
     onLoad() {
@@ -60,6 +62,7 @@ export class hallScene extends Component {
         this.setting.active = false;
         this.face.active = false;
         this.mail.active = false;
+        this.EnterWindow.active = false;
         this.openMenu = false;
         gameManager.Instance.socketUtil = new SocketUtil();
         gameManager.Instance.util = new Util();
@@ -120,6 +123,7 @@ export class hallScene extends Component {
         this.rule.active = false;
         this.setting.active = false;
         this.face.active = false;
+        this.EnterWindow.active = false;
         this.openMenu = false;
         console.log("確定按鈕被點擊");
     }
@@ -127,26 +131,7 @@ export class hallScene extends Component {
 
     // 進入初階場按鈕
     onEnterRoom(roominfo) {
-        // 首先檢查是否已存在可加入的房間
-        this.checkForExistingRoom((err, roomExists, existingRoomInfo) => {
-            if (err) {
-                console.error("檢查現有房間時出錯:", err);
-                return;
-            }
-
-            if (roomExists) {
-                // 如果存在房間，則嘗試加入該房間
-                this.joinExistingRoom(existingRoomInfo);
-            } else {
-                // 如果不存在房間，則執行創建房間的流程
-                this.createRoom(roominfo);
-            }
-        });
-    }
-
-
-    createRoom(roominfo) {
-        // 獲取房間配置
+        
         const config = createRoomConfig[roominfo];
         if (config) {
             // 創建房間請求
@@ -170,28 +155,21 @@ export class hallScene extends Component {
         }
     }
 
-    joinExistingRoom(roomInfo) {
-        // 實現加入已存在房間的邏輯
-        // 例如：發送加入房間的請求，更新用戶界面等
-        // ...
-    }
-
-    checkForExistingRoom(callback) {
-        // 實現檢查已存在房間的邏輯
-        // 通常是向伺服器發送請求，並在回調函數中處理結果
-        // callback(err, roomExists, roomInfo)
-        // ...
-    }
-
     public onInRookieRoom() {
         this.onEnterRoom('1')
 
     }
 
-    // 進入高級場按鈕
+    // 加入房間按鈕
 
-    public onInMasterRoom() {
+    public onEnter() {
+        if (!this.openMenu)
+            this.EnterWindow.active = !false,
+                this.openMenu = !false;
+    }
 
+    public onEnterWindow(){
+        
     }
     // ----------下方功能列-------------
 
