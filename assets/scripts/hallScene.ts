@@ -25,7 +25,7 @@ export class hallScene extends Component {
     //sammykym:
     @property(Node) recordFrame: Node = null;
     @property(Prefab) recordText: Prefab = null;
-    //-----------
+   //-----------
     @property(Node) lbFace: Node = null;
     @property(Node) lbname: Node = null;
     @property(Node) lbMoney: Node = null;
