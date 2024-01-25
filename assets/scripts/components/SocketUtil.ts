@@ -77,7 +77,7 @@ export default class SocketUtil {
         this.sio.emit("notify", { cmd: cmdtype, data: req, callIndex: callIndex });
     }
 
-    private _request(cmdType, req?, callback?) {
+    private _request(cmdType, req, callback) {
         console.log(`Send cmd: ${cmdType} ${JSON.stringify(req)}`);
 
         this.callIndex++;
@@ -91,12 +91,10 @@ export default class SocketUtil {
     }
 
     requestCreateRoom(req, callback) {
-        this._request("createroom_req", callback);
+        this._request("createroom_req", req,callback);
     }
 
-    requestCheckRoom(req, callback) {
-        this._request("checkroom_req", req, callback);
-    }
+    
     requestJoin(req, callback) {
         this._request("joinroom_req", req, callback);
     }

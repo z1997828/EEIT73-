@@ -1822,16 +1822,18 @@
     "card_node": {
       "__id__": 70
     },
-    "card_prefab": null,
     "clockimage": null,
     "qiangdidzhu_node": null,
     "time_label": null,
-    "robimage_sp": null,
-    "robnoimage_sp": null,
-    "robIconSp": null,
-    "robIcon_Sp": null,
-    "robnoIcon_Sp": null,
-    "masterIcon": null,
+    "robimage_sp": {
+      "__id__": 19
+    },
+    "robnoimage_sp": {
+      "__id__": 25
+    },
+    "masterIcon": {
+      "__id__": 31
+    },
     "pokerPrefab": {
       "__uuid__": "36ecba63-b06f-437e-a045-2b8a7b752262",
       "__expectedType__": "cc.Prefab"

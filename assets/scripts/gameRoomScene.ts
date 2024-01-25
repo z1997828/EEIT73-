@@ -1,7 +1,5 @@
 import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Prefab, instantiate, SpriteAtlas,director, Label } from 'cc';
-import Deck from './Card/carder';
-import Card2 from './Card/Card2';
-import Card from './Card/Card';
+
 import gameManager from './components/gameManager';
 
 

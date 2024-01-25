@@ -41,15 +41,6 @@ export class PlayerNode extends Component {
     @property(Node)
     robnoimage_sp: Node = null;
 
-    @property(Sprite)
-    robIconSp: Sprite = null;
-
-    @property(Node)
-    robIcon_Sp: Node = null;
-
-    @property(Node)
-    robnoIcon_Sp: Node = null;
-
     @property(Node)
     masterIcon: Node = null;
 
