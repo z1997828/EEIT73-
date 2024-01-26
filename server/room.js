@@ -38,7 +38,7 @@ module.exports = function(roominfo,player){
     var that = {}
     that.room_id = getRandomStr(6)
     that._player_list = []
-    console.log("creat room id:"+that.room_id)
+    console.log("create room id:"+that.room_id)
     var tconfigKey = String(roominfo.rate);
     console.log("roominfo.rate:"+tconfigKey)
     
@@ -49,9 +49,9 @@ module.exports = function(roominfo,player){
     that.bottom = tconfig.bottom
     that.rate = tconfig.rate              //倍数  
     that.gold =  that.rate * that.bottom //基数 
-    that.house_manage = player          //房主(不是地主)
+    that.house_manage = player   //房主(不是地主)
     that.state = RoomState.ROOM_INVALID //房间状态
-    console.log(that.own_player)
+    console.log("own_player:",that.own_player._username)
     //初始化发牌器对象
     //实例化牌和洗牌在构造函数完成
     that.carder = Carder()  //发牌对象

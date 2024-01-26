@@ -1,22 +1,21 @@
-const gamectr = require('./game_ctr')
-
 module.exports = function (info, socket, callindex, gamectr) {
     // console.log("playerinfo:" + JSON.stringify(info))
 
-    var that = {}
+    let that = {}
     that._username = info.username;    //用户昵称
     that._email = info.email;  //用户账号
     that._avatar = info.avatar;  //头像
     that._money = info.money;       //当前金币
-    that._socket = socket
-    that._gamesctr = gamectr
-    that._room = undefined //所在房间的引用
-    that._seatindex = 0   //在房间的位置
-    that._isready = false //当前在房间的状态 是否点击了准备按钮
-    that._cards = []      //当前手上的牌
+    that._socket = socket;
+    that._gamesctr = gamectr;
+    that._room = undefined; //所在房间的引用
+    that._seatindex = 0;   //在房间的位置
+    that._isready = false; //当前在房间的状态 是否点击了准备按钮
+    that._cards = [];      //当前手上的牌
     //内部使用的发送数据函数
+
     const _notify = function (type, result, data, callBackIndex) {
-        console.log('notify =' + JSON.stringify(data));
+        // console.log('notify =' + JSON.stringify(data));
         that._socket.emit('notify', {
             type: type,
             result: result,
@@ -26,18 +25,16 @@ module.exports = function (info, socket, callindex, gamectr) {
 
     };
 
-
-
-
     //通知客户端登录成功，返回数据
     _notify("login_resp", 0, { moneycount: that._money }, callindex)
-    //    console.log(that);
 
     
-    that._socket.on("notify", function() {
+
+    that._socket.on('notify', function (req) {
+        // console.log("notify:" + JSON.stringify(req))
         var cmdType = req.cmd
         var data = req.data
-        var callindex = req.callindex
+        var callindex = req.callIndex
         console.log("_notify" + JSON.stringify(req))
         switch (cmdType) {
             case "createroom_req":
@@ -135,9 +132,11 @@ module.exports = function (info, socket, callindex, gamectr) {
                 break;
         }
     })
-    
+
+
+
     that._socket.on("disconnect", function () {
-        
+
         console.log("player disconnect")
         if (that._room) {
             that._room.playerOffLine(that)
@@ -229,5 +228,6 @@ module.exports = function (info, socket, callindex, gamectr) {
     that.SendOtherChuCard = function (data) {
         _notify("other_chucard_notify", 0, data, 0)
     }
+
     return that
 }

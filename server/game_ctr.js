@@ -8,8 +8,6 @@ var _room_info = []
 exports.create_player = function (info, socket, callindex) {
     var player = Player(info, socket, callindex, this)
     _player_list.push(player)
-    // console.log(player)
-    return player;
 }
 
 exports.create_room = function (roominfo, own_player, callback) {
@@ -17,7 +15,7 @@ exports.create_room = function (roominfo, own_player, callback) {
 
     var room = Room(roominfo, own_player)
     _room_info.push(room)
-    console.log(room)
+    // console.log(room)
     //检测用户是否能创建房间
     //检查金币数量是否足够
 
@@ -42,33 +40,7 @@ exports.create_room = function (roominfo, own_player, callback) {
 
 }
 
-exports.check_room = function (data, player, callback) {
-    var availableRoom = null;
 
-    // 遍歷所有房間尋找可加入的房間
-    for (var i = 0; i < _room_info.length; i++) {
-        var room = _room_info[i];
-        availableRoom = room;
-        break;
-    }
-
-    // 如果找到了房間，回調傳遞房間信息
-    if (availableRoom) {
-        callback(null, {
-            roomExists: true,
-            roomInfo: {
-                roomid: availableRoom.room_id,
-                bottom: availableRoom.bottom,
-                rate: availableRoom.rate
-            }
-        });
-    } else {
-        // 如果沒有可加入的房間，回調傳遞房間不存在的信息
-        callback(null, {
-            roomExists: false
-        });
-    }
-}
 //notify{"type":"joinroom_resp","result":null,"data":{"data":{"roomid":"714950","gold":100}},"callBackIndex":3}
 exports.jion_room = function (data, player, callback) {
     //console.log("jion_room AA"+data.roomid)
