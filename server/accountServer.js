@@ -5,12 +5,14 @@ const io = require('socket.io-client');
 const http = require('http').Server(app)
 const sio = require('socket.io')(http)
 const Login = require('../function/login')
+const addData = require('../function/addData')
 const gamectr = require('./game_ctr')
-const player = require('./player')
+
 
 // 允許跨域使用本服務
 var cors = require("cors");
 const { userInfo } = require("os");
+const player = require("./player");
 app.use(cors());
 
 // 協助 Express 解析表單與JSON資料
@@ -46,6 +48,18 @@ app.post('/login', (req, res) => {
     .catch(error => {
       res.status(401).json({ message: '登錄失敗', error });
     });
+});
+//郵件
+app.post('/mail', (req, res) => {
+  const { mailtext,username } = req.body;
+  console.log(mailtext);
+addData.feedback(mailtext,username)
+.then(Newfeedback => {
+  res.status(200).json({ message: '發送成功', Newfeedback });
+ })
+ .catch(error => {
+  res.status(401).json({ message: '發送失敗', error });
+  });
 });
 
 //檢測帳號重複
@@ -94,6 +108,7 @@ app.post('/getPost', (req, res) => {
 // 一切就緒，開始接受用戶端連線
 
 http.listen(3000);
+
 sio.on('connection', (socket) => {
   let clientIp = socket.handshake.address;
   socket.emit('connected', '' + clientIp);
@@ -101,32 +116,24 @@ sio.on('connection', (socket) => {
   socket.on("game_ping", () => {
     socket.emit("game_pong")
   })
+
   socket.on('notify', (req) => {
-
-
-    const cmdType = req.cmd;
-    const info = req.data;
-    const callIndex = req.callindex;
-    
-
-
-    // console.log(`收到通知: 命令類型 - ${cmdType}, 數據 - ${JSON.stringify(info.username)},callIndex - ${callIndex}`);
-    switch (cmdType) {
+    // console.log("notify:" + JSON.stringify(req))
+    var data = req.data
+    console.log("收到通知: 命令類型 -", req.cmd, "數據 - ", data, "callindex -", req.callIndex);
+    switch (req.cmd) {
       case 'login':
-        gamectr.create_player(info, socket, callIndex)
-
-        break;
-      case 'createroom_req':
-        // 假設gamectr有一個處理創建房間的函數
-        gamectr.create_room(info, info, callIndex )
-       
-        break;
-
-
+        gamectr.create_player(data, socket, req.callIndex)
+        
+        
       default:
-        console.log(`未知的命令類型: ${cmdType}`);
+        console.log("未知的命令類型: ", req.cmd);
+        console.log(req)
     }
+
   });
+
+
   socket.on("disconnect", () => {
     console.log("客戶端:有人離開Server")
   })

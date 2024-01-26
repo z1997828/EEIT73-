@@ -1,9 +1,13 @@
-import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Label, director, game, Prefab, instantiate } from 'cc';
+import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Label, director, game, Prefab, instantiate, labelAssembler, EditBox } from 'cc';
 import { createRoomConfig } from "./components/define"
 import gameManager from './components/gameManager';
 import SocketUtil from './components/SocketUtil';
 import Util from './components/Util';
+
 import HTTP from './components/HTTP'; // 假設HTTP類被定義在'HTTP.ts'文件中
+
+import { Api } from './components/urlAPI';
+
 
 const { ccclass, property } = _decorator;
 
@@ -34,16 +38,27 @@ export class hallScene extends Component {
     @property(Node) pIname: Node = null;
     @property(Node) pIemail: Node = null;
     @property(Node) pIip: Node = null;
+    @property(Node) feedbackname: Node = null;
     _pIname: Label = null;
     _pIemail: Label = null;
     _pIip: Label = null;
+    _feedbackname:Label = null;
     public openMenu = false;
     private MusicIsOn: boolean = !false;
     private AudioIsOn: boolean = !false;
+    @property(Node) recordMail: Node = null;
+    @property(Prefab) mailText: Prefab = null;
+    @property(Node) userMessage: Node = null;
+    @property(Node) replyMessage: Node = null;
+    @property(Node) EnterWindow: Node = null;
+    @property(EditBox) roomId: EditBox = null;
+    private _roomId: string = "";
+    private cur_input_count: number = -1;
+    @property(EditBox) feedbackInput: EditBox = null;
 
 
     onLoad() {
-
+        
         this._lbname = this.lbname.getComponent(Label);
         this._lbMoney = this.lbMoney.getComponent(Label);
         this._pIname = this.pIname.getComponent(Label);
@@ -56,7 +71,9 @@ export class hallScene extends Component {
         this.setting.active = false;
         this.face.active = false;
         this.mail.active = false;
+        this.EnterWindow.active = false;
         this.openMenu = false;
+        this._feedbackname = this.feedbackname.getComponent(Label)
         gameManager.Instance.socketUtil = new SocketUtil();
         gameManager.Instance.util = new Util();
 
@@ -68,7 +85,10 @@ export class hallScene extends Component {
 
     init() {
         let userDetails = gameManager.Instance.userDetails;
+
         if (userDetails) {
+
+            this._feedbackname.string = userDetails.username;
             this._lbname.string = userDetails.username;
             this._lbMoney.string = userDetails.money
             this._pIname.string = userDetails.username;
@@ -83,10 +103,33 @@ export class hallScene extends Component {
                 record.identity == 'banker' ? record_text.getComponentsInChildren(Label)[2].string = '地主' : record_text.getComponentsInChildren(Label)[2].string = '農民';
                 record_text.getComponentsInChildren(Label)[3].string = record.money;
                 this.recordFrame.addChild(record_text);
+
             });
             //-----------
+            //郵箱:
+
+
+            this.recordMail.removeAllChildren();
+            userDetails.feedback.forEach(record => {
+                let text = instantiate(this.mailText);
+                let labels = text.getComponentsInChildren(Label);
+                labels[0].string = new Date(record.user_message_date._seconds * 1000).toLocaleString();
+                // labels[1].string=record.user_message;
+                this.recordMail.addChild(text);
+                text.on('click', () => this.onTextClicked(record), this);
+            });
+
         }
+
     }
+    onTextClicked(record) {
+        let userMessage = this.userMessage.getComponent(Label);
+        let replyMessage = this.replyMessage.getComponent(Label);
+        userMessage.string = record.user_message
+        replyMessage.string = record.reply_message
+    }
+
+
 
 
     // ----------上方功能列-------------
@@ -114,29 +157,33 @@ export class hallScene extends Component {
         this.rule.active = false;
         this.setting.active = false;
         this.face.active = false;
+        this.EnterWindow.active = false;
         this.openMenu = false;
         console.log("確定按鈕被點擊");
     }
     // ----------中間功能列-------------
 
-    // 進入初階場按鈕
+    // 創建房間按鈕
     onEnterRoom(roominfo) {
-        // 獲取房間配置
+
         const config = createRoomConfig[roominfo];
         if (config) {
             // 創建房間請求
             gameManager.Instance.socketUtil.connect();
             gameManager.Instance.socketUtil.requestCreateRoom(config, (err, result) => {
                 if (err) {
-                    console.error("創建房間失敗", err);
+                    // 處理錯誤
+                    console.error("Socket 失敗", err);
                 } else {
-                    console.log("創建房間成功", result);
-                    gameManager.Instance.userDetails.bottom = result.bottom
-                    gameManager.Instance.userDetails.rate = result.rate
-                    director.loadScene('gameroom')
-                    // 在這裡處理房間創建成功後的邏輯，例如跳轉到房間場景
+                    // 處理登入成功的邏輯
+                    console.log("Socket 成功", result);
                 }
             });
+
+            gameManager.Instance.userDetails.bottom = config.bottom
+            gameManager.Instance.userDetails.rate = config.rate
+            // console.log(gameManager.Instance.userDetails)
+            // director.loadScene('gameroom')
         } else {
             console.error("無效的房間等級");
         }
@@ -144,11 +191,43 @@ export class hallScene extends Component {
 
     public onInRookieRoom() {
         this.onEnterRoom('1')
+
     }
 
-    // 進入高級場按鈕
+    // 加入房間按鈕
 
-    public onInMasterRoom() {
+
+    
+
+    public onEnter() {
+        if (!this.openMenu)
+            this.EnterWindow.active = !false,
+                this.openMenu = !false;
+    }
+
+    public onEnterWindow() {
+
+        this._roomId = this.roomId.string;
+
+        //console.log("joinid.length:"+this.joinid.length)
+        if (this._roomId.length >= 6) {
+            //判断加入房间逻辑
+            gameManager.Instance.socketUtil.connect();
+            var room_para = {
+                _roomId: this._roomId
+            }
+            console.log(room_para);
+            gameManager.Instance.socketUtil.requestJoin(room_para, function (err, result) {
+                if (err) {
+                    console.log("err" + err)
+                } else {
+                    console.log("join room sucess" + JSON.stringify(result))
+                    gameManager.Instance.userDetails.bottom = result.bottom
+                    gameManager.Instance.userDetails.rate = result.rate
+                    director.loadScene("gameScene")
+                }
+            })
+        }
 
     }
     // ----------下方功能列-------------
@@ -219,9 +298,22 @@ export class hallScene extends Component {
                 this.openMenu = !false;
     }
 
-    // 反饋內提交按鈕
+    //反饋內提交按鈕
     public onFbSummit() {
-        console.log("確定按鈕被點擊");
+        let check = this.feedbackInput.string;
+        let username = gameManager.Instance.userDetails.username
+        if (check.length < 1) {
+            console.log('未輸入');
+            return;
+        }
+        let data = { "mailtext": check , "username":username }
+        gameManager.Instance.http.postRequest(Api.mail, data, (ret) => {
+            if (ret.message === '發送成功') {
+                console.log('OK');   
+            } else {
+               console.log('error');
+            }
+        });
     }
     // 設定按鈕
     public onSetting() {

@@ -1,6 +1,7 @@
 import { Game, game } from "cc";
 import gameManager from "./gameManager";
 import eventListener from "./eventListener";
+import { defines } from "./define";
 const io = (window as any).io || {}
 gameManager.Instance.eventlistener = new eventListener();
 
@@ -13,7 +14,7 @@ export default class SocketUtil {
     isPing = false;
     lastSendTime = null;
     lastReciveTime = null;
-    private responseMap: { [key: number]: Function } = {};
+    private responseMap = {};
     private callIndex = 0;
     private event = gameManager.Instance.eventlistener;
 
@@ -24,14 +25,14 @@ export default class SocketUtil {
             'force new connection': true,
             'transports': ['websocket', 'polling']
         }
-        this.sio = io.connect("http://127.0.0.1:3000", opts)
+        this.sio = io.connect(defines.serverUrl, opts)
         this.sio.on("connect", (data) => {
             console.log("服務端：connect success!")
             this.connected = true
             this.StartHeartBeat();
         })
 
-        this.sio.on("notify", (res) => {
+        this.sio.on('notify', (res) => {
             console.log("收到來自伺服器的通知:", res);
             // 檢查回應對象中是否有名為 callBackIndex 的屬性，
             // 如果有，則這表明這個通知是之前某個請求的回應。
@@ -39,7 +40,9 @@ export default class SocketUtil {
                 // 從回應映射中獲取對應的回調函數。
                 const callback = this.responseMap[res.callBackIndex];
                 // 執行回調函數，並將服務器返回的結果和數據作為參數傳遞給它。
-                callback(res.result, res.data);
+                if(callback){
+                    callback(res.result,res.data)
+                }
             } else {
                 // 如果回應對象中沒有 callBackIndex，則認為這是一個獨立的通知，
                 // 而不是對之前請求的回應。
@@ -49,7 +52,7 @@ export default class SocketUtil {
             }
         });
 
-
+        
         this.sio.on("disconnect", () => {
             this.connected = false;
             console.log("disconnect")
@@ -71,7 +74,7 @@ export default class SocketUtil {
 
 
     private _sendmsg(cmdtype, req, callIndex) {
-        this.sio.emit("notify", { cmd: cmdtype, data: req, callIndex: callIndex });
+        this.sio.emit('notify', { cmd: cmdtype, data: req, callIndex: callIndex });
     }
 
     private _request(cmdType, req, callback) {
@@ -83,14 +86,15 @@ export default class SocketUtil {
 
     }
 
-    requestLogin = function (req, callback) {
+    requestLogin(req, callback) {
         this._request("login", req, callback)
     }
 
     requestCreateRoom(req, callback) {
-        this._request("createroom_req", req, callback);
+        this._request("createroom_req", req,callback);
     }
 
+    
     requestJoin(req, callback) {
         this._request("joinroom_req", req, callback);
     }
