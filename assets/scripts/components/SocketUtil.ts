@@ -32,7 +32,7 @@ export default class SocketUtil {
             this.StartHeartBeat();
         })
 
-        this.sio.on("notify", (res) => {
+        this.sio.on('notify', (res) => {
             console.log("收到來自伺服器的通知:", res);
             // 檢查回應對象中是否有名為 callBackIndex 的屬性，
             // 如果有，則這表明這個通知是之前某個請求的回應。
@@ -74,7 +74,7 @@ export default class SocketUtil {
 
 
     private _sendmsg(cmdtype, req, callIndex) {
-        this.sio.emit("notify", { cmd: cmdtype, data: req, callIndex: callIndex });
+        this.sio.emit('notify', { cmd: cmdtype, data: req, callIndex: callIndex });
     }
 
     private _request(cmdType, req, callback) {

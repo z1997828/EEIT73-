@@ -25,7 +25,7 @@ export class hallScene extends Component {
     //sammykym:
     @property(Node) recordFrame: Node = null;
     @property(Prefab) recordText: Prefab = null;
-   //-----------
+    //-----------
     @property(Node) lbFace: Node = null;
     @property(Node) lbname: Node = null;
     @property(Node) lbMoney: Node = null;
@@ -40,12 +40,14 @@ export class hallScene extends Component {
     public openMenu = false;
     private MusicIsOn: boolean = !false;
     private AudioIsOn: boolean = !false;
-    @property(Node) recordMail: Node = null;  
-    @property(Prefab) mailText:Prefab=null;
-    @property(Node) userMessage: Node = null;  
-    @property(Node) replyMessage: Node = null;  
-    @property(Node)EnterWindow:Node = null;
-    @property(EditBox)roomId:EditBox=null;
+    @property(Node) recordMail: Node = null;
+    @property(Prefab) mailText: Prefab = null;
+    @property(Node) userMessage: Node = null;
+    @property(Node) replyMessage: Node = null;
+    @property(Node) EnterWindow: Node = null;
+    @property(EditBox) roomId: EditBox = null;
+    private _roomId: string = "";
+    private cur_input_count: number = -1;
 
 
     onLoad() {
@@ -66,22 +68,22 @@ export class hallScene extends Component {
         this.openMenu = false;
         gameManager.Instance.socketUtil = new SocketUtil();
         gameManager.Instance.util = new Util();
-        
+
 
         this.init();
     }
 
-   
+
 
     init() {
         let userDetails = gameManager.Instance.userDetails;
-        
+
         if (userDetails) {
             this._lbname.string = userDetails.username;
             this._lbMoney.string = userDetails.money
             this._pIname.string = userDetails.username;
             this._pIemail.string = userDetails.email;
-            
+
             //sammykym:
             this.recordFrame.removeAllChildren();
             userDetails.user_playway.forEach(record => {
@@ -91,33 +93,33 @@ export class hallScene extends Component {
                 record.identity == 'banker' ? record_text.getComponentsInChildren(Label)[2].string = '地主' : record_text.getComponentsInChildren(Label)[2].string = '農民';
                 record_text.getComponentsInChildren(Label)[3].string = record.money;
                 this.recordFrame.addChild(record_text);
-                
+
             });
             //-----------
-             //郵箱:
-            
-            
-             this.recordMail.removeAllChildren();
-             userDetails.feedback.forEach(record => {
-                 let text = instantiate(this.mailText);
-                 let labels = text.getComponentsInChildren(Label);
-                 labels[0].string=new Date(record.user_message_date._seconds * 1000).toLocaleString();
-                 // labels[1].string=record.user_message;
-                 this.recordMail.addChild(text);
-                 text.on('click', () => this.onTextClicked(record), this);
-             });
-             
-         }
-     }
-    onTextClicked(record) {
-         let userMessage = this.userMessage.getComponent(Label);
-         let replyMessage = this.replyMessage.getComponent(Label);
-         userMessage.string = record.user_message
-         replyMessage.string = record.reply_message
-        }
-    
+            //郵箱:
 
-    
+
+            this.recordMail.removeAllChildren();
+            userDetails.feedback.forEach(record => {
+                let text = instantiate(this.mailText);
+                let labels = text.getComponentsInChildren(Label);
+                labels[0].string = new Date(record.user_message_date._seconds * 1000).toLocaleString();
+                // labels[1].string=record.user_message;
+                this.recordMail.addChild(text);
+                text.on('click', () => this.onTextClicked(record), this);
+            });
+
+        }
+    }
+    onTextClicked(record) {
+        let userMessage = this.userMessage.getComponent(Label);
+        let replyMessage = this.replyMessage.getComponent(Label);
+        userMessage.string = record.user_message
+        replyMessage.string = record.reply_message
+    }
+
+
+
     // ----------上方功能列-------------
     // 頭像按鈕
     public onFace() {
@@ -149,9 +151,9 @@ export class hallScene extends Component {
     }
     // ----------中間功能列-------------
 
-    // 進入初階場按鈕
+    // 創建房間按鈕
     onEnterRoom(roominfo) {
-        
+
         const config = createRoomConfig[roominfo];
         if (config) {
             // 創建房間請求
@@ -169,7 +171,7 @@ export class hallScene extends Component {
             gameManager.Instance.userDetails.bottom = config.bottom
             gameManager.Instance.userDetails.rate = config.rate
             // console.log(gameManager.Instance.userDetails)
-            director.loadScene('gameroom')
+            // director.loadScene('gameroom')
         } else {
             console.error("無效的房間等級");
         }
@@ -188,8 +190,29 @@ export class hallScene extends Component {
                 this.openMenu = !false;
     }
 
-    public onEnterWindow(){
-        
+    public onEnterWindow() {
+
+        this._roomId = this.roomId.string;
+
+        //console.log("joinid.length:"+this.joinid.length)
+        if (this._roomId.length >= 6) {
+            //判断加入房间逻辑
+            gameManager.Instance.socketUtil.connect();
+            var room_para = {
+                _roomId: this._roomId
+            }
+            console.log(room_para);
+            gameManager.Instance.socketUtil.requestJoin(room_para, function (err, result) {
+                if (err) {
+                    console.log("err" + err)
+                } else {
+                    console.log("join room sucess" + JSON.stringify(result))
+                    gameManager.Instance.userDetails.bottom = result.bottom
+                    gameManager.Instance.userDetails.rate = result.rate
+                    director.loadScene("gameScene")
+                }
+            })
+        }
     }
     // ----------下方功能列-------------
 
