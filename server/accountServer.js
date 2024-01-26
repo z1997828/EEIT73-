@@ -5,6 +5,7 @@ const io = require('socket.io-client');
 const http = require('http').Server(app)
 const sio = require('socket.io')(http)
 const Login = require('../function/login')
+const addData = require('../function/addData')
 const gamectr = require('./game_ctr')
 
 
@@ -47,6 +48,18 @@ app.post('/login', (req, res) => {
     .catch(error => {
       res.status(401).json({ message: '登錄失敗', error });
     });
+});
+//郵件
+app.post('/mail', (req, res) => {
+  const { mailtext,username } = req.body;
+  console.log(mailtext);
+addData.feedback(mailtext,username)
+.then(Newfeedback => {
+  res.status(200).json({ message: '發送成功', Newfeedback });
+ })
+ .catch(error => {
+  res.status(401).json({ message: '發送失敗', error });
+  });
 });
 
 //檢測帳號重複

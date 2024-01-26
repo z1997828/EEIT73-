@@ -1,9 +1,9 @@
 var admin = require('firebase-admin');
 //取得Key認證文件
 var serviceAccount = require("../gameproject-d9074-firebase-adminsdk-6rnh9-cff9fb8858.json");
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-});
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+// });
 //數據庫對象
 let db = admin.firestore();
 //服務器時間戳
@@ -30,3 +30,16 @@ async function addData(){
         console.log('Added document with ID', res.id);
     
 }
+
+exports.feedback = async function addfeedback(mailtext,username){
+        const res = await db.collection('feedback').doc(username).update({
+            message:FieldValue.arrayUnion({
+            reply_message: "尚未回覆",
+            reply_message_date: "",
+            user_message: mailtext,
+            user_message_date: new Date()
+        })    
+        });
+
+}
+
