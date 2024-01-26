@@ -3,6 +3,7 @@ import { createRoomConfig } from "./components/define"
 import gameManager from './components/gameManager';
 import SocketUtil from './components/SocketUtil';
 import Util from './components/Util';
+import HTTP from './components/HTTP'; // 假設HTTP類被定義在'HTTP.ts'文件中
 
 const { ccclass, property } = _decorator;
 
@@ -22,8 +23,8 @@ export class hallScene extends Component {
     @property(AudioSource) bgMusic: AudioSource = null;
     @property(Node) personalInfo: Node = null;
     //sammykym:
-    @property(Node) recordFrame: Node = null;  
-    @property(Prefab) recordText:Prefab=null;
+    @property(Node) recordFrame: Node = null;
+    @property(Prefab) recordText: Prefab = null;
     //-----------
     @property(Node) lbFace: Node = null;
     @property(Node) lbname: Node = null;
@@ -40,7 +41,7 @@ export class hallScene extends Component {
     private MusicIsOn: boolean = !false;
     private AudioIsOn: boolean = !false;
 
-    
+
     onLoad() {
 
         this._lbname = this.lbname.getComponent(Label);
@@ -58,12 +59,12 @@ export class hallScene extends Component {
         this.openMenu = false;
         gameManager.Instance.socketUtil = new SocketUtil();
         gameManager.Instance.util = new Util();
-        
+
 
         this.init();
     }
 
-   
+
 
     init() {
         let userDetails = gameManager.Instance.userDetails;
@@ -77,17 +78,17 @@ export class hallScene extends Component {
             this.recordFrame.removeAllChildren();
             userDetails.user_playway.forEach(record => {
                 let record_text = instantiate(this.recordText);
-                record.money>0?record_text.getComponentsInChildren(Label)[0].string='勝':record_text.getComponentsInChildren(Label)[0].string='負';
-                record_text.getComponentsInChildren(Label)[1].string=record.date;
-                record.identity=='banker'?record_text.getComponentsInChildren(Label)[2].string='地主':record_text.getComponentsInChildren(Label)[2].string='農民';
-                record_text.getComponentsInChildren(Label)[3].string=record.money;
+                record.money > 0 ? record_text.getComponentsInChildren(Label)[0].string = '勝' : record_text.getComponentsInChildren(Label)[0].string = '負';
+                record_text.getComponentsInChildren(Label)[1].string = record.date;
+                record.identity == 'banker' ? record_text.getComponentsInChildren(Label)[2].string = '地主' : record_text.getComponentsInChildren(Label)[2].string = '農民';
+                record_text.getComponentsInChildren(Label)[3].string = record.money;
                 this.recordFrame.addChild(record_text);
             });
             //-----------
         }
     }
 
-    
+
     // ----------上方功能列-------------
     // 頭像按鈕
     public onFace() {
@@ -148,45 +149,59 @@ export class hallScene extends Component {
     // 進入高級場按鈕
 
     public onInMasterRoom() {
-       
+
     }
     // ----------下方功能列-------------
 
     // 商城按鈕
     public onMall() {
-        if (!this.openMenu)
-            this.mall.active = !false,
-                this.openMenu = !false;
+        // 切換商城菜單的顯示狀態
+        if (!this.openMenu) {//openMenu是一個控制菜單是否打開的布林值
+            this.mall.active = true; // 啟用商城菜單節點
+            this.openMenu = true; // 標記菜單為打開狀態
+            // 可以在這裡進一步初始化商城菜單，例如更新金額顯示等
+        } else {
+            this.mall.active = false; // 關閉商城菜單節點
+            this.openMenu = false; // 標記菜單為關閉狀態
+        }
     }
+
+        http: HTTP = new HTTP(); // 創建HTTP類的實例
 
     // 商城內儲值金額1按鈕
     public onAddValue150() {
-        console.log("確定按鈕被點擊");
-    }
-
-    // 商城內儲值金額1按鈕
-    public onAddValue300() {
-        console.log("確定按鈕被點擊");
+        console.log("確定金額150按鈕被點擊");
+        this.http.postAmount(150); // 調用http.postAmount並傳入金額150
     }
 
     // 商城內儲值金額2按鈕
-    public onAddValue500() {
-        console.log("確定按鈕被點擊");
+    public onAddValue300() {
+        console.log("確定金額300按鈕被點擊");
+        this.http.postAmount(300); // 調用http.postAmount並傳入金額300
     }
 
     // 商城內儲值金額3按鈕
-    public onAddValue1000() {
-        console.log("確定按鈕被點擊");
+    public onAddValue500() {
+        console.log("確定金額500按鈕被點擊");
+        this.http.postAmount(500); // 調用http.postAmount並傳入金額500
     }
 
     // 商城內儲值金額4按鈕
-    public onAddValue2000() {
-        console.log("確定按鈕被點擊");
+    public onAddValue1000() {
+        console.log("確定金額1000按鈕被點擊");
+        this.http.postAmount(1000); // 調用http.postAmount並傳入金額1000
     }
 
     // 商城內儲值金額5按鈕
-    public onAddValue3290() {
-        console.log("確定按鈕被點擊");
+    public onAddValue2000() {
+        console.log("確定金額2000按鈕被點擊");
+        this.http.postAmount(2000); // 調用http.postAmount並傳入金額2000
+    }
+
+    // 商城內儲值金額6按鈕
+    public onAddValue8888() {
+        console.log("確定金額8888按鈕被點擊");
+        this.http.postAmount(8888); // 調用http.postAmount並傳入金額8888
     }
 
 

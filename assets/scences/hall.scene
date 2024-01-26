@@ -187,7 +187,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 444.9861495844875,
+    "_orthoHeight": 401.2539184952978,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -5897,7 +5897,7 @@
         "__id__": 173
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 242
@@ -8735,7 +8735,7 @@
       "b": 4,
       "a": 255
     },
-    "_string": "$ 3290",
+    "_string": "$ 8888",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 30,
@@ -8937,7 +8937,7 @@
     },
     "component": "",
     "_componentId": "d7e0cNvQSxNxJUz5zO2Y3Rh",
-    "handler": "onAddValue3290",
+    "handler": "onAddValue8888",
     "customEventData": ""
   },
   {
@@ -14790,7 +14790,7 @@
         "__id__": 421
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 427
