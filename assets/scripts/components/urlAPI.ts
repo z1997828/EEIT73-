@@ -3,5 +3,6 @@ export enum Api{
     login = '/login',
     register = '/register',
     confirmname = '/confirmname',
-    create_room = '/create_room'
+    create_room = '/create_room',
+    mail = '/mail'
  }
