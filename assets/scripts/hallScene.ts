@@ -3,7 +3,7 @@ import { createRoomConfig } from "./components/define"
 import gameManager from './components/gameManager';
 import SocketUtil from './components/SocketUtil';
 import Util from './components/Util';
-
+import { Api } from './components/urlAPI';
 
 const { ccclass, property } = _decorator;
 
@@ -34,9 +34,11 @@ export class hallScene extends Component {
     @property(Node) pIname: Node = null;
     @property(Node) pIemail: Node = null;
     @property(Node) pIip: Node = null;
+    @property(Node) feedbackname: Node = null;
     _pIname: Label = null;
     _pIemail: Label = null;
     _pIip: Label = null;
+    _feedbackname:Label = null;
     public openMenu = false;
     private MusicIsOn: boolean = !false;
     private AudioIsOn: boolean = !false;
@@ -46,7 +48,7 @@ export class hallScene extends Component {
     @property(Node) replyMessage: Node = null;  
     @property(Node)EnterWindow:Node = null;
     @property(EditBox)roomId:EditBox=null;
-
+    @property(EditBox) feedbackInput: EditBox = null;
 
     onLoad() {
         
@@ -64,6 +66,7 @@ export class hallScene extends Component {
         this.mail.active = false;
         this.EnterWindow.active = false;
         this.openMenu = false;
+        this._feedbackname = this.feedbackname.getComponent(Label)
         gameManager.Instance.socketUtil = new SocketUtil();
         gameManager.Instance.util = new Util();
         
@@ -77,6 +80,8 @@ export class hallScene extends Component {
         let userDetails = gameManager.Instance.userDetails;
         
         if (userDetails) {
+
+            this._feedbackname.string = userDetails.username;
             this._lbname.string = userDetails.username;
             this._lbMoney.string = userDetails.money
             this._pIname.string = userDetails.username;
@@ -115,7 +120,7 @@ export class hallScene extends Component {
          userMessage.string = record.user_message
          replyMessage.string = record.reply_message
         }
-    
+
 
     
     // ----------上方功能列-------------
@@ -245,9 +250,22 @@ export class hallScene extends Component {
                 this.openMenu = !false;
     }
 
-    // 反饋內提交按鈕
+    //反饋內提交按鈕
     public onFbSummit() {
-        console.log("確定按鈕被點擊");
+        let check = this.feedbackInput.string;
+        let username = gameManager.Instance.userDetails.username
+        if (check.length < 1) {
+            console.log('未輸入');
+            return;
+        }
+        let data = { "mailtext": check , "username":username }
+        gameManager.Instance.http.postRequest(Api.mail, data, (ret) => {
+            if (ret.message === '發送成功') {
+                console.log('OK');   
+            } else {
+               console.log('error');
+            }
+        });
     }
     // 設定按鈕
     public onSetting() {
