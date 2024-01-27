@@ -11,8 +11,6 @@ const gamectr = require('./game_ctr')
 
 // 允許跨域使用本服務
 var cors = require("cors");
-const { userInfo } = require("os");
-const player = require("./player");
 app.use(cors());
 
 // 協助 Express 解析表單與JSON資料
