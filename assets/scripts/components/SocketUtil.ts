@@ -17,7 +17,20 @@ export default class SocketUtil {
     private responseMap = {};
     private callIndex = 0;
     private event = gameManager.Instance.eventlistener;
+    
+    private _sendmsg(cmdtype, req, callIndex) {
+        this.sio.emit("notify", { cmd: cmdtype, data: req, callIndex: callIndex });
+        console.log("notify", { cmd: cmdtype, data: req, callIndex: callIndex })
+    }
 
+    private _request(cmdType, req?, callback?) {
+        // console.log(`Send cmd: ${cmdType}     ${JSON.stringify(req)}`);
+
+        this.callIndex++;
+        this.responseMap[this.callIndex] = callback;
+        this._sendmsg(cmdType, req, this.callIndex);
+
+    }
 
     connect() {
         let opts = {
@@ -26,7 +39,7 @@ export default class SocketUtil {
             'transports': ['websocket', 'polling']
         }
         this.sio = io.connect(defines.serverUrl, opts)
-        this.sio.on("connect", (data) => {
+        this.sio.on("connection", (data) => {
             console.log("服務端：connect success!")
             this.connected = true
             this.StartHeartBeat();
@@ -40,8 +53,8 @@ export default class SocketUtil {
                 // 從回應映射中獲取對應的回調函數。
                 const callback = this.responseMap[res.callBackIndex];
                 // 執行回調函數，並將服務器返回的結果和數據作為參數傳遞給它。
-                if(callback){
-                    callback(res.result,res.data)
+                if (callback) {
+                    callback(res.result, res.data)
                 }
             } else {
                 // 如果回應對象中沒有 callBackIndex，則認為這是一個獨立的通知，
@@ -52,7 +65,7 @@ export default class SocketUtil {
             }
         });
 
-        
+
         this.sio.on("disconnect", () => {
             this.connected = false;
             console.log("disconnect")
@@ -64,6 +77,7 @@ export default class SocketUtil {
 
         })
 
+
     }
     send(event, data?) {
         if (this.connected) {
@@ -73,28 +87,17 @@ export default class SocketUtil {
     }
 
 
-    private _sendmsg(cmdtype, req, callIndex) {
-        this.sio.emit("notify", { cmd: cmdtype, data: req, callIndex: callIndex });
-    }
-
-    private _request(cmdType, req?, callback?) {
-        console.log(`Send cmd: ${cmdType} ${JSON.stringify(req)}`);
-
-        this.callIndex++;
-        this.responseMap[this.callIndex] = callback;
-        this._sendmsg(cmdType, req, this.callIndex);
-
-    }
+    
 
     requestLogin(req, callback) {
         this._request("login", req, callback)
     }
 
     requestCreateRoom(req, callback) {
-        this._request("createroom_req", callback);
+        this._request("createroom_req", req,callback);
     }
 
-    
+
     requestJoin(req, callback) {
         this._request("joinroom_req", req, callback);
     }

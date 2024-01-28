@@ -179,7 +179,7 @@ export class loginScene extends Component {
                 gameManager.Instance.loading.hide();
                 gameManager.Instance.userDetails = ret.userDetails;
                 gameManager.Instance.socketUtil.connect();
-                gameManager.Instance.socketUtil.requestLogin(ret.userDetails, (err, result) => {
+                gameManager.Instance.socketUtil.requestLogin(gameManager.Instance.userDetails, (err, result) => {
                     if (err) {
                         // 處理錯誤
                         console.error("Socket 登入失敗", err);

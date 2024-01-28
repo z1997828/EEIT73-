@@ -7,12 +7,15 @@ module.exports = function (info, socket, callindex, gamectr) {
     that._avatar = info.avatar;  //头像
     that._money = info.money;       //当前金币
     that._socket = socket;
-    that._gamesctr = gamectr;
+    that._gamectr = gamectr;
     that._room = undefined; //所在房间的引用
     that._seatindex = 0;   //在房间的位置
     that._isready = false; //当前在房间的状态 是否点击了准备按钮
     that._cards = [];      //当前手上的牌
     //内部使用的发送数据函数
+    // console.log(that);
+    // console.log(callindex);
+
 
     const _notify = function (type, result, data, callBackIndex) {
         // console.log('notify =' + JSON.stringify(data));
@@ -24,21 +27,31 @@ module.exports = function (info, socket, callindex, gamectr) {
         });
 
     };
-
+    
     //通知客户端登录成功，返回数据
-    _notify("login_resp", 0, { moneycount: that._money }, callindex)
+
+    that._socket.on("disconnect", function () {
+
+        console.log("player disconnect")
+        if (that._room) {
+            that._room.playerOffLine(that)
+        }
+    })
 
     
+    _notify("login_resp", 0, { moneycount: that._money }, callindex)
+    
+    //data分3个部分 cmd,{data},callindex
 
-    that._socket.on('notify', function (req) {
-        // console.log("notify:" + JSON.stringify(req))
+    that._socket.on("notify", (req)=> {
+
         var cmdType = req.cmd
         var data = req.data
         var callindex = req.callIndex
         console.log("_notify" + JSON.stringify(req))
         switch (cmdType) {
             case "createroom_req":
-                that._gamesctr.create_room(data, that, function (err, result) {
+                that._gamectr.create_room(data, that, function (err, result) {
                     if (err != 0) {
                         console.log("create_room err:" + err)
                     } else {
@@ -53,7 +66,7 @@ module.exports = function (info, socket, callindex, gamectr) {
                 break;
             case "joinroom_req":
 
-                that._gamesctr.jion_room(req.data, that, function (err, result) {
+                that._gamectr.jion_room(req.data, that, function (err, result) {
                     if (err) {
                         console.log("joinroom_req err" + err)
                         _notify("joinroom_resp", err, null, callindex)
@@ -133,18 +146,6 @@ module.exports = function (info, socket, callindex, gamectr) {
         }
     })
 
-
-
-    that._socket.on("disconnect", function () {
-
-        console.log("player disconnect")
-        if (that._room) {
-            that._room.playerOffLine(that)
-        }
-    })
-
-
-    //data分3个部分 cmd,{data},callindex
 
 
 

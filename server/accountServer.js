@@ -49,15 +49,15 @@ app.post('/login', (req, res) => {
 });
 //郵件
 app.post('/mail', (req, res) => {
-  const { mailtext,username } = req.body;
+  const { mailtext, username } = req.body;
   console.log(mailtext);
-addData.feedback(mailtext,username)
-.then(Newfeedback => {
-  res.status(200).json({ message: '發送成功', Newfeedback });
- })
- .catch(error => {
-  res.status(401).json({ message: '發送失敗', error });
-  });
+  addData.feedback(mailtext, username)
+    .then(Newfeedback => {
+      res.status(200).json({ message: '發送成功', Newfeedback });
+    })
+    .catch(error => {
+      res.status(401).json({ message: '發送失敗', error });
+    });
 });
 
 //檢測帳號重複
@@ -114,29 +114,38 @@ sio.on('connection', (socket) => {
   socket.on("game_ping", () => {
     socket.emit("game_pong")
   })
-
-  socket.on('notify', (req) => {
+  
+  socket.on("notify", (req) => {
     // console.log("notify:" + JSON.stringify(req))
     var data = req.data
+    var cmdType = req.cmd
     console.log("收到通知: 命令類型 -", req.cmd, "數據 - ", data, "callindex -", req.callIndex);
-    switch (req.cmd) {
+    switch (cmdType) {
       case 'login':
         gamectr.create_player(data, socket, req.callIndex)
         
+        break;
         
       default:
-        console.log("未知的命令類型: ", req.cmd);
-        console.log(req)
+        console.log("未知的命令類型: ", cmdType);
+        break;
     }
 
   });
-
 
   socket.on("disconnect", () => {
     console.log("客戶端:有人離開Server")
   })
 
 })
+
+
+
+
+
+
+
+
 console.log("Web伺服器就緒，開始接受用戶端連線.");
 console.log("鍵盤「Ctrl + C」可結束伺服器程式.");
 
