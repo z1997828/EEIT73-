@@ -178,9 +178,9 @@ export class hallScene extends Component {
                 } else {
                     // 處理登入成功的邏輯
                     console.log("Socket 成功", result);
+
                 }
             });
-
             gameManager.Instance.userDetails.bottom = config.bottom
             gameManager.Instance.userDetails.rate = config.rate
             // console.log(gameManager.Instance.userDetails)
@@ -207,30 +207,30 @@ export class hallScene extends Component {
     }
 
     public onEnterWindow() {
-
         this._roomId = this.roomId.string;
-
         //console.log("joinid.length:"+this.joinid.length)
         if (this._roomId.length >= 6) {
-            //判断加入房间逻辑
 
+            //判断加入房间逻辑
             var room_para = {
                 roomid: this._roomId
             }
             console.log(room_para);
-            gameManager.Instance.socketUtil.requestJoin(room_para, (err, result)=> {
-                if (!err) { // 如果没有错误发生
+            gameManager.Instance.socketUtil.requestJoin(room_para, (err, result) => {
+                console.log("err", err, "result", result)
+                if (err) { // 如果没有错误发生
+                    console.log("error joining room:" + err);
+                    gameManager.Instance.alert.show("錯誤", "查詢不到此房號")
+                } else { // 如果有错误
                     console.log("join room success" + JSON.stringify(result));
                     gameManager.Instance.userDetails.bottom = result.bottom;
                     gameManager.Instance.userDetails.rate = result.rate;
-                } else { // 如果有错误
-                    console.log("error joining room:" + err);
+                    director.loadScene('gameroom');
                 }
-                console.log(gameManager.Instance.userDetails)
-                director.loadScene('gameroom');
-            });
-        }
 
+            });
+            return
+        }
     }
     // ----------下方功能列-------------
 
