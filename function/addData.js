@@ -20,14 +20,14 @@ const FieldValue = admin.firestore.FieldValue;
 
 addData();
 async function addData(){
-        const res = await db.collection('users').add({
-            account: "tony123",
-            email: "tony@tony.com",
-            name:'Tony',
-            password: '123456',
-            registertime : FieldValue.serverTimestamp()
-        });
-        console.log('Added document with ID', res.id);
+        // const res = await db.collection('users').add({
+        //     account: "tony123",
+        //     email: "tony@tony.com",
+        //     name:'Tony',
+        //     password: '123456',
+        //     registertime : FieldValue.serverTimestamp()
+        // });
+        // console.log('Added document with ID', res.id);
     
 }
 

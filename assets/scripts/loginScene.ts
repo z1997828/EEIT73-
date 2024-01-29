@@ -5,7 +5,7 @@ import { Api } from './components/urlAPI';
 import HTTP from './components/HTTP';
 const { ccclass, property } = _decorator;
 const eventTarget = new EventTarget;
-
+gameManager.Instance.socketUtil = new SocketUtil();
 @ccclass('login')
 export class loginScene extends Component {
     @property(Node) singUp: Node = null;
@@ -17,6 +17,7 @@ export class loginScene extends Component {
     @property(EditBox) regPasswdInput: EditBox = null;
     @property(EditBox) confirmregPasswdInput: EditBox = null;
     @property(Node) Label: Node = null;
+    
     _Label: Label = null;
     public openMenu = false;
 
@@ -24,8 +25,8 @@ export class loginScene extends Component {
         this.singUp.active = false;
         this.singIn.active = false;
         gameManager.Instance.http = new HTTP();
-        gameManager.Instance.socketUtil = new SocketUtil();
 
+        gameManager.Instance.socketUtil.connect();
         this._Label = this.Label.getComponent(Label);
         this.Label.active = false
 
@@ -178,7 +179,7 @@ export class loginScene extends Component {
             if (ret.message === '登錄成功') {
                 gameManager.Instance.loading.hide();
                 gameManager.Instance.userDetails = ret.userDetails;
-                gameManager.Instance.socketUtil.connect();
+                
                 gameManager.Instance.socketUtil.requestLogin(gameManager.Instance.userDetails, (err, result) => {
                     if (err) {
                         // 處理錯誤

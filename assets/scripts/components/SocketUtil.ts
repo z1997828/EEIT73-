@@ -19,10 +19,15 @@ export default class SocketUtil {
     private event = gameManager.Instance.eventlistener;
     
     private _sendmsg(cmdtype, req, callIndex) {
+        if (!this.sio) {
+            console.error("Socket is not connected.");
+            return;
+        }
         this.sio.emit("notify", { cmd: cmdtype, data: req, callIndex: callIndex });
         console.log("notify", { cmd: cmdtype, data: req, callIndex: callIndex })
     }
 
+   
     private _request(cmdType, req?, callback?) {
         // console.log(`Send cmd: ${cmdType}     ${JSON.stringify(req)}`);
 
@@ -32,6 +37,8 @@ export default class SocketUtil {
 
     }
 
+
+
     connect() {
         let opts = {
             'reconnection': false,
@@ -39,7 +46,7 @@ export default class SocketUtil {
             'transports': ['websocket', 'polling']
         }
         this.sio = io.connect(defines.serverUrl, opts)
-        this.sio.on("connection", (data) => {
+        this.sio.on("connect", (data) => {
             console.log("服務端：connect success!")
             this.connected = true
             this.StartHeartBeat();
