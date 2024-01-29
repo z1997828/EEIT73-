@@ -19,7 +19,7 @@ public class OrderService {
 		AioCheckOutALL obj = new AioCheckOutALL();
 		obj.setMerchantTradeNo(uuId);
 		obj.setMerchantTradeDate("2017/01/01 08:05:23");
-		obj.setTotalAmount("100");
+		obj.setTotalAmount("8888");
 		obj.setTradeDesc("test Description");
 		obj.setItemName("TestItem");
 		obj.setReturnURL("http://localhost:8080/form.html");
