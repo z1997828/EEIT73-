@@ -187,7 +187,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 508.8042049934297,
+    "_orthoHeight": 444.9861495844875,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -13747,7 +13747,7 @@
         "__id__": 394
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 409
@@ -15091,7 +15091,7 @@
         "__id__": 426
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 431
@@ -15504,7 +15504,7 @@
     },
     "component": "",
     "_componentId": "d7e0cNvQSxNxJUz5zO2Y3Rh",
-    "handler": "onEnter",
+    "handler": "onEnterWindow",
     "customEventData": ""
   },
   {
