@@ -15,7 +15,7 @@ exports.create_player = function (playinfo, socket, callindex) {
 exports.create_room = function (roominfo, own_player, callback) {
     var room = Room(roominfo, own_player)
     _room_info.push(room)
-    console.log(room)
+    // console.log(room)
     //检测用户是否能创建房间
     //检查金币数量是否足够
 
