@@ -42,7 +42,7 @@ export class hallScene extends Component {
     _pIname: Label = null;
     _pIemail: Label = null;
     _pIip: Label = null;
-    _feedbackname:Label = null;
+    _feedbackname: Label = null;
     public openMenu = false;
     private MusicIsOn: boolean = !false;
     private AudioIsOn: boolean = !false;
@@ -58,7 +58,7 @@ export class hallScene extends Component {
 
 
     onLoad() {
-        
+
         this._lbname = this.lbname.getComponent(Label);
         this._lbMoney = this.lbMoney.getComponent(Label);
         this._pIname = this.pIname.getComponent(Label);
@@ -74,7 +74,8 @@ export class hallScene extends Component {
         this.EnterWindow.active = false;
         this.openMenu = false;
         this._feedbackname = this.feedbackname.getComponent(Label)
-        gameManager.Instance.socketUtil = new SocketUtil();
+
+
         gameManager.Instance.util = new Util();
 
 
@@ -169,7 +170,7 @@ export class hallScene extends Component {
         const config = createRoomConfig[roominfo];
         if (config) {
             // 創建房間請求
-            gameManager.Instance.socketUtil.connect();
+
             gameManager.Instance.socketUtil.requestCreateRoom(config, (err, result) => {
                 if (err) {
                     // 處理錯誤
@@ -183,7 +184,7 @@ export class hallScene extends Component {
             gameManager.Instance.userDetails.bottom = config.bottom
             gameManager.Instance.userDetails.rate = config.rate
             // console.log(gameManager.Instance.userDetails)
-            // director.loadScene('gameroom')
+            director.loadScene('gameroom')
         } else {
             console.error("無效的房間等級");
         }
@@ -197,7 +198,7 @@ export class hallScene extends Component {
     // 加入房間按鈕
 
 
-    
+
 
     public onEnter() {
         if (!this.openMenu)
@@ -212,21 +213,22 @@ export class hallScene extends Component {
         //console.log("joinid.length:"+this.joinid.length)
         if (this._roomId.length >= 6) {
             //判断加入房间逻辑
-            gameManager.Instance.socketUtil.connect();
+
             var room_para = {
-                _roomId: this._roomId
+                roomid: this._roomId
             }
             console.log(room_para);
-            gameManager.Instance.socketUtil.requestJoin(room_para, function (err, result) {
-                if (err) {
-                    console.log("err" + err)
-                } else {
-                    console.log("join room sucess" + JSON.stringify(result))
-                    gameManager.Instance.userDetails.bottom = result.bottom
-                    gameManager.Instance.userDetails.rate = result.rate
-                    director.loadScene("gameScene")
+            gameManager.Instance.socketUtil.requestJoin(room_para, (err, result)=> {
+                if (!err) { // 如果没有错误发生
+                    console.log("join room success" + JSON.stringify(result));
+                    gameManager.Instance.userDetails.bottom = result.bottom;
+                    gameManager.Instance.userDetails.rate = result.rate;
+                } else { // 如果有错误
+                    console.log("error joining room:" + err);
                 }
-            })
+                console.log(gameManager.Instance.userDetails)
+                director.loadScene('gameroom');
+            });
         }
 
     }
@@ -245,7 +247,7 @@ export class hallScene extends Component {
         }
     }
 
-        http: HTTP = new HTTP(); // 創建HTTP類的實例
+    http: HTTP = new HTTP(); // 創建HTTP類的實例
 
     // 商城內儲值金額1按鈕
     public onAddValue150() {
@@ -306,12 +308,12 @@ export class hallScene extends Component {
             console.log('未輸入');
             return;
         }
-        let data = { "mailtext": check , "username":username }
+        let data = { "mailtext": check, "username": username }
         gameManager.Instance.http.postRequest(Api.mail, data, (ret) => {
             if (ret.message === '發送成功') {
-                console.log('OK');   
+                console.log('OK');
             } else {
-               console.log('error');
+                console.log('error');
             }
         });
     }

@@ -1,6 +1,7 @@
 import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Prefab, instantiate, SpriteAtlas,director, Label } from 'cc';
 
 import gameManager from './components/gameManager';
+import { RoomState } from './components/define';
 
 
 
@@ -22,7 +23,7 @@ export class gameRoomScene extends Component {
     public openMenu = false;
     private MusicIsOn: boolean = !false;
     private AudioIsOn: boolean = !false;
-
+    roomstate = null;
 
 
     onLoad() {
@@ -31,6 +32,9 @@ export class gameRoomScene extends Component {
         this.playerNodeList = [];
         this.bottomLabel.string = "底分:" + gameManager.Instance.userDetails.bottom
         this.rateLabel.string = "倍率:" + gameManager.Instance.userDetails.rate
+        this.roomstate = RoomState.ROOM_INVALID
+       
+       
         this.roomNumberLabel.string = "房間號:" 
     }
 

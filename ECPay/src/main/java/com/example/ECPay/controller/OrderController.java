@@ -42,14 +42,14 @@ public class OrderController {
 	// 处理POST请求到/ecpayCheckout路径
 	// ecpayCheckout 方法：处理发送到 /ecpayCheckout 的POST请求，用于启动电子支付流程。它接收一个 OrderObject
 	// 类型的对象作为请求体，调用 orderService 的 ecpayCheckout 方法，并返回结果。
-	@PostMapping("/ecpayCheckout") // 使用@PostMapping注解定义路径映射，处理POST请求到/ecpayCheckout
-	public String ecpayCheckout(@RequestBody OrderObject ooj) {// 建立一個package裡面放classes，加入OrderObject，//
-																// 使用@RequestBody注解处理请求数据
-		String aioCheckOutALLForm = orderService.ecpayCheckout();// 调用orderService的方法
-		System.out.println(ooj);// print物件會印出記憶體位置，所以去OrderObject用source, Generate to String()來印出String內容，//
-								// 打印请求对象
-		return aioCheckOutALLForm;// 返回处理结果
-	}
+    @PostMapping("/ecpayCheckout")
+    public String ecpayCheckout(@RequestBody String amountAsString) {
+        int amount = Integer.parseInt(amountAsString); // 將字符串轉換為整數
+        // 使用 amount 變量
+        System.out.println("Received amount: " + amount);
+        // ...後續處理邏輯...
+        return "處理完成";
+    }   
 
 	// 处理POST请求到/ecpay/response路径
 	// handleECPayResponse 方法：处理发送到 /ecpay/response
