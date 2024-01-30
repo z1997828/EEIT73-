@@ -18,15 +18,12 @@
     "_children": [
       {
         "__id__": 2
-      },
-      {
-        "__id__": 164
       }
     ],
     "_active": true,
     "_components": [],
     "_prefab": {
-      "__id__": 165
+      "__id__": 164
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -57,7 +54,7 @@
     },
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 166
+      "__id__": 165
     },
     "_id": "ca28c55a-943e-473c-a5bc-3c751c4d80f2"
   },
@@ -6036,47 +6033,6 @@
     "_id": "61Wr6+ZqdE6KHByHqydsVG"
   },
   {
-    "__type__": "cc.Node",
-    "_name": "players_node",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "_parent": {
-      "__id__": 1
-    },
-    "_children": [],
-    "_active": true,
-    "_components": [],
-    "_prefab": null,
-    "_lpos": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_lrot": {
-      "__type__": "cc.Quat",
-      "x": 0,
-      "y": 0,
-      "z": 0,
-      "w": 1
-    },
-    "_lscale": {
-      "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
-      "z": 1
-    },
-    "_mobility": 0,
-    "_layer": 1073741824,
-    "_euler": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_id": "3fULQwCShBLLvOiSLA/HVw"
-  },
-  {
     "__type__": "cc.PrefabInfo",
     "root": null,
     "asset": null,
@@ -6087,28 +6043,28 @@
   {
     "__type__": "cc.SceneGlobals",
     "ambient": {
-      "__id__": 167
+      "__id__": 166
     },
     "shadows": {
-      "__id__": 168
+      "__id__": 167
     },
     "_skybox": {
-      "__id__": 169
+      "__id__": 168
     },
     "fog": {
-      "__id__": 170
+      "__id__": 169
     },
     "octree": {
-      "__id__": 171
+      "__id__": 170
     },
     "skin": {
-      "__id__": 172
+      "__id__": 171
     },
     "lightProbeInfo": {
-      "__id__": 173
+      "__id__": 172
     },
     "postSettings": {
-      "__id__": 174
+      "__id__": 173
     },
     "bakedWithStationaryMainLight": false,
     "bakedWithHighpLightmap": false
