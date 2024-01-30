@@ -1,6 +1,5 @@
 import { _decorator, Component, Label, Sprite, Node, Prefab, SpriteAtlas, instantiate } from 'cc';
-import Deck from '../Card/carder';
-import Card2 from '../Card/Card2';
+
 import Card from '../Card/Card';
 import gameManager from './gameManager';
 
@@ -140,15 +139,20 @@ export default class PlayerPrefab extends Component {
 
     pushCard(){
         
-        // this.pokerContainer.active = true 
-        // for(var i=0;i<17;i++){
-        //     var card = instantiate(this.pokerPrefab)
-        //     console.log(" this.pokerContainer.parent.parent"+ this.pokerContainer.parent.parent.name)
-        //     card.parent = this.pokerContainer
-        //     //card.parent = this.node   
-        //     //console.log("call pushCard x:"+card.x+" y:"+card.y)
-        //     this.cardlist_node.push(card)
-        // }
+        this.pokerContainer.active = true 
+         
+        for(var i=0;i<17;i++){
+            let card = instantiate(this.pokerPrefab)
+            card.setScale(0.6, 0.6, 0)
+            console.log(" this.card_node.parent.parent"+ this.pokerContainer.parent.parent.name)
+            card.parent = this.pokerContainer
+            //card.parent = this.node
+            let height = 159
+            let yPos = (17 - 1) * 0.5 * height * 0.4 * 0.3 - height * 0.4 * 0.3 * i;
+            card.setPosition(0, yPos, 0)
+            // console.log("call pushCard x:"+card.x+" y:"+card.y)
+            this.cardlist_node.push(card)
+        }
     }
 
     

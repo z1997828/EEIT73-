@@ -22,7 +22,7 @@ export class gameRoomScene extends Component {
     @property(Label) bottomLabel: Label = null;
     @property(Label) rateLabel: Label = null;
     @property(Label) roomidLabel: Label = null;
-    
+    @property(Node) BottomCardNode:Node =null;
     playerNodeList = []
     public openMenu = false;
     private MusicIsOn: boolean = !false;
@@ -346,11 +346,7 @@ export class gameRoomScene extends Component {
         }
         console.log("確定按鈕被點擊");
     }
-    public onReady() {
-
-    }
-
-
+    
 }
 
 
