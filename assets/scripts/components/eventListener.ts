@@ -1,7 +1,7 @@
 type EventListenerCallback = (...args: any[]) => void;
 
 export default class eventListener {
-    private register: { [type: string]: EventListenerCallback[] } = {};
+    private register = {};
     
     on(type: string, method: EventListenerCallback) {
         if (this.register.hasOwnProperty(type)) {

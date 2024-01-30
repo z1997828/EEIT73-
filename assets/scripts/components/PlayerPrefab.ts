@@ -7,8 +7,8 @@ import gameManager from './gameManager';
 
 const { ccclass, property } = _decorator;
 
-@ccclass('PlayerNode')
-export class PlayerNode extends Component {
+@ccclass('PlayerPrefab')
+export default class PlayerPrefab extends Component {
 
     @property(Label)
     username_label: Label = null;
@@ -21,10 +21,6 @@ export class PlayerNode extends Component {
 
     @property(Node)
     headimage: Node = null;
-
-
-    @property(Node)
-    card_node: Node = null;
 
     @property(Node)
     clockimage: Node = null;
@@ -48,7 +44,7 @@ export class PlayerNode extends Component {
     @property(Node) pokerContainer: Node | null = null;
     @property(SpriteAtlas)
     public cardsSpriteAtlas: SpriteAtlas | null = null;
-    deck: Deck = null;
+    
     cardlist_node = []
     seat_index = null;
     onLoad() {
@@ -114,12 +110,17 @@ export class PlayerNode extends Component {
             }
           }.bind(this))
 
-          
+          this.node.on("playernode_canrob_event",function(event){
+            var detail = event
+            console.log("------playernode_canrob_event detail:"+detail)
+            if(detail==this.accountid){
+              this.qiangdidzhu_node.active=true
+              //this.tips_label.string ="正在抢地主" 
+              this.time_label.string="10"
+              //开启一个定时器
 
-
-        this.deck = new Deck();
-
-        
+            }
+        }.bind(this))
 
     }
 
@@ -127,8 +128,8 @@ export class PlayerNode extends Component {
     init_data(data, index) {
         console.log("init_data:" + JSON.stringify(data))
         //data:{"accountid":"2117836","nick_name":"tiny543","avatarUrl":"http://xxx","goldcount":1000}
-
-        this.username_label = data.username
+        this.avatar = data.avatar
+        this.username_label.string = data.username
         this.money_label.string = data.money
         this.cardlist_node = []
         this.seat_index = index
@@ -137,32 +138,20 @@ export class PlayerNode extends Component {
         }
     }
 
+    pushCard(){
+        
+        // this.pokerContainer.active = true 
+        // for(var i=0;i<17;i++){
+        //     var card = instantiate(this.pokerPrefab)
+        //     console.log(" this.pokerContainer.parent.parent"+ this.pokerContainer.parent.parent.name)
+        //     card.parent = this.pokerContainer
+        //     //card.parent = this.node   
+        //     //console.log("call pushCard x:"+card.x+" y:"+card.y)
+        //     this.cardlist_node.push(card)
+        // }
+    }
 
     
 
-    showPlayerCards(cards: Card2[]) {
-        if (!this.pokerPrefab || !this.pokerContainer) return;
-
-        // 先按value进行排序，点数小的牌排在前面
-        cards.sort((a, b) => a.value - b.value);
-        // 定义起始位置和每张牌的间隔
-        const startPositionX = 150;
-        const OFFSET_X = 50; // 每张牌之间的间隔，可以根据需要调整
-
-        cards.forEach((card, index) => {
-            const pokerNode = instantiate(this.pokerPrefab);
-            if (!pokerNode) return; // 如果实例化失败，直接返回
-
-            const cardComponent = pokerNode.getComponent(Card);
-            if (cardComponent) {
-                cardComponent.showCards(card, this.cardsSpriteAtlas); // 设置牌面
-            }
-
-            // 根据 index 计算牌的 x 位置
-            const posX = startPositionX + OFFSET_X * index;
-            pokerNode.setPosition(posX, 0, 0); // 设置每张牌的位置
-
-            this.pokerContainer.addChild(pokerNode); // 将牌节点添加到容器中
-        });
-    }
+    
 }
