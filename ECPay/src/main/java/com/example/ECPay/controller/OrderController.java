@@ -1,10 +1,13 @@
 package com.example.ECPay.controller;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 //引入所需的类和接口
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
@@ -19,11 +22,9 @@ import com.example.classes.Person;
 import com.example.entity.Money;
 import com.example.firebase.FirebaseInitialization;
 import com.example.utils.Receive;
-import com.google.api.core.ApiFuture;
-import com.google.api.core.ApiFutureCallback;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
-import com.google.firebase.cloud.FirestoreClient;
+
+//Import the necessary CORS annotation
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 //声明这是一个REST控制器
 @RestController
@@ -38,18 +39,47 @@ public class OrderController {
 	
     @Autowired
     private MoneyService moneyService;
+    
+    @CrossOrigin(origins = "http://localhost:7456") // or use "*" to allow all origins
+    @PostMapping("/amountToSpringboot")
+    public String amountToSpringboot(@RequestBody String amountAsString) {
+        int amount = Integer.parseInt(amountAsString); // 將字符串轉換為整數
+        // 使用 amount 變量
+        System.out.println("Received amount: " + amount);
+        
+        //原本打算使用Java直接開啟瀏覽器，但沒反應...
+//        if (amount != 0) {
+//            try {
+//                if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+//                    Desktop.getDesktop().browse(new URI("http://localhost:8080/form.html"));
+//                }
+//            } catch (IOException | URISyntaxException e) {
+//                e.printStackTrace();
+//                return "Error opening browser: " + e.getMessage();
+//            }
+//        }        
+        
+     // 現在傳遞 amount 給 ecpayCheckout 方法
+     //   String form = orderService.ecpayCheckout(amount);
+        
+    // 現在不需要再轉換成 int，直接傳給 ecpayCheckout 方法
+    String form = orderService.ecpayCheckout(amountAsString);
+    return form; // 返回從 ecpayCheckout 獲得的表單
+        
+        //return "處理完成";
+    }   
 
 	// 处理POST请求到/ecpayCheckout路径
 	// ecpayCheckout 方法：处理发送到 /ecpayCheckout 的POST请求，用于启动电子支付流程。它接收一个 OrderObject
 	// 类型的对象作为请求体，调用 orderService 的 ecpayCheckout 方法，并返回结果。
-    @PostMapping("/ecpayCheckout")
-    public String ecpayCheckout(@RequestBody String amountAsString) {
-        int amount = Integer.parseInt(amountAsString); // 將字符串轉換為整數
-        // 使用 amount 變量
-        System.out.println("Received amount: " + amount);
-        // ...後續處理邏輯...
-        return "處理完成";
-    }   
+	@PostMapping("/ecpayCheckout") // 使用@PostMapping注解定义路径映射，处理POST请求到/ecpayCheckout
+	public String ecpayCheckout(@RequestBody OrderObject ooj) {// 建立一個package裡面放classes，加入OrderObject，//
+																// 使用@RequestBody注解处理请求数据
+		String aioCheckOutALLForm = orderService.ecpayCheckout("");// 调用orderService的方法
+		System.out.println(ooj);// print物件會印出記憶體位置，所以去OrderObject用source, Generate to String()來印出String內容，//
+								// 打印请求对象
+		return aioCheckOutALLForm;// 返回处理结果
+	}
 
 	// 处理POST请求到/ecpay/response路径
 	// handleECPayResponse 方法：处理发送到 /ecpay/response
