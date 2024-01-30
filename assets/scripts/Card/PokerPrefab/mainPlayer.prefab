@@ -1669,7 +1669,7 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 225.664,
+      "x": 253.354,
       "y": 0,
       "z": 0
     },
@@ -2237,9 +2237,6 @@
     "headimage": {
       "__id__": 2
     },
-    "card_node": {
-      "__id__": 70
-    },
     "clockimage": {
       "__id__": 74
     },
@@ -2258,7 +2255,9 @@
     "masterIcon": {
       "__id__": 31
     },
-    "readyimage": null,
+    "readyimage": {
+      "__id__": 86
+    },
     "pokerPrefab": {
       "__uuid__": "36ecba63-b06f-437e-a045-2b8a7b752262",
       "__expectedType__": "cc.Prefab"
@@ -2285,7 +2284,6 @@
       "__id__": 0
     },
     "fileId": "41R7Ze/TlPn5k655ivfina",
-    "instance": null,
-    "targetOverrides": null
+    "instance": null
   }
 ]

@@ -176,15 +176,15 @@ export class hallScene extends Component {
                     // 處理錯誤
                     console.error("Socket 失敗", err);
                 } else {
-                    // 處理登入成功的邏輯
+                    // 處理創建成功的邏輯
                     console.log("Socket 成功", result);
+                    gameManager.Instance.userDetails.bottom = config.bottom
+                    gameManager.Instance.userDetails.rate = config.rate
+                    // console.log(gameManager.Instance.userDetails)
+                    director.loadScene('gameroom')
 
                 }
             });
-            gameManager.Instance.userDetails.bottom = config.bottom
-            gameManager.Instance.userDetails.rate = config.rate
-            // console.log(gameManager.Instance.userDetails)
-            director.loadScene('gameroom')
         } else {
             console.error("無效的房間等級");
         }
@@ -217,7 +217,7 @@ export class hallScene extends Component {
             }
             console.log(room_para);
             gameManager.Instance.socketUtil.requestJoin(room_para, (err, result) => {
-                console.log("err", err, "result", result)
+                // console.log("err", err, "result", result)
                 if (err) { // 如果没有错误发生
                     console.log("error joining room:" + err);
                     gameManager.Instance.alert.show("錯誤", "查詢不到此房號")

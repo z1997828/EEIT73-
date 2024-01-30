@@ -26,4 +26,5 @@ export default class gameManager{
     eventlistener:eventListener = null;
     userDetails = null;
     
+    
 }

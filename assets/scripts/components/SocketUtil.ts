@@ -24,7 +24,7 @@ export default class SocketUtil {
             return;
         }
         this.sio.emit("notify", { cmd: cmdtype, data: req, callIndex: callIndex });
-        console.log("notify", { cmd: cmdtype, data: req, callIndex: callIndex })
+        // console.log("notify", { cmd: cmdtype, data: req, callIndex: callIndex })
     }
 
    
@@ -53,7 +53,7 @@ export default class SocketUtil {
         })
 
         this.sio.on("notify", (res) => {
-            console.log("收到來自伺服器的通知:", res);
+            console.log("收到來自伺服器的通知:",JSON.stringify(res));
             // 檢查回應對象中是否有名為 callBackIndex 的屬性，
             // 如果有，則這表明這個通知是之前某個請求的回應。
             if (this.responseMap.hasOwnProperty(res.callBackIndex)) {

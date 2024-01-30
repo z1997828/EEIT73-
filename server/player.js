@@ -27,7 +27,7 @@ module.exports = function (info, socket, callindex,gamectr) {
        
     
        //通知客户端登录成功，返回数据
-       _notify("login_resp",0,{goldcount:that._gold},callindex)
+       _notify("login_resp",0,{momey:that._money},callindex)
     
        that._socket.on("disconnect",function(){
             console.log("player disconnect")
@@ -61,8 +61,8 @@ module.exports = function (info, socket, callindex,gamectr) {
        that._socket.on("notify",function(req){
             var cmd = req.cmd
             var data = req.data
-            var callindex = req.callindex
-            console.log("_notify" + JSON.stringify(req))
+            var callindex = req.callIndex
+            // console.log("_notify" + JSON.stringify(req))
             switch(cmd){
                 case "createroom_req":
                     that._gamectr.create_room(data,that,function(err,result){

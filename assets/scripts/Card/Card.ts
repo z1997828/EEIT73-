@@ -1,6 +1,7 @@
 import { _decorator, Component, Node, Sprite, SpriteAtlas } from 'cc';
 const { ccclass, property } = _decorator;
-
+import { RoomState } from '../components/define';
+import gameManager from '../components/gameManager';
 @ccclass('card')
 export default class Card extends Component {
     @property({ type: SpriteAtlas })
@@ -10,21 +11,22 @@ export default class Card extends Component {
     private offset_y: number = 20;
     private cardId: number | undefined;
     private cardData: any; // 根據實際情況定義類型
-    private accountId: string | undefined;
+    private username: string | undefined;
 
     onLoad() {
-        // 初始化
-        this.node.on('reset_card_flag', this.resetCardFlag, this);
-        // 綁定其他事件
+        this.flag = false
+        this.offset_y = 20
+        
+        this.node.on("reset_card_flag",function(event){
+            if(this.flag==true){
+                this.flag = false
+                this.node.y -= this.offset_y
+            }
+        }.bind(this))
     }
+    
 
-    resetCardFlag() {
-        if (this.flag) {
-            this.flag = false;
-            this.node.position = this.node.position.subtract3f(0, this.offset_y, 0);
-        }
-    }
-
+     
     runToCenter() {
         //移动到屏幕中间，并带一个牌缩小的效果
     }
@@ -39,7 +41,7 @@ export default class Card extends Component {
     // 其他方法同理轉換，省略...
 
     // setTouchEvent() {
-    //     if (this.accountId === myglobal.playerData.accountID) {
+    //     if (this.username === gameManager.Instance.userDetails.username) {
     //         this.node.on(Node.EventType.TOUCH_START, this.onCardTouch, this);
     //     }
     // }
@@ -47,7 +49,7 @@ export default class Card extends Component {
     // onCardTouch() {
     //     const gameSceneNode = this.node.parent;
     //     if (gameSceneNode) {
-    //         const roomState = gameSceneNode.getComponent('GameScene').roomState;
+    //         const roomState = gameSceneNode.getComponent('gameroom').roomState;
     //         if (roomState === RoomState.ROOM_PLAYING) {
     //             console.log(`TOUCH_START id: ${this.cardId}`);
     //             this.flag = !this.flag;

@@ -182,10 +182,10 @@ module.exports = function(roominfo,player){
     that.playerOffLine = function(player){
         //通知房间内那个用户掉线,并且用用户列表删除
         for(var i=0;i<that._player_list.length;i++){
-            if(that._player_list[i].username === player.username){
+            if(that._player_list[i]._username === player._username){
                 that._player_list.splice(i,1)
                 //判断是否为房主掉线
-                if(that.house_manage.username == player.username){
+                if(that.house_manage._username == player._username){
                     if(that._player_list.length>=1){
                         changeHouseManage(that._player_list[0])
                     }
@@ -198,7 +198,7 @@ module.exports = function(roominfo,player){
     that.playerReady = function(player){
         //告诉房间里所有用户，有玩家ready
         for(var i=0;i<that._player_list.length;i++){
-            that._player_list[i].sendplayerReady(player.username)
+            that._player_list[i].sendplayerReady(player._username)
         }
     }
 
@@ -215,7 +215,7 @@ module.exports = function(roominfo,player){
         if(that.robplayer.length==0){
             //都抢过了，需要确定最终地主人选,直接退出
             console.log("rob player end")
-            changeMaster(that.room_master.username)
+            changeMaster(that.room_master._username)
             //改变房间状态，显示底牌
             changeState(RoomState.ROOM_SHOWBOTTOMCARD)
             return
@@ -231,14 +231,14 @@ module.exports = function(roominfo,player){
        
         for(var i=0;i<that._player_list.length;i++){
             //通知下一个可以抢地主的玩家
-            that._player_list[i].SendCanRob(can_player.username)
+            that._player_list[i].SendCanRob(can_player._username)
         }
     }
 
     //客户端到服务器: 发送地主改变的消息
     const changeMaster = function(){
         for(var i=0;i<that._player_list.length;i++){
-            that._player_list[i].SendChangeMaster(that.room_master.username)
+            that._player_list[i].SendChangeMaster(that.room_master._username)
         }
 
         //显示底牌
@@ -259,7 +259,7 @@ module.exports = function(roominfo,player){
 
         //判断是有都准备成功
         for(var i=0;i<that._player_list.length;i++){
-            if(that._player_list[0].username!=that.house_manage.username){
+            if(that._player_list[0]._username!=that.house_manage._username){
                 if(that._player_list[0]._isready==false){
                     cb(-3,null)
                     return 
@@ -281,7 +281,7 @@ module.exports = function(roominfo,player){
     const resetChuCardPlayer = function(){
         var master_index = 0 //地主在列表中的位置 
         for(var i=that._player_list.length-1;i>=0;i--){
-           if(that._player_list[i].username==that.room_master.username){
+           if(that._player_list[i]._username==that.room_master._username){
                master_index = i
            }
         }
@@ -310,7 +310,7 @@ module.exports = function(roominfo,player){
         var cur_chu_card_player = that.playing_cards.pop()
         for(var i=0;i<that._player_list.length;i++){
               //通知下一个出牌的玩家
-              that._player_list[i].SendChuCard(cur_chu_card_player.username)
+              that._player_list[i].SendChuCard(cur_chu_card_player._username)
         }
       }
 
@@ -337,7 +337,7 @@ module.exports = function(roominfo,player){
                 continue
             }
             data = {
-                accountid:player.username,
+                accountid:player._username,
                 cards:cards,
             }
             that._player_list[i].SendOtherChuCard(data)
@@ -353,7 +353,7 @@ module.exports = function(roominfo,player){
          if(data==0){
             resp = {
                 data:{
-                      account:player.username,
+                      account:player._username,
                       msg:"choose card sucess",
                     }
             }
@@ -368,7 +368,7 @@ module.exports = function(roominfo,player){
         if(cardvalue==undefined){
             resp = {
                 data:{
-                      account:player.username,
+                      account:player._username,
                       msg:"不可用牌型",
                     }
             }
@@ -380,10 +380,10 @@ module.exports = function(roominfo,player){
             if(that.last_push_card_list.length==0){
                 //出牌成功
                 that.last_push_card_list = data
-                that.last_push_card_accountid = player.username
+                that.last_push_card_accountid = player._username
                 resp = {
                     data:{
-                          account:player.username,
+                          account:player._username,
                           msg:"sucess",
                           cardvalue:cardvalue,
                         }
@@ -400,7 +400,7 @@ module.exports = function(roominfo,player){
             if(false==that.carder.compareWithCard(that.last_push_card_list,data)){
                 resp = {
                     data:{
-                          account:player.username,
+                          account:player._username,
                           msg:"当前牌太小",
                           cardvalue:cardvalue,
                         }
@@ -409,10 +409,10 @@ module.exports = function(roominfo,player){
             }else{
                 //出牌成功
                 that.last_push_card_list = data
-                that.last_push_card_accountid = player.username
+                that.last_push_card_accountid = player._username
                 resp = {
                     data:{
-                          account:player.username,
+                          account:player._username,
                           msg:"choose card sucess",
                           cardvalue:cardvalue,
                         }
@@ -447,7 +447,7 @@ module.exports = function(roominfo,player){
         var value = data
         for(var i=0;i<that._player_list.length;i++){
             data={
-                accountid:player.username,
+                username:player._username,
                 state:value,
             }
             that._player_list[i].sendRobState(data)
