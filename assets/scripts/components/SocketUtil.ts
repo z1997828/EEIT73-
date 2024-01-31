@@ -114,12 +114,12 @@ export default class SocketUtil {
         this._request("enterroom_req", req, callback);
     }
 
-    requestNoplayCard(req, callback) {
-        this._request("no_play_card_req", req, callback);
+    requestbuchuCard(req, callback) {
+        this._request("bu_chu_card_req", req, callback);
     }
 
-    requestPlayCard(req, callback) {
-        this._request("play_card_req", req, callback);
+    requestChuCard(req, callback) {
+        this._request("Chu_card_req", req, callback);
     }
 
     // 註冊事件監聽
@@ -196,9 +196,9 @@ export default class SocketUtil {
     }
 
     // 監聽可以出牌的消息
-    onCanplayCard(callback) {
+    onCanChuCard(callback) {
         if (callback) {
-            this.event.on("can_play_card_notify", callback);
+            this.event.on("can_chu_card_notify", callback);
         }
     }
 

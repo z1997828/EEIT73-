@@ -1669,7 +1669,7 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 225.664,
+      "x": 119.639,
       "y": 0,
       "z": 0
     },
@@ -2246,10 +2246,10 @@
     "time_label": {
       "__id__": 78
     },
-    "robimage_sp": {
+    "robIcon_Sp": {
       "__id__": 19
     },
-    "robnoimage_sp": {
+    "robnoIcon_Sp": {
       "__id__": 25
     },
     "masterIcon": {

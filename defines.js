@@ -15,8 +15,8 @@ exports.createRoomConfig = {
     
 };
 
-exports.rob_state = {
-    noRob:0,
-    rob:1,
+exports.qian_state = {
+    buqiang: 0,
+    qian: 1,
 }
 

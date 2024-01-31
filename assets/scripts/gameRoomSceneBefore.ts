@@ -8,11 +8,14 @@ export class gameRoomSceneBefore extends Component {
     @property(Node) btn_gamestart: Node = null;
 
     onLoad() {
+        this.btn_ready.active = false
+        this.btn_gamestart.active = false
+
         this.node.on("init", function () {
             console.log("game beforeui init")
             console.log("housemanageid:" + gameManager.Instance.userDetails.housemanageid)
             console.log("username:" + gameManager.Instance.userDetails.username)
-            if (gameManager.Instance.userDetails.housemanageid == gameManager.Instance.userDetails.accountID) {
+            if (gameManager.Instance.userDetails.housemanageid == gameManager.Instance.userDetails.username) {
                 //自己就是房主
                 this.btn_gamestart.active = true
                 this.btn_ready.active = false
@@ -44,22 +47,30 @@ export class gameRoomSceneBefore extends Component {
     start() {
 
     }
-
-    public onReady() {
-        console.log("btn_ready")
-        gameManager.Instance.socketUtil.requestReady()
-    }
-
-    public onGameStart() {
-        console.log("btn_start")
-        gameManager.Instance.socketUtil.requestStart(function (err, data) {
-            if (err != 0) {
-                console.log("requestStart err" + err)
-            } else {
-                console.log("requestStart data" + JSON.stringify(data))
-
-            }
-        })
+    
+    onButtonClick(event,customData){
+        switch(customData){
+            case "btn_ready":
+                console.log("btn_ready")
+                gameManager.Instance.socketUtil.requestReady()
+                break
+            case "btn_start":
+                // if(isopen_sound){
+                //    cc.audioEngine.play(cc.url.raw("resources/sound/start_a.ogg")) 
+                //  }
+                 console.log("btn_start")
+                 gameManager.Instance.socketUtil.requestStart(function(err,data){
+                    if(err!=0){
+                        console.log("requestStart err"+err)
+                    }else{
+                        console.log("requestStart data"+ JSON.stringify(data))
+                        
+                    }
+                 })
+                 break    
+            default:
+                break
+        }
     }
 
    

@@ -17,8 +17,8 @@ export default class Card extends Component {
     private card_id = null;
     private card_data = null;
     private username = '';
-    private CardValue = null;
-    
+
+
     onLoad() {
         this.offset_y = 20
 
@@ -103,22 +103,22 @@ export default class Card extends Component {
 
         //this.node.getComponent(cc.Sprite).spriteFrame = 
         //服务器定义牌的表示
-        // const cardvalue = {
-        //     "A": 12,
-        //     "2": 13,
-        //     "3": 1,
-        //     "4": 2,
-        //     "5": 3,
-        //     "6": 4,
-        //     "7": 5,
-        //     "8": 6,
-        //     "9": 7,
-        //     "10": 8,
-        //     "J": 9,
-        //     "Q": 10,
-        //     "K": 11,
-        // }
-    
+        const CardValue = {
+            "12": 1,
+            "13": 2,
+            "1": 3,
+            "2": 4,
+            "3": 5,
+            "4": 6,
+            "5": 7,
+            "6": 8,
+            "7": 9,
+            "8": 10,
+            "9": 11,
+            "10": 12,
+            "11": 13
+        };
+
         const Kings = {
             "14": 54,
             "15": 53
@@ -127,12 +127,12 @@ export default class Card extends Component {
         let spriteKey = '';
 
         if (card.shape) {
-            spriteKey = 'card_' + (cardShpae[card.shape] * 13 + this.CardValue[card.value]);
+            spriteKey = 'card_' + (cardShpae[card.shape] * 13 + CardValue[card.value]);
 
         } else {
             spriteKey = 'card_' + Kings[card.king];
         }
-        
+
         // console.log("spriteKey"+spriteKey)
         this.node.getComponent(Sprite).spriteFrame = this.cardsSpriteAtlas.getSpriteFrame(spriteKey)
         this.setTouchEvent()
