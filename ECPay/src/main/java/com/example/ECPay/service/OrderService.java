@@ -19,7 +19,7 @@ public class OrderService {
 		AioCheckOutALL obj = new AioCheckOutALL();
 		obj.setMerchantTradeNo(uuId);
 		obj.setMerchantTradeDate("2017/01/01 08:05:23");
-		obj.setTotalAmount(amount);// 使用傳入的金額
+		obj.setTotalAmount(amount);
 		obj.setTradeDesc("test Description");
 		obj.setItemName("TestItem");
 		obj.setReturnURL("http://localhost:8080/form.html");
