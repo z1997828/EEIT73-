@@ -35,6 +35,7 @@ const getSeatIndex = function(playerlist){
 }
 
 module.exports = function(roominfo,player){
+    console.log('testtest',player)
     var that = {}
     that.room_id = getRandomStr(6)
     that._player_list = []
@@ -257,7 +258,7 @@ module.exports = function(roominfo,player){
             return
         }
 
-        //判断是有都准备成功
+        //判断都准备成功
         for(var i=0;i<that._player_list.length;i++){
             if(that._player_list[0]._username!=that.house_manage._username){
                 if(that._player_list[0]._isready==false){

@@ -135,7 +135,7 @@ module.exports = function (info, socket, callindex,gamectr) {
                                 that._room.playerRobmaster(that,data)
                                }
                                break 
-                           case "chu_bu_card_req":   //客户端发送出牌消息
+                           case "bu_chu_card_req":   //客户端发送出牌消息
                                 if(that._room){
                                     that._room.playerBuChuCard(that,data)
                                 }

@@ -22,7 +22,7 @@ export class gameRoomScene extends Component {
     @property(Label) bottomLabel: Label = null;
     @property(Label) rateLabel: Label = null;
     @property(Label) roomidLabel: Label = null;
-    @property(Node) BottomCardNode:Node =null;
+   
     playerNodeList = []
     public openMenu = false;
     private MusicIsOn: boolean = !false;
@@ -30,7 +30,10 @@ export class gameRoomScene extends Component {
     roomstate = null;
     playerdata_list_pos = [];
 
+    gameEnd(){
 
+    }
+    
     onLoad() {
 
         this.openMenu = false;
@@ -77,8 +80,8 @@ export class gameRoomScene extends Component {
                 //     cc.audioEngine.play(cc.url.raw("resources/sound/bg.mp3"),true) 
                 //  }
             }
-            // var gamebefore_node = this.node.getChildByName("gamebeforeUI")
-            // gamebefore_node.emit("init")
+            var gamebefore_node = this.node.getChildByName("gamebeforeUI")
+            gamebefore_node.emit("init")
         })
 
         gameManager.Instance.socketUtil.onRoomChangeState((data) => {
@@ -100,7 +103,7 @@ export class gameRoomScene extends Component {
 
         this.node.on("choose_card_event", function (event) {
             console.log("--------choose_card_event-----------")
-            var gameui_node = this.node.getChildByName("gameingUI")
+            var gameui_node = this.node.getChildByName("gamingUI")
             if (gameui_node == null) {
                 console.log("get childer name gameingUI")
                 return
@@ -111,7 +114,7 @@ export class gameRoomScene extends Component {
 
         this.node.on("unchoose_card_event", function (event) {
             console.log("--------unchoose_card_event-----------")
-            var gameui_node = this.node.getChildByName("gameingUI")
+            var gameui_node = this.node.getChildByName("gamingUI")
             if (gameui_node == null) {
                 console.log("get childer name gameingUI")
                 return
@@ -145,8 +148,8 @@ export class gameRoomScene extends Component {
                 //     cc.audioEngine.play(cc.url.raw("resources/sound/bg.mp3"),true) 
                 //  }
             }
-            // var gamebefore_node = this.node.getChildByName("gamebeforeUI")
-            // gamebefore_node.emit("init")
+            var gamebefore_node = this.node.getChildByName("gamebeforeUI")
+            gamebefore_node.emit("init")
         })
 
         gameManager.Instance.socketUtil.onPlayerJoinRoom((join_playerdata) => {
@@ -165,18 +168,18 @@ export class gameRoomScene extends Component {
         })
 
         gameManager.Instance.socketUtil.onGameStart(() => {
-            // for (var i = 0; i < this.playerNodeList.length; i++) {
-            //     var node = this.playerNodeList[i]
-            //     if (node) {
-            //         node.emit("gamestart_event")
-            //     }
-            // }
+            for (var i = 0; i < this.playerNodeList.length; i++) {
+                var node = this.playerNodeList[i]
+                if (node) {
+                    node.emit("gamestart_event")
+                }
+            }
 
-            // //隐藏gamebeforeUI节点
-            // var gamebeforeUI = this.node.getChildByName("gamebeforeUI")
-            // if (gamebeforeUI) {
-            //     gamebeforeUI.active = false
-            // }
+            //隐藏gamebeforeUI节点
+            var gamebeforeUI = this.node.getChildByName("gamebeforeUI")
+            if (gamebeforeUI) {
+                gamebeforeUI.active = false
+            }
         })
         gameManager.Instance.socketUtil.onRobState((event) => {
             console.log("-----onRobState" + JSON.stringify(event))
@@ -205,7 +208,7 @@ export class gameRoomScene extends Component {
 
         gameManager.Instance.socketUtil.onShowBottomCard((event) => {
             console.log("onShowBottomCard---------" + event)
-            var gameui_node = this.node.getChildByName("gameingUI")
+            var gameui_node = this.node.getChildByName("gamingUI")
             if (gameui_node == null) {
                 console.log("get childer name gameingUI")
                 return
@@ -281,10 +284,10 @@ export class gameRoomScene extends Component {
                 //如果accountid和player_node节点绑定的accountid相同
                 //接获取player_node的子节点
                 if (node_script.username === username) {
-                    var seat_node = this.Players_Seat.children[node_script.seat_index]
+                    var seat = this.Players_Seat.children[node_script.seat_index]
                     var index_name = "cardzone" + node_script.seat_index
                     //console.log("getUserOutCardPosByAccount index_name:"+index_name)
-                    var out_card_node = seat_node.getChildByName(index_name)
+                    var out_card_node = seat.getChildByName(index_name)
                     //console.log("OutZone:"+ out_card_node.name)
                     return out_card_node
                 }
