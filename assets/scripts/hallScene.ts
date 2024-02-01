@@ -218,10 +218,10 @@ export class hallScene extends Component {
             console.log(room_para);
             gameManager.Instance.socketUtil.requestJoin(room_para, (err, result) => {
                 // console.log("err", err, "result", result)
-                if (err) { // 如果没有错误发生
+                if (err) { 
                     console.log("error joining room:" + err);
-                    gameManager.Instance.alert.show("錯誤", "查詢不到此房號")
-                } else { // 如果有错误
+    
+                } else { 
                     console.log("join room success" + JSON.stringify(result));
                     gameManager.Instance.userDetails.bottom = result.bottom;
                     gameManager.Instance.userDetails.rate = result.rate;

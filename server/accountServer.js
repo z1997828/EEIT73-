@@ -10,7 +10,7 @@ const gamectr = require('./game_ctr')
 
 
 // 允許跨域使用本服務
-var cors = require("cors");
+let cors = require("cors");
 app.use(cors());
 
 // 協助 Express 解析表單與JSON資料
@@ -117,8 +117,8 @@ sio.on('connection', (socket) => {
   
   socket.on("notify", (req) => {
     // console.log("notify:" + JSON.stringify(req))
-    var data = req.data
-    var cmdType = req.cmd
+    let data = req.data
+    let cmdType = req.cmd
     console.log("收到通知: 命令類型 -", req.cmd, "數據 - ", data, "callindex -", req.callIndex);
     switch (cmdType) {
       case 'login':

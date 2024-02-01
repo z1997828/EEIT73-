@@ -1,6 +1,7 @@
 import { _decorator, Component, Node, Prefab, Sprite, SpriteAtlas } from 'cc';
 import gameManager from '../components/gameManager';
 import { RoomState } from '../components/define';
+import { gameRoomScene } from '../gameRoomScene';
 const { ccclass, property } = _decorator;
 
 @ccclass('Card')
@@ -8,15 +9,12 @@ const { ccclass, property } = _decorator;
 export default class Card extends Component {
     @property(SpriteAtlas)
     public cardsSpriteAtlas: SpriteAtlas | null = null;
-    @property(Prefab)
-    public pokerPrefab: Prefab = null;
-    @property(Node)
-    public pokerContainer: Node = null;
-    private flag = false;
-    private offset_y = null;
-    private card_id = null;
-    private card_data = null;
-    private username = '';
+    
+    flag = false;
+    offset_y = null;
+    card_id = null;
+    card_data = null;
+    username = '';
 
 
     onLoad() {
@@ -25,7 +23,7 @@ export default class Card extends Component {
         this.node.on("reset_card_flag", function (event) {
             if (this.flag == true) {
                 this.flag = false
-                this.node.y -= this.offset_y
+                this.node.position.y -= this.offset_y
             }
         }.bind(this))
     }
@@ -46,17 +44,19 @@ export default class Card extends Component {
     // 其他方法同理轉換，省略...
 
     setTouchEvent() {
-        if (this.username == gameManager.Instance.userDetails.userDetails) {
+        
+        if (this.username == gameManager.Instance.userDetails.username) {
             this.node.on(Node.EventType.TOUCH_START, function (event) {
-                var gameroom_node = this.node.parent
-                var room_state = gameroom_node.getComponent("gameroom").roomstate
+                let gameroom_node = this.node.parent
+                let room_state = gameroom_node.getComponent(gameRoomScene).roomstate
+                console.log(room_state)
                 if (room_state == RoomState.ROOM_PLAYING) {
                     console.log("TOUCH_START id:" + this.card_id)
                     if (this.flag == false) {
                         this.flag = true
                         this.node.position.y += this.offset_y
                         //通知gameui层选定的牌
-                        var carddata = {
+                        let carddata = {
                             "cardid": this.card_id,
                             "card_data": this.card_data,
                         }
