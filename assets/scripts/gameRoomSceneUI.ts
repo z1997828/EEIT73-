@@ -69,17 +69,17 @@ export class gameRoomSceneUI extends Component {
             //{"username":"2357540","cards":[{"cardid":4,"card_data":{"index":4,"value":1,"shape":1}}]}
             console.log("onOtherPlayerChuCard" + JSON.stringify(data))
 
-            var username = data.username
-            var gameroom_script = this.node.parent.getComponent("gameroom")
+            let username = data.username
+            let gameroom_script = this.node.parent.getComponent(gameRoomScene)
             //获取出牌区域节点
-            var outCard_node = gameroom_script.getUserOutCardPosByAccount(username)
+            let outCard_node = gameroom_script.getUserOutCardPosByAccount(username)
             if (outCard_node == null) {
                 return
             }
 
-            var node_cards = []
-            for (var i = 0; i < data.cards.length; i++) {
-                var card = instantiate(this.PokerPrefab)
+            let node_cards = []
+            for (let i = 0; i < data.cards.length; i++) {
+                let card = instantiate(this.PokerPrefab)
                 card.getComponent("Card").showCards(data.cards[i].card_data, gameManager.Instance.userDetails.username)
                 node_cards.push(card)
             }
@@ -90,24 +90,25 @@ export class gameRoomSceneUI extends Component {
 
         //内部事件:显示底牌事件,data是三张底牌数据
         this.node.on("show_bottom_card_event", function (data) {
-            console.log("----show_bottom_card_event", +data)
+            console.log("----show_bottom_card_event", data)
 
             this.bottom_card_data = data
 
-            for (var i = 0; i < data.length; i++) {
-                var card = this.bottom_card[i]
-                var show_data = data[i];
-
+            for (let i = 0; i < data.length; i++) {
+                let card = this.bottom_card[i]
+                let show_data = data[i];
+                var call_data = {
+                    "obj": card,
+                    "data": show_data,
+                }
                 console.log("bottom show_data:" + JSON.stringify(show_data));
 
                 tween(card)
                     .to(0, { eulerAngles: new Vec3(0, 0, 180) }) // 立即旋转180度
                     .to(0.2, { eulerAngles: new Vec3(0, 0, 90) }) // 0.2秒内旋转至90度
-                    .call(() => {
-                        card.getComponent("Card").showCards(show_data); // 调用 showCards 方法
-                    })
+                    .call(() => { card.getComponent("Card").showCards(show_data), this, call_data })
                     .to(0.2, { eulerAngles: new Vec3(0, 0, 0) }) // 再次旋转回0度
-                    .to(1, { scale: new Vec3(0.8, 0.8, 0) }) // 1秒内缩放至1.2倍
+                    .to(1, { scale: new Vec3(0.8, 0.8, 0) }) // 1秒内缩放至0.8倍
                     .start();
 
                 // if (isopen_sound) {
@@ -117,6 +118,8 @@ export class gameRoomSceneUI extends Component {
 
             //如果自己地主，给加上三张底牌
             if (gameManager.Instance.userDetails.username == gameManager.Instance.userDetails.master_username) {
+
+                console.log("--------------getbottemcard---------------")
                 this.scheduleOnce(this.pushThreeCard.bind(this), 0.2)
             }
 
@@ -126,14 +129,14 @@ export class gameRoomSceneUI extends Component {
         //注册监听一个选择牌消息 
         this.node.on("choose_card_event", function (event) {
             console.log("choose_card_event:" + JSON.stringify(event))
-            var detail = event
+            let detail = event
             this.choose_card_data.push(detail)
         }.bind(this))
 
         this.node.on("unchoose_card_event", function (event) {
             console.log("unchoose_card_event:" + event)
-            var detail = event
-            for (var i = 0; i < this.choose_card_data.length; i++) {
+            let detail = event
+            for (let i = 0; i < this.choose_card_data.length; i++) {
                 if (this.choose_card_data[i].cardid == detail) {
                     this.choose_card_data.splice(i, 1)
                 }
@@ -160,29 +163,29 @@ export class gameRoomSceneUI extends Component {
 
 
             //通知gamescene节点，倒计时
-            var sendevent = this.rob_player_username
+            let sendevent = this.rob_player_username
             this.node.parent.emit("canrob_event", sendevent)
 
             return
         }
 
         //原有逻辑  
-        // var move_node = this.cards_nods[this.cur_index_card]
+        // let move_node = this.cards_nods[this.cur_index_card]
         // move_node.active = true
-        // var newx = move_node.x + (this.card_width * 0.4*this.cur_index_card) - (this.card_width * 0.4)
-        // var action = cc.moveTo(0.1, cc.v2(newx, -250));
+        // let newx = move_node.x + (this.card_width * 0.4*this.cur_index_card) - (this.card_width * 0.4)
+        // let action = cc.moveTo(0.1, cc.v2(newx, -250));
         // move_node.runAction(action)
         // this.cur_index_card--
         // this.scheduleOnce(this._runactive_pushcard.bind(this),0.3)
 
 
-        var move_node = this.cards_nods[this.cards_nods.length - this.cur_index_card - 1]
+        let move_node = this.cards_nods[this.cards_nods.length - this.cur_index_card - 1]
         move_node.active = true
         this.push_card_tmp.push(move_node)
         // this.fapai_audioID = cc.audioEngine.play(cc.url.raw("resources/sound/fapai1.mp3"))
-        for (var i = 0; i < this.push_card_tmp.length - 1; i++) {
-            var move_node = this.push_card_tmp[i]
-            var newx = move_node.position.x - (this.card_width * 0.4)
+        for (let i = 0; i < this.push_card_tmp.length - 1; i++) {
+            let move_node = this.push_card_tmp[i]
+            let newx = move_node.position.x - (this.card_width * 0.4)
             tween(move_node)
                 .to(0.1, { position: new Vec3(newx, -250, 0) })
                 .start();
@@ -194,8 +197,8 @@ export class gameRoomSceneUI extends Component {
 
     sortCard() {
         this.cards_nods.sort(function (x, y) {
-            var a = x.getComponent("Card").card_data;
-            var b = y.getComponent("Card").card_data;
+            let a = x.getComponent("Card").card_data;
+            let b = y.getComponent("Card").card_data;
             if (a.hasOwnProperty('king') && !b.hasOwnProperty('king')) {
                 return 1;
             }
@@ -213,21 +216,15 @@ export class gameRoomSceneUI extends Component {
 
 
         })
-        //var x = this.cards_nods[0].x;
-        //这里使用固定坐标，因为取this.cards_nods[0].xk可能排序为完成，导致x错误
-        //所以做1000毫秒的延时
-        var timeout = 1000
-        setTimeout(function () {
-            //var x = -417.6 
-            var x = this.cards_nods[0].position.x;
-            console.log("sort x:" + x)
-            for (let i = 0; i < this.cards_nods.length; i++) {
-                var card = this.cards_nods[i];
-                card.zIndex = i; //设置牌的叠加次序,zindex越大显示在上面
-                let width = card.getComponent(UITransform).width
-                card.position.x = x + i * width * 0.4;
-            }
-        }.bind(this), timeout);
+
+        let x = this.cards_nods[0].position.x;
+        console.log("sort x:" + x)
+        for (let i = 0; i < this.cards_nods.length; i++) {
+            let card = this.cards_nods[i];
+            card.zIndex = i; //设置牌的叠加次序,zindex越大显示在上面
+            let width = card.getComponent(UITransform).width
+            card.position.x = x + i * width * 0.4;
+        }
 
 
     }
@@ -254,9 +251,9 @@ export class gameRoomSceneUI extends Component {
         }
         //创建card预制体
         this.cards_nods = []
-        for (var i = 0; i < 17; i++) {
+        for (let i = 0; i < 17; i++) {
 
-            var card = instantiate(this.PokerPrefab)
+            let card = instantiate(this.PokerPrefab)
             card.setScale(0.8, 0.8, 0)
             card.parent = this.node.parent
 
@@ -274,9 +271,9 @@ export class gameRoomSceneUI extends Component {
 
         //创建3张底牌
         this.bottom_card = []
-        for (var i = 0; i < 3; i++) {
-            var di_card = instantiate(this.PokerPrefab)
-            di_card.setScale(0.4, 0.4, 0)
+        for (let i = 0; i < 3; i++) {
+            let di_card = instantiate(this.PokerPrefab)
+            di_card.setScale(0.6, 0.6, 0)
             di_card.position = this.bottem_card_pos.position
             //三张牌，中间坐标就是bottom_card_pos_node节点坐标，
             //0,和2两张牌左右移动windth*0.4
@@ -297,38 +294,30 @@ export class gameRoomSceneUI extends Component {
         }
     }
 
-    schedulePushThreeCard() {
-        for (var i = 0; i < this.cards_nods.length; i++) {
-            var card = this.cards_nods[i]
-            if (card.y == -230) {
-                card.y = -250
-            }
-        }
-    }
-
     pushThreeCard() {
         //每张牌的起始位置 
-        var last_card_x = this.cards_nods[this.cards_nods.length - 1].x
-        for (var i = 0; i < this.bottom_card_data.length; i++) {
-            var card = instantiate(this.PokerPrefab)
+        let last_card_x = this.cards_nods[this.cards_nods.length - 1].position.x
+        console.log(last_card_x)
+        for (let i = 0; i < this.bottom_card_data.length; i++) {
+            let card = instantiate(this.PokerPrefab)
             card.setScale(0.8, 0.8, 0)
             card.parent = this.node.parent
 
             let xPos = last_card_x + ((i + 1) * this.card_width * 0.4);
-            card.setPosition(xPos, -230, 0)
+            card.setPosition(xPos, -250, 0)
             // card.x = last_card_x + ((i + 1) * this.card_width * 0.4)
-            // card.y = -230  //先把底盘放在-230，在设置个定时器下移到-250的位置
+            // card.y = -230  //先把底牌放在-230，在设置个定时器下移到-250的位置
 
             //console.log("pushThreeCard x:"+card.x)
-            let cardComponent = card.getComponent(Card) as Card;
+            let cardComponent = card.getComponent(Card);
             cardComponent.showCards(this.bottom_card_data[i], gameManager.Instance.userDetails.username)
             card.active = true
             this.cards_nods.push(card)
         }
 
-        this.sortCard()
-        //设置一个定时器，在2s后，修改y坐标为-250
-        this.scheduleOnce(this.schedulePushThreeCard.bind(this), 2)
+
+        this.scheduleOnce(this.sortCard.bind(this), 2)
+
 
     }
 
@@ -348,10 +337,10 @@ export class gameRoomSceneUI extends Component {
           4.  重新设置手中的牌的位置  this.updateCards();
         */
         //1/2步骤删除自己手上的card节点 
-        var destroy_card = []
-        for (var i = 0; i < choose_card.length; i++) {
-            for (var j = 0; j < this.cards_nods.length; j++) {
-                var card_id = this.cards_nods[j].getComponent("card").card_id
+        let destroy_card = []
+        for (let i = 0; i < choose_card.length; i++) {
+            for (let j = 0; j < this.cards_nods.length; j++) {
+                let card_id = this.cards_nods[j].getComponent("Card").card_id
                 if (card_id == choose_card[i].cardid) {
                     console.log("destroy card id:" + card_id)
                     //this.cards_nods[j].destroy()
@@ -369,12 +358,12 @@ export class gameRoomSceneUI extends Component {
 
     //清除显示出牌节点全部子节点(就是把出牌的清空)
     clearOutZone(username) {
-        var gameroom_script = this.node.parent.getComponent(gameRoomScene)
-        var outCard_node = gameroom_script.getUserOutCardPosByAccount(username)
+        let gameroom_script = this.node.parent.getComponent(gameRoomScene)
+        let outCard_node = gameroom_script.getUserOutCardPosByAccount(username)
 
-        var children = outCard_node.children;
-        for (var i = 0; i < children.length; i++) {
-            var card = children[i];
+        let children = outCard_node.children;
+        for (let i = 0; i < children.length; i++) {
+            let card = children[i];
             card.destroy()
         }
         outCard_node.removeAllChildren();
@@ -385,8 +374,8 @@ export class gameRoomSceneUI extends Component {
             return
         }
         cards.sort(function (x, y) {
-            var a = x.getComponent("Card").card_data;
-            var b = y.getComponent("Card").card_data;
+            let a = x.getComponent("Card").card_data;
+            let b = y.getComponent("Card").card_data;
 
             if (a.hasOwnProperty('king') && !b.hasOwnProperty('king')) {
                 return 1;
@@ -410,19 +399,19 @@ export class gameRoomSceneUI extends Component {
 
         //console.log("appendOtherCardsToOutZone length"+cards.length)
         //添加新的子节点
-        for (var i = 0; i < cards.length; i++) {
-            var card = cards[i];
+        for (let i = 0; i < cards.length; i++) {
+            let card = cards[i];
             outCard_node.addChild(card, 100 + i) //第二个参数是zorder,保证牌不能被遮住
         }
 
         //对出牌进行排序
         //设置出牌节点的坐标
-        var zPoint = cards.length / 2;
+        let zPoint = cards.length / 2;
         //console.log("appendOtherCardsToOutZone zeroPoint:"+zPoint)
-        for (var i = 0; i < cards.length; i++) {
-            var cardNode = outCard_node.getChildren()[i]
-            var x = (i - zPoint) * 30;
-            var y = cardNode.y + yoffset; //因为每个节点需要的Y不一样，做参数传入
+        for (let i = 0; i < cards.length; i++) {
+            let cardNode = outCard_node.getChildren()[i]
+            let x = (i - zPoint) * 30;
+            let y = cardNode.y + yoffset; //因为每个节点需要的Y不一样，做参数传入
             //console.log("-----cardNode: x:"+x+" y:"+y)
             cardNode.setScale(0.5, 0.5);
             cardNode.setPosition(x, y);
@@ -437,9 +426,9 @@ export class gameRoomSceneUI extends Component {
         //先给本次出的牌做一个排序
         this.pushCardSort(destroy_card)
         //console.log("appendCardsToOutZone")
-        var gameroom_script = this.node.parent.getComponent("gameroom") as gameRoomScene
+        let gameroom_script = this.node.parent.getComponent(gameRoomScene)
         //获取出牌区域节点
-        var outCard_node = gameroom_script.getUserOutCardPosByAccount(username)
+        let outCard_node = gameroom_script.getUserOutCardPosByAccount(username)
         this.appendOtherCardsToOutZone(outCard_node, destroy_card, 360)
         //sconsole.log("OutZone:"+outCard_node.name)
 
@@ -447,11 +436,11 @@ export class gameRoomSceneUI extends Component {
 
     updateCards() {
 
-        var zeroPoint = this.cards_nods.length / 2;
-        //var last_card_x = this.cards_nods[this.cards_nods.length-1].x
-        for (var i = 0; i < this.cards_nods.length; i++) {
-            var cardNode = this.cards_nods[i]
-            var x = (i - zeroPoint) * (this.card_width * 0.4);
+        let zeroPoint = this.cards_nods.length / 2;
+        //let last_card_x = this.cards_nods[this.cards_nods.length-1].x
+        for (let i = 0; i < this.cards_nods.length; i++) {
+            let cardNode = this.cards_nods[i]
+            let x = (i - zeroPoint) * (this.card_width * 0.4);
             cardNode.setPosition(x, -250);
         }
 
@@ -518,8 +507,8 @@ export class gameRoomSceneUI extends Component {
                         }
 
                         //出牌失败，把选择的牌归位
-                        for (var i = 0; i < this.cards_nods.length; i++) {
-                            var card = this.cards_nods[i]
+                        for (let i = 0; i < this.cards_nods.length; i++) {
+                            let card = this.cards_nods[i]
                             card.emit("reset_card_flag")
                         }
                         this.choose_card_data = []

@@ -45,8 +45,8 @@ export class gameRoomScene extends Component {
         this.roomstate = RoomState.ROOM_INVALID
         this.node.on("pushcard_other_event", function () {
             console.log("gamescene pushcard_other_event")
-            for (var i = 0; i < this.playerNodeList.length; i++) {
-                var node = this.playerNodeList[i]
+            for (let i = 0; i < this.playerNodeList.length; i++) {
+                let node = this.playerNodeList[i]
                 if (node) {
                     //给playernode节点发送事件
                     node.emit("push_card_event")
@@ -61,16 +61,16 @@ export class gameRoomScene extends Component {
             } else {
 
                 //enter_room成功
-                var seatid = result.seatindex //自己在房间里的seatid
+                let seatid = result.seatindex //自己在房间里的seatid
                 this.playerdata_list_pos = []  //3个用户创建一个空用户列表
                 this.setPlayerSeatPos(seatid)
 
-                var playerdata_list = result.playerdata
-                var roomid = result.roomid
+                let playerdata_list = result.playerdata
+                let roomid = result.roomid
                 this.roomidLabel.string = "房間號: " + roomid
                 gameManager.Instance.userDetails.housemanageid = result.housemanageid
 
-                for (var i = 0; i < playerdata_list.length; i++) {
+                for (let i = 0; i < playerdata_list.length; i++) {
                     // console.log("this----"+this)
                     this.addPlayerNode(playerdata_list[i])
                 }
@@ -80,7 +80,7 @@ export class gameRoomScene extends Component {
                 //     cc.audioEngine.play(cc.url.raw("resources/sound/bg.mp3"),true) 
                 //  }
             }
-            var gamebefore_node = this.node.getChildByName("gamebeforeUI")
+            let gamebefore_node = this.node.getChildByName("gamebeforeUI")
             gamebefore_node.emit("init")
         })
 
@@ -92,8 +92,8 @@ export class gameRoomScene extends Component {
         this.node.on("canrob_event", function (event) {
             console.log("gamescene canrob_event:" + event)
             //通知给playernode子节点
-            for (var i = 0; i < this.playerNodeList.length; i++) {
-                var node = this.playerNodeList[i]
+            for (let i = 0; i < this.playerNodeList.length; i++) {
+                let node = this.playerNodeList[i]
                 if (node) {
                     //给playernode节点发送事件
                     node.emit("playernode_canrob_event", event)
@@ -103,7 +103,7 @@ export class gameRoomScene extends Component {
 
         this.node.on("choose_card_event", function (event) {
             console.log("--------choose_card_event-----------")
-            var gameui_node = this.node.getChildByName("gamingUI")
+            let gameui_node = this.node.getChildByName("gamingUI")
             if (gameui_node == null) {
                 console.log("get childer name gameingUI")
                 return
@@ -114,7 +114,7 @@ export class gameRoomScene extends Component {
 
         this.node.on("unchoose_card_event", function (event) {
             console.log("--------unchoose_card_event-----------")
-            var gameui_node = this.node.getChildByName("gamingUI")
+            let gameui_node = this.node.getChildByName("gamingUI")
             if (gameui_node == null) {
                 console.log("get childer name gameingUI")
                 return
@@ -129,16 +129,16 @@ export class gameRoomScene extends Component {
             } else {
 
                 //enter_room成功
-                var seatid = result.seatindex //自己在房间里的seatid
+                let seatid = result.seatindex //自己在房间里的seatid
                 this.playerdata_list_pos = []  //3个用户创建一个空用户列表
                 this.setPlayerSeatPos(seatid)
 
-                var playerdata_list = result.playerdata
-                var roomid = result.roomid
+                let playerdata_list = result.playerdata
+                let roomid = result.roomid
                 this.roomidLabel.string = "房間號: " + roomid
                 gameManager.Instance.userDetails.housemanageid = result.housemanageid
 
-                for (var i = 0; i < playerdata_list.length; i++) {
+                for (let i = 0; i < playerdata_list.length; i++) {
                     // console.log("this----"+this)
                     this.addPlayerNode(playerdata_list[i])
                 }
@@ -148,7 +148,7 @@ export class gameRoomScene extends Component {
                 //     cc.audioEngine.play(cc.url.raw("resources/sound/bg.mp3"),true) 
                 //  }
             }
-            var gamebefore_node = this.node.getChildByName("gamebeforeUI")
+            let gamebefore_node = this.node.getChildByName("gamebeforeUI")
             gamebefore_node.emit("init")
         })
 
@@ -159,8 +159,8 @@ export class gameRoomScene extends Component {
 
         gameManager.Instance.socketUtil.onPlayerReady((data) => {
             console.log("-------onPlayerReady:" + data)
-            for (var i = 0; i < this.playerNodeList.length; i++) {
-                var node = this.playerNodeList[i]
+            for (let i = 0; i < this.playerNodeList.length; i++) {
+                let node = this.playerNodeList[i]
                 if (node) {
                     node.emit("player_ready_notify", data)
                 }
@@ -168,15 +168,15 @@ export class gameRoomScene extends Component {
         })
 
         gameManager.Instance.socketUtil.onGameStart(() => {
-            for (var i = 0; i < this.playerNodeList.length; i++) {
-                var node = this.playerNodeList[i]
+            for (let i = 0; i < this.playerNodeList.length; i++) {
+                let node = this.playerNodeList[i]
                 if (node) {
                     node.emit("gamestart_event")
                 }
             }
 
             //隐藏gamebeforeUI节点
-            var gamebeforeUI = this.node.getChildByName("gamebeforeUI")
+            let gamebeforeUI = this.node.getChildByName("gamebeforeUI")
             if (gamebeforeUI) {
                 gamebeforeUI.active = false
             }
@@ -184,8 +184,8 @@ export class gameRoomScene extends Component {
         gameManager.Instance.socketUtil.onRobState((event) => {
             console.log("-----onRobState" + JSON.stringify(event))
             //onRobState{"accountid":"2162866","state":1}
-            for (var i = 0; i < this.playerNodeList.length; i++) {
-                var node = this.playerNodeList[i]
+            for (let i = 0; i < this.playerNodeList.length; i++) {
+                let node = this.playerNodeList[i]
                 if (node) {
                     //给playernode节点发送事件
                     node.emit("playernode_rob_state_event", event)
@@ -197,8 +197,8 @@ export class gameRoomScene extends Component {
             console.log("onChangeMaster" + event)
             //保存一下地主id
             gameManager.Instance.userDetails.master_username = event
-            for (var i = 0; i < this.playerNodeList.length; i++) {
-                var node = this.playerNodeList[i]
+            for (let i = 0; i < this.playerNodeList.length; i++) {
+                let node = this.playerNodeList[i]
                 if (node) {
                     //给playernode节点发送事件
                     node.emit("playernode_changemaster_event", event)
@@ -208,7 +208,7 @@ export class gameRoomScene extends Component {
 
         gameManager.Instance.socketUtil.onShowBottomCard((event) => {
             console.log("onShowBottomCard---------" + event)
-            var gameui_node = this.node.getChildByName("gamingUI")
+            let gameui_node = this.node.getChildByName("gamingUI")
             if (gameui_node == null) {
                 console.log("get childer name gameingUI")
                 return
@@ -256,7 +256,7 @@ export class gameRoomScene extends Component {
 
     addPlayerNode(player_data) {
 
-        var playernode_inst = instantiate(this.PlayerPrefab)
+        let playernode_inst = instantiate(this.PlayerPrefab)
         playernode_inst.active = true
         playernode_inst.parent = this.node
 
@@ -264,7 +264,7 @@ export class gameRoomScene extends Component {
         this.playerNodeList.push(playernode_inst)
         
         //玩家在room里的位置索引(逻辑位置)
-        var index = this.playerdata_list_pos[player_data.seatindex]
+        let index = this.playerdata_list_pos[player_data.seatindex]
         console.log("index " + player_data.seatindex + " " + index)
         const playerComponent = playernode_inst.getComponent("PlayerPrefab") as PlayerPrefab
         playerComponent.init_data(player_data, index)
@@ -276,18 +276,18 @@ export class gameRoomScene extends Component {
 
     getUserOutCardPosByAccount(username) {
         console.log("getUserOutCardPosByAccount username:" + username)
-        for (var i = 0; i < this.playerNodeList.length; i++) {
-            var node = this.playerNodeList[i]
+        for (let i = 0; i < this.playerNodeList.length; i++) {
+            let node = this.playerNodeList[i]
             if (node) {
                 //获取节点绑定的组件
-                var node_script = node.getComponent("PlayerPrefab")
+                let node_script = node.getComponent("PlayerPrefab")
                 //如果accountid和player_node节点绑定的accountid相同
                 //接获取player_node的子节点
                 if (node_script.username === username) {
-                    var seat = this.Players_Seat.children[node_script.seat_index]
-                    var index_name = "cardzone" + node_script.seat_index
+                    let seat = this.Players_Seat.children[node_script.seat_index]
+                    let index_name = "cardzone" + node_script.seat_index
                     //console.log("getUserOutCardPosByAccount index_name:"+index_name)
-                    var out_card_node = seat.getChildByName(index_name)
+                    let out_card_node = seat.getChildByName(index_name)
                     //console.log("OutZone:"+ out_card_node.name)
                     return out_card_node
                 }
