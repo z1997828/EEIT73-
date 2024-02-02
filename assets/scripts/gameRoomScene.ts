@@ -54,35 +54,7 @@ export class gameRoomScene extends Component {
             }
         }.bind(this))
 
-        gameManager.Instance.socketUtil.requestEnterRoom({}, (err, result) => {
-            // console.log("enter_room_resp"+ JSON.stringify(result))
-            if (err != 0) {
-                console.log("enter_room_resp err:" + err)
-            } else {
-
-                //enter_room成功
-                let seatid = result.seatindex //自己在房间里的seatid
-                this.playerdata_list_pos = []  //3个用户创建一个空用户列表
-                this.setPlayerSeatPos(seatid)
-
-                let playerdata_list = result.playerdata
-                let roomid = result.roomid
-                this.roomidLabel.string = "房間號: " + roomid
-                gameManager.Instance.userDetails.housemanageid = result.housemanageid
-
-                for (let i = 0; i < playerdata_list.length; i++) {
-                    // console.log("this----"+this)
-                    this.addPlayerNode(playerdata_list[i])
-                }
-
-                // if(isopen_sound){
-                //     cc.audioEngine.stopAll()
-                //     cc.audioEngine.play(cc.url.raw("resources/sound/bg.mp3"),true) 
-                //  }
-            }
-            let gamebefore_node = this.node.getChildByName("gamebeforeUI")
-            gamebefore_node.emit("init")
-        })
+        
 
         gameManager.Instance.socketUtil.onRoomChangeState((data) => {
             console.log("onRoomChangeState:" + data)
@@ -105,7 +77,7 @@ export class gameRoomScene extends Component {
             console.log("--------choose_card_event-----------")
             let gameui_node = this.node.getChildByName("gamingUI")
             if (gameui_node == null) {
-                console.log("get childer name gameingUI")
+                console.log("get childrdn name gameingUI")
                 return
             }
             gameui_node.emit("choose_card_event", event)
@@ -266,12 +238,10 @@ export class gameRoomScene extends Component {
         //玩家在room里的位置索引(逻辑位置)
         let index = this.playerdata_list_pos[player_data.seatindex]
         console.log("index " + player_data.seatindex + " " + index)
-        const playerComponent = playernode_inst.getComponent("PlayerPrefab") as PlayerPrefab
-        playerComponent.init_data(player_data, index)
+        playernode_inst.getComponent(PlayerPrefab).init_data(player_data, index)
         const localPosition = this.Players_Seat.children[index].position.clone();
         playernode_inst.setPosition(localPosition);
-        console.log(playernode_inst.position);
-
+        
     }
 
     getUserOutCardPosByAccount(username) {
@@ -280,7 +250,7 @@ export class gameRoomScene extends Component {
             let node = this.playerNodeList[i]
             if (node) {
                 //获取节点绑定的组件
-                let node_script = node.getComponent("PlayerPrefab")
+                let node_script = node.getComponent(PlayerPrefab)
                 //如果accountid和player_node节点绑定的accountid相同
                 //接获取player_node的子节点
                 if (node_script.username === username) {
@@ -297,9 +267,7 @@ export class gameRoomScene extends Component {
         return null
     }
 
-    start() {
-
-    }
+    
 
     // 
 

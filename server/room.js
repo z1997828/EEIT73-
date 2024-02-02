@@ -355,7 +355,7 @@ module.exports = function(roominfo,player){
             resp = {
                 data:{
                       account:player._username,
-                      msg:"choose card sucess",
+                      msg:"choose card success",
                     }
             }
             cb(0,resp)
@@ -385,7 +385,7 @@ module.exports = function(roominfo,player){
                 resp = {
                     data:{
                           account:player._username,
-                          msg:"sucess",
+                          msg:"success",
                           cardvalue:cardvalue,
                         }
                 }

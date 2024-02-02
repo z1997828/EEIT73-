@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Prefab, Sprite, SpriteAtlas } from 'cc';
+import { _decorator, Component, Node, Prefab, Sprite, SpriteAtlas, UITransform, Vec3 } from 'cc';
 import gameManager from '../components/gameManager';
 import { RoomState } from '../components/define';
 import { gameRoomScene } from '../gameRoomScene';
@@ -7,54 +7,50 @@ const { ccclass, property } = _decorator;
 @ccclass('Card')
 
 export default class Card extends Component {
-    @property(SpriteAtlas)
-    public cardsSpriteAtlas: SpriteAtlas | null = null;
-    
+    @property(SpriteAtlas) cardsSpriteAtlas: SpriteAtlas = null;
+
     flag = false;
-    offset_y = null;
+    offset_y = 20;
     card_id = null;
     card_data = null;
     username = '';
 
 
     onLoad() {
-        this.offset_y = 20
-
         this.node.on("reset_card_flag", function (event) {
             if (this.flag == true) {
-                this.flag = false
-                this.node.position.y -= this.offset_y
+                let transform = this.node.getComponent(UITransform);
+                let position = transform.position;
+                transform.position = new Vec3(position.x, position.y - this.offset_y, position.z);
             }
         }.bind(this))
+
+
     }
 
 
 
     runToCenter() {
-        //移动到屏幕中间，并带一个牌缩小的效果
-    }
-
-    start() {
 
     }
 
-    init_data(data) {
 
-    }
     // 其他方法同理轉換，省略...
 
     setTouchEvent() {
-        
-        if (this.username == gameManager.Instance.userDetails.username) {
+        if (this.username === gameManager.Instance.userDetails.username) {
+            console.log("username相同")
             this.node.on(Node.EventType.TOUCH_START, function (event) {
+                console.log("點到了!")
                 let gameroom_node = this.node.parent
                 let room_state = gameroom_node.getComponent(gameRoomScene).roomstate
-                console.log(room_state)
                 if (room_state == RoomState.ROOM_PLAYING) {
                     console.log("TOUCH_START id:" + this.card_id)
-                    if (this.flag == false) {
+                    if (!this.flag) {
                         this.flag = true
-                        this.node.position.y += this.offset_y
+                        let transform = this.node.getComponent(UITransform);
+                        let position = transform.position;
+                        transform.position = new Vec3(position.x, position.y + this.offset_y, position.z);
                         //通知gameui层选定的牌
                         let carddata = {
                             "cardid": this.card_id,
@@ -63,7 +59,9 @@ export default class Card extends Component {
                         gameroom_node.emit("choose_card_event", carddata)
                     } else {
                         this.flag = false
-                        this.node.y -= this.offset_y
+                        let transform = this.node.getComponent(UITransform);
+                        let position = transform.position;
+                        transform.position = new Vec3(position.x, position.y - this.offset_y, position.z);
                         //通知gameUI取消了那张牌
                         gameroom_node.emit("unchoose_card_event", this.card_id)
                     }

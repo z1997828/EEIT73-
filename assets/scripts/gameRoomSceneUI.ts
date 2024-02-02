@@ -26,6 +26,7 @@ export class gameRoomSceneUI extends Component {
     onLoad() {
         this.robUI.active = false
         this.playingUI.active = false
+        
         gameManager.Instance.socketUtil.onPushCards(function (data) {
             console.log("onPushCards" + JSON.stringify(data))
             this.card_data = data
@@ -52,7 +53,7 @@ export class gameRoomSceneUI extends Component {
         }.bind(this))
 
         gameManager.Instance.socketUtil.onCanChuCard(function (data) {
-            console.log("onCanRobState" + JSON.stringify(data))
+            console.log("can_chu_card_notify:" + JSON.stringify(data))
             //判断是不是自己能出牌
             if (data == gameManager.Instance.userDetails.username) {
                 //先清理出牌区域
@@ -80,7 +81,7 @@ export class gameRoomSceneUI extends Component {
             let node_cards = []
             for (let i = 0; i < data.cards.length; i++) {
                 let card = instantiate(this.PokerPrefab)
-                card.getComponent("Card").showCards(data.cards[i].card_data, gameManager.Instance.userDetails.username)
+                card.getComponent(Card).showCards(data.cards[i].card_data, gameManager.Instance.userDetails.username)
                 node_cards.push(card)
             }
             this.appendOtherCardsToOutZone(outCard_node, node_cards, 0)
@@ -106,7 +107,7 @@ export class gameRoomSceneUI extends Component {
                 tween(card)
                     .to(0, { eulerAngles: new Vec3(0, 0, 180) }) // 立即旋转180度
                     .to(0.2, { eulerAngles: new Vec3(0, 0, 90) }) // 0.2秒内旋转至90度
-                    .call(() => { card.getComponent("Card").showCards(show_data), this, call_data })
+                    .call(() => { card.getComponent(Card).showCards(show_data), this, call_data })
                     .to(0.2, { eulerAngles: new Vec3(0, 0, 0) }) // 再次旋转回0度
                     .to(1, { scale: new Vec3(0.8, 0.8, 0) }) // 1秒内缩放至0.8倍
                     .start();
@@ -197,8 +198,8 @@ export class gameRoomSceneUI extends Component {
 
     sortCard() {
         this.cards_nods.sort(function (x, y) {
-            let a = x.getComponent("Card").card_data;
-            let b = y.getComponent("Card").card_data;
+            let a = x.getComponent(Card).card_data;
+            let b = y.getComponent(Card).card_data;
             if (a.hasOwnProperty('king') && !b.hasOwnProperty('king')) {
                 return 1;
             }
@@ -221,7 +222,8 @@ export class gameRoomSceneUI extends Component {
         console.log("sort x:" + x)
         for (let i = 0; i < this.cards_nods.length; i++) {
             let card = this.cards_nods[i];
-            card.zIndex = i; //设置牌的叠加次序,zindex越大显示在上面
+            card.parent = this.node
+            card.setSiblingIndex(i);; //设置牌的叠加次序,zindex越大显示在上面
             let width = card.getComponent(UITransform).width
             card.position.x = x + i * width * 0.4;
         }
@@ -258,12 +260,10 @@ export class gameRoomSceneUI extends Component {
             card.parent = this.node.parent
 
             let width = card.getComponent(Sprite).spriteFrame.rect.width;
-            let xPos = width * 0.4 * (-0.5) * (-16) + width * 0.4 * 0;
+            let xPos = 300;
             card.setPosition(xPos, -250, 0)
             card.active = false
-            let cardComponent = card.getComponent(Card) as Card;
-
-            cardComponent.showCards(data[i], gameManager.Instance.userDetails.username)
+            card.getComponent(Card).showCards(data[i], gameManager.Instance.userDetails.username)
             //存储牌的信息,用于后面发牌效果
             this.cards_nods.push(card)
             this.card_width = width
@@ -294,6 +294,15 @@ export class gameRoomSceneUI extends Component {
         }
     }
 
+    schedulePushThreeCard(){
+        for(var i=0;i<this.cards_nods.length;i++){
+            var card = this.cards_nods[i]
+            if (card.position.y === -230) {
+                card.setPosition(card.position.x, -250, card.position.z);
+            }
+        }
+    }
+
     pushThreeCard() {
         //每张牌的起始位置 
         let last_card_x = this.cards_nods[this.cards_nods.length - 1].position.x
@@ -304,19 +313,18 @@ export class gameRoomSceneUI extends Component {
             card.parent = this.node.parent
 
             let xPos = last_card_x + ((i + 1) * this.card_width * 0.4);
-            card.setPosition(xPos, -250, 0)
+            card.setPosition(xPos, -230, 0)
             // card.x = last_card_x + ((i + 1) * this.card_width * 0.4)
             // card.y = -230  //先把底牌放在-230，在设置个定时器下移到-250的位置
 
             //console.log("pushThreeCard x:"+card.x)
-            let cardComponent = card.getComponent(Card);
-            cardComponent.showCards(this.bottom_card_data[i], gameManager.Instance.userDetails.username)
+            card.getComponent(Card).showCards(this.bottom_card_data[i], gameManager.Instance.userDetails.username)
             card.active = true
             this.cards_nods.push(card)
         }
 
-
-        this.scheduleOnce(this.sortCard.bind(this), 2)
+        this.sortCard()
+        this.scheduleOnce(this.schedulePushThreeCard.bind(this), 1)
 
 
     }
@@ -340,7 +348,7 @@ export class gameRoomSceneUI extends Component {
         let destroy_card = []
         for (let i = 0; i < choose_card.length; i++) {
             for (let j = 0; j < this.cards_nods.length; j++) {
-                let card_id = this.cards_nods[j].getComponent("Card").card_id
+                let card_id = this.cards_nods[j].getComponent(Card).card_id
                 if (card_id == choose_card[i].cardid) {
                     console.log("destroy card id:" + card_id)
                     //this.cards_nods[j].destroy()
@@ -374,8 +382,8 @@ export class gameRoomSceneUI extends Component {
             return
         }
         cards.sort(function (x, y) {
-            let a = x.getComponent("Card").card_data;
-            let b = y.getComponent("Card").card_data;
+            let a = x.getComponent(Card).card_data;
+            let b = y.getComponent(Card).card_data;
 
             if (a.hasOwnProperty('king') && !b.hasOwnProperty('king')) {
                 return 1;
