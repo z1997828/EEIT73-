@@ -119,7 +119,7 @@ export default class SocketUtil {
     }
 
     requestChuCard(req, callback) {
-        this._request("Chu_card_req", req, callback);
+        this._request("chu_card_req", req, callback);
     }
 
     // 註冊事件監聽

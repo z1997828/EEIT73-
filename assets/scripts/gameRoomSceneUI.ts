@@ -20,9 +20,9 @@ export class gameRoomSceneUI extends Component {
     bottom_card = []
     bottom_card_data = []
     choose_card_data = []
+    cur_index_card = 0
     outcar_zone = []
     push_card_tmp = []
-    cur_index_card = 0
     onLoad() {
         this.robUI.active = false
         this.playingUI.active = false
@@ -59,7 +59,7 @@ export class gameRoomSceneUI extends Component {
                 //先清理出牌区域
                 this.clearOutZone(gameManager.Instance.userDetails.username)
                 //先把自己出牌列表置空
-                this.choose_card_data = []
+                // this.choose_card_data = []
                 //显示可以出牌的UI
                 this.playingUI.active = true
 
@@ -98,7 +98,7 @@ export class gameRoomSceneUI extends Component {
             for (let i = 0; i < data.length; i++) {
                 let card = this.bottom_card[i]
                 let show_data = data[i];
-                var call_data = {
+                let call_data = {
                     "obj": card,
                     "data": show_data,
                 }
@@ -294,8 +294,8 @@ export class gameRoomSceneUI extends Component {
         }
     }
 
-    schedulePushThreeCard(){
-        for(var i=0;i<this.cards_nods.length;i++){
+    schedulePushThreeCard() {
+        for (var i = 0; i < this.cards_nods.length; i++) {
             var card = this.cards_nods[i]
             if (card.position.y === -230) {
                 card.setPosition(card.position.x, -250, card.position.z);

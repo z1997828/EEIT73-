@@ -17,6 +17,8 @@ export default class Card extends Component {
 
 
     onLoad() {
+       
+
         this.node.on("reset_card_flag", function (event) {
             if (this.flag == true) {
                 let transform = this.node.getComponent(UITransform);
@@ -25,25 +27,29 @@ export default class Card extends Component {
             }
         }.bind(this))
 
-
+       
     }
-
 
 
     runToCenter() {
 
     }
 
-
+    start(){
+        
+    }
     // 其他方法同理轉換，省略...
 
     setTouchEvent() {
+        console.log(this.node)
+        let gameroom_node = this.node.parent
+        let room_state = gameroom_node.getComponent(gameRoomScene).roomstate
         if (this.username === gameManager.Instance.userDetails.username) {
             console.log("username相同")
             this.node.on(Node.EventType.TOUCH_START, function (event) {
                 console.log("點到了!")
-                let gameroom_node = this.node.parent
-                let room_state = gameroom_node.getComponent(gameRoomScene).roomstate
+                // let gameroom_node = this.node.parent
+                // let room_state = gameroom_node.getComponent(gameRoomScene).roomstate
                 if (room_state == RoomState.ROOM_PLAYING) {
                     console.log("TOUCH_START id:" + this.card_id)
                     if (!this.flag) {
@@ -73,6 +79,7 @@ export default class Card extends Component {
     }
 
     showCards(card, username) {
+        console.log(card)
         //card.index是服务器生成card给对象设置的一副牌里唯一id
         this.card_id = card.index
         //传入参数 card={"value":5,"shape":1,"index":20}

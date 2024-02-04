@@ -175,7 +175,7 @@ module.exports = function(roominfo,player){
             that.house_manage = player
             //这里需要加上，掉线用户accountid过去
             for(var i=0;i<that._player_list.length;i++){
-                that._player_list[i].sendPlayerChangeManage(that.house_manage.username)
+                that._player_list[i].sendPlayerChangeManage(that.house_manage._username)
             }
         }
     }
@@ -297,7 +297,7 @@ module.exports = function(roominfo,player){
 
         //如果上一个出牌的人是自己，在一轮完毕后要从新设置为空
         //如果上一个出牌的人不是自己，就不用处理
-        var next_push_player_account = that.playing_cards[that.playing_cards.length-1].username
+        var next_push_player_account = that.playing_cards[that.playing_cards.length-1]._username
         if(that.last_push_card_accountid == next_push_player_account){
            that.last_push_card_list = []
            that.last_push_card_accountid = 0
