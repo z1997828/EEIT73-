@@ -24,6 +24,9 @@ export class hallScene extends Component {
     @property(Button) AudioButton: Button = null;
     @property(SpriteFrame) onImage: SpriteFrame = null;
     @property(SpriteFrame) offImage: SpriteFrame = null;
+    @property(Button) mailButton: Button = null;
+    @property(SpriteFrame) mailOnImage: SpriteFrame = null;
+    @property(SpriteFrame) mailOffImage: SpriteFrame = null;
     @property(AudioSource) bgMusic: AudioSource = null;
     @property(Node) personalInfo: Node = null;
     //sammykym:
@@ -117,17 +120,28 @@ export class hallScene extends Component {
                 labels[0].string = new Date(record.user_message_date._seconds * 1000).toLocaleString();
                 // labels[1].string=record.user_message;
                 this.recordMail.addChild(text);
-                text.on('click', () => this.onTextClicked(record), this);
+                let button = text.getComponent(Button);
+                text.on('click', () => this.onTextClicked(record, button), this);
             });
 
         }
 
     }
-    onTextClicked(record) {
+    onTextClicked(record, button) {
         let userMessage = this.userMessage.getComponent(Label);
         let replyMessage = this.replyMessage.getComponent(Label);
         userMessage.string = record.user_message
         replyMessage.string = record.reply_message
+        console.log(this.mailText);
+        this.recordMail.children.forEach(child => {
+            let childButton = child.getComponent(Button);
+            if (childButton) {
+                childButton.normalSprite = this.mailOffImage;
+                childButton.pressedSprite = this.mailOffImage;
+            }
+        });
+        button.normalSprite = this.mailOnImage;
+        button.pressedSprite = this.mailOnImage;
     }
 
 
