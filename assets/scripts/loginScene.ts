@@ -140,6 +140,10 @@ export class loginScene extends Component {
             if (ret.message === '註冊成功') {
                 gameManager.Instance.loading.hide();
                 gameManager.Instance.alert.show("註冊成功", "請到信箱收取驗證信!");
+                this.regNameInput.string = ''
+                this.regAccountInput.string = ''
+                this.regPasswdInput.string = ''
+                this.confirmregPasswdInput.string = ''
             } else {
                 gameManager.Instance.loading.hide();
                 gameManager.Instance.alert.show("註冊失敗", "您的資料有誤，請核實。");

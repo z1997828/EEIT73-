@@ -1,7 +1,6 @@
 import { _decorator, Component, Node, AudioSource, Button, SpriteFrame, Label, director, game, Prefab, instantiate, labelAssembler, EditBox } from 'cc';
 import { createRoomConfig } from "./components/define"
 import gameManager from './components/gameManager';
-import SocketUtil from './components/SocketUtil';
 import Util from './components/Util';
 
 import HTTP from './components/HTTP'; // 假設HTTP類被定義在'HTTP.ts'文件中
@@ -58,7 +57,7 @@ export class hallScene extends Component {
     private _roomId: string = "";
     private cur_input_count: number = -1;
     @property(EditBox) feedbackInput: EditBox = null;
-
+    
 
     onLoad() {
 
@@ -224,7 +223,7 @@ export class hallScene extends Component {
         this._roomId = this.roomId.string;
         //console.log("joinid.length:"+this.joinid.length)
         if (this._roomId.length >= 6) {
-
+            
             //判断加入房间逻辑
             var room_para = {
                 roomid: this._roomId
@@ -234,14 +233,15 @@ export class hallScene extends Component {
                 // console.log("err", err, "result", result)
                 if (err) { 
                     console.log("error joining room:" + err);
-    
+                    gameManager.Instance.loading.show();
+                    
                 } else { 
                     console.log("join room success" + JSON.stringify(result));
                     gameManager.Instance.userDetails.bottom = result.bottom;
                     gameManager.Instance.userDetails.rate = result.rate;
                     director.loadScene('gameroom');
                 }
-
+                
             });
             return
         }
@@ -319,13 +319,16 @@ export class hallScene extends Component {
         let check = this.feedbackInput.string;
         let username = gameManager.Instance.userDetails.username
         if (check.length < 1) {
-            console.log('未輸入');
+            gameManager.Instance.alert.show("系統提示","請輸入內容!")
             return;
         }
+        
         let data = { "mailtext": check, "username": username }
         gameManager.Instance.http.postRequest(Api.mail, data, (ret) => {
-            if (ret.message === '發送成功') {
+            if (ret.message === '發送成功') { 
                 console.log('OK');
+                gameManager.Instance.alert.show("系統提示","您的反饋已成功發送!");
+                this.feedbackInput.string = "";
             } else {
                 console.log('error');
             }
