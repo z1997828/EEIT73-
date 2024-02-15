@@ -16,8 +16,6 @@ public class MoneyService {
 
 	private static final String COLLECTION_NAME = "money";
 
-	//private static final String COLLECTION_NAME = "transactions";
-
 	public String saveMoney(Money money) throws InterruptedException, ExecutionException {
 //		 Firestore dbFirestore = FirestoreClient.getFirestore();
 //		 ApiFuture<WriteResult> collectionApiFuture =
